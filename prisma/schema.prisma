@@ -1,0 +1,231 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String         @id @default(cuid())
+  name          String
+  phone         String         @unique
+  passwordHash  String
+  role          Role
+  isActive      Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  restaurantId  String?
+  notifications Notification[]
+  orders        Order[]        @relation("OrderWaiter")
+  receipts      Receipt[]      @relation("ReceiptKitchen")
+  tables        Table[]        @relation("TableWaiter")
+  restaurant    Restaurant?    @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+}
+
+model Restaurant {
+  id            String           @id @default(cuid())
+  name          String
+  address       String?
+  phone         String?
+  theme         String?
+  logoUrl       String?
+  parentId      String?
+  parent        Restaurant?      @relation("RestaurantBranches", fields: [parentId], references: [id], onDelete: SetNull)
+  branches      Restaurant[]     @relation("RestaurantBranches")
+  createdAt     DateTime         @default(now())
+  categories    Category[]
+  menuItems     MenuItem[]
+  notifications Notification[]
+  orders        Order[]
+  receipts      Receipt[]
+  tables        Table[]
+  users         User[]
+}
+
+model Table {
+  id           String     @id @default(cuid())
+  number       Int
+  code         String     @unique
+  status       String     @default("free")
+  restaurantId String
+  waiterId     String?
+  bellCalls    BellCall[]
+  orders       Order[]
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  waiter       User?      @relation("TableWaiter", fields: [waiterId], references: [id])
+
+  @@unique([restaurantId, number])
+  @@index([waiterId])
+}
+
+model Category {
+  id           String     @id @default(cuid())
+  name         String
+  sortOrder    Int        @default(0)
+  restaurantId String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  menuItems    MenuItem[]
+
+  @@unique([restaurantId, name])
+}
+
+model MenuItem {
+  id           String      @id @default(cuid())
+  name         String
+  description  String?
+  ingredients  String
+  price        Float
+  imageUrl     String?
+  available    Boolean     @default(true)
+  isPopular    Boolean     @default(false)
+  categoryId   String?
+  restaurantId String
+  createdAt    DateTime    @default(now())
+  category     Category?   @relation(fields: [categoryId], references: [id])
+  restaurant   Restaurant  @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  orderItems   OrderItem[]
+
+  @@index([categoryId])
+  @@index([restaurantId, categoryId])
+  @@index([restaurantId, available])
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  orderNumber     Int
+  type            OrderType   @default(DINE_IN)
+  status          OrderStatus @default(PENDING)
+  note            String?
+  total           Float       @default(0)
+  collectedAmount Float?
+  tip             Float?
+  tableId         String?
+  tableLabel      String?
+  sourceTableCode String?
+  waiterId        String?
+  restaurantId    String
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  restaurant      Restaurant  @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  table           Table?      @relation(fields: [tableId], references: [id])
+  waiter          User?       @relation("OrderWaiter", fields: [waiterId], references: [id])
+  items           OrderItem[]
+  receipt         Receipt?
+
+  @@unique([restaurantId, orderNumber])
+  @@index([restaurantId, status, createdAt])
+  @@index([waiterId, status, createdAt])
+  @@index([tableId, status])
+}
+
+model OrderItem {
+  id         String          @id @default(cuid())
+  orderId    String
+  menuItemId String?
+  name       String
+  price      Float
+  quantity   Int
+  status     OrderItemStatus @default(PENDING)
+  menuItem   MenuItem?       @relation(fields: [menuItemId], references: [id])
+  order      Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@index([menuItemId])
+}
+
+model Receipt {
+  id           String     @id @default(cuid())
+  orderId      String     @unique
+  items        String
+  subtotal     Float
+  tax          Float
+  total        Float
+  kitchenId    String?
+  restaurantId String
+  generatedAt  DateTime   @default(now())
+  kitchen      User?      @relation("ReceiptKitchen", fields: [kitchenId], references: [id])
+  order        Order      @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@index([restaurantId])
+}
+
+model BellCall {
+  id          String     @id @default(cuid())
+  tableId     String
+  status      BellStatus @default(RINGING)
+  createdAt   DateTime   @default(now())
+  resolvedAt  DateTime?
+  respondedBy String?
+  table       Table      @relation(fields: [tableId], references: [id], onDelete: Cascade)
+
+  @@index([tableId, status])
+}
+
+model Notification {
+  id           String       @id @default(cuid())
+  userId       String?
+  role         Role?
+  restaurantId String?
+  type         String
+  title        String
+  body         String
+  read         Boolean      @default(false)
+  orderId      String?
+  tableId      String?
+  createdAt    DateTime     @default(now())
+  restaurant   Restaurant?  @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  user         User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([restaurantId, createdAt])
+  @@index([userId, createdAt])
+}
+
+model EventLog {
+  id        String   @id @default(cuid())
+  scope     String
+  scopeId   String?
+  type      String
+  payload   Json?
+  createdAt DateTime @default(now())
+
+  @@index([scope, scopeId, createdAt])
+  @@index([createdAt])
+}
+
+enum Role {
+  OWNER
+  MANAGER
+  KITCHEN
+  WAITER
+}
+
+enum OrderStatus {
+  PENDING
+  ACCEPTED
+  COOKING
+  READY
+  SERVED
+  COMPLETED
+  CANCELLED
+}
+
+enum OrderItemStatus {
+  PENDING
+  ACCEPTED
+  COOKING
+  READY
+  SERVED
+}
+
+enum OrderType {
+  DINE_IN
+  TAKEAWAY
+}
+
+enum BellStatus {
+  RINGING
+  RESPONDED
+  DISMISSED
+}
