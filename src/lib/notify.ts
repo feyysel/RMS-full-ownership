@@ -1,6 +1,7 @@
 import type { Role } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 import { persistEvent, type Channel } from "@/lib/realtime";
+import { sendPushToUser, sendPushToRole } from "@/lib/push";
 
 type NotifyInput = {
   userId?: string;
@@ -41,6 +42,16 @@ export async function notify(input: NotifyInput) {
       tableId: notif.tableId ?? null,
       createdAt: notif.createdAt.toISOString(),
     });
+  }
+
+  const pushPayload = { title: notif.title, body: notif.body, tag: notif.type };
+
+  if (userId) {
+    sendPushToUser(userId, pushPayload).catch(() => {});
+  } else if (role && restaurantId) {
+    sendPushToRole(role, restaurantId, pushPayload).catch(() => {});
+  } else if (role) {
+    sendPushToRole(role, null, pushPayload).catch(() => {});
   }
 
   return notif;

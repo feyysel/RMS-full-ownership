@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { ROLE_HOME } from "@/lib/constants";
 import { PortalShell, type NavItem } from "@/components/portal/portal-shell";
 
+const RESTAURANT_SELECT = { name: true, logoUrl: true } as const;
+
 export default async function ManagerLayout({ children }: LayoutProps<"/manager">) {
   const session = await getSession();
   if (!session) redirect("/login");
@@ -15,7 +17,7 @@ export default async function ManagerLayout({ children }: LayoutProps<"/manager"
   if (session.restaurantId) {
     const restaurant = await prisma.restaurant.findUnique({
       where: { id: session.restaurantId },
-      select: { name: true, logoUrl: true },
+      select: RESTAURANT_SELECT,
     });
     restaurantName = restaurant?.name ?? null;
     restaurantLogo = restaurant?.logoUrl ?? null;

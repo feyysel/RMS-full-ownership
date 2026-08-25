@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { randomUUID } from "node:crypto";
 import { prisma } from "@/lib/prisma";
 import { requireRoles } from "@/lib/guard";
 
@@ -22,20 +21,29 @@ export async function GET(req: Request) {
 
   const tables = await prisma.table.findMany({
     where: { restaurantId: session.restaurantId, ...waiterFilter },
-    include: {
+    select: {
+      id: true,
+      number: true,
+      code: true,
+      status: true,
       waiter: { select: { id: true, name: true } },
       bellCalls: {
         where: { status: "RINGING" },
         orderBy: { createdAt: "desc" },
+        select: { id: true, createdAt: true },
       },
       orders: {
         where: {
           status: { in: ["PENDING", "ACCEPTED", "COOKING", "READY", "SERVED"] },
         },
         orderBy: { createdAt: "desc" },
-        include: {
+        select: {
+          id: true,
+          orderNumber: true,
+          status: true,
+          total: true,
           waiter: { select: { id: true, name: true } },
-          items: true,
+          items: { select: { id: true, name: true } },
         },
       },
     },
@@ -63,6 +71,7 @@ export async function POST(req: Request) {
     if (existing)
       return NextResponse.json({ error: "Table number already exists" }, { status: 409 });
 
+    const { randomUUID } = await import("node:crypto");
     const table = await prisma.table.create({
       data: {
         number,

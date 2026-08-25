@@ -21,7 +21,10 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/app", request.url));
   }
 
-  return NextResponse.next();
+  const res = NextResponse.next();
+  res.headers.set("X-DNS-Prefetch-Control", "on");
+  res.headers.set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
+  return res;
 }
 
 export const config = {

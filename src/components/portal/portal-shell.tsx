@@ -5,25 +5,15 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import {
-  BarChart3,
   Bell,
   BellRing,
-  ChefHat,
-  Coins,
   Crown,
-  Grid3X3,
   KeyRound,
   LayoutDashboard,
-  ListChecks,
   LogOut,
   Menu,
-  Radio,
-  ReceiptText,
   Settings,
-  Store,
-  Users,
   UtensilsCrossed,
-  Wallet,
   Wifi,
   WifiOff,
 } from "lucide-react";
@@ -36,17 +26,17 @@ import { Badge } from "@/components/ui/badge";
 
 export const NAV_ICONS = {
   LayoutDashboard,
-  Store,
-  Users,
-  BarChart3,
-  Radio,
+  Store: LayoutDashboard,
+  Users: LayoutDashboard,
+  BarChart3: LayoutDashboard,
+  Radio: LayoutDashboard,
   BellRing,
-  ListChecks,
-  ReceiptText,
+  ListChecks: LayoutDashboard,
+  ReceiptText: LayoutDashboard,
   UtensilsCrossed,
-  Grid3X3,
-  Wallet,
-  Coins,
+  Grid3X3: LayoutDashboard,
+  Wallet: LayoutDashboard,
+  Coins: LayoutDashboard,
   Settings,
 } as const;
 
@@ -59,7 +49,7 @@ export type NavItem = {
 const ROLE_ICON: Record<string, React.ComponentType<{ className?: string }>> = {
   OWNER: Crown,
   MANAGER: LayoutDashboard,
-  KITCHEN: ChefHat,
+  KITCHEN: UtensilsCrossed,
   WAITER: UtensilsCrossed,
 };
 
@@ -80,6 +70,7 @@ function RestaurantLogo({
         src={logoUrl}
         alt="Restaurant logo"
         className={`${wrap} shrink-0 border border-white/10 object-cover ${shadow}`}
+        loading="lazy"
       />
     );
   }
@@ -102,6 +93,10 @@ const NOTIFY_TOAST: Record<string, { title: string; tone: "default" | "success" 
   BRANCH_APPROVED: { title: "Branch approved", tone: "success" },
   BRANCH_REJECTED: { title: "Branch request declined", tone: "error" },
   BRANCH_REQUEST_NEW: { title: "New branch request", tone: "default" },
+  BRANCH_CREATED: { title: "Branch created", tone: "success" },
+  USER_CREATED: { title: "Employee added", tone: "success" },
+  USER_UPDATED: { title: "Employee updated", tone: "default" },
+  USER_DELETED: { title: "Employee removed", tone: "error" },
 };
 
 export function PortalShell({
@@ -132,7 +127,7 @@ export function PortalShell({
   >([]);
   const [unread, setUnread] = React.useState(0);
 
-  const { permission, notifyBrowser, requestPermission } = useBrowserNotify();
+  const { permission, notifyBrowser, requestPermission, unsubscribeAll } = useBrowserNotify();
 
   const channels = React.useMemo<RealtimeChannel[]>(() => {
     const c: RealtimeChannel[] = [];
@@ -145,7 +140,7 @@ export function PortalShell({
     const map = NOTIFY_TOAST[evt.type];
     if (map) {
       const payload = evt.payload as { title?: string; body?: string; id?: string };
-      if (!document.hasFocus()) notifyBrowser(payload.title ?? map.title, { body: payload.body ?? "" });
+      if (typeof document !== "undefined" && !document.hasFocus()) notifyBrowser(payload.title ?? map.title, { body: payload.body ?? "" });
       if (map.tone === "success") toast.success(payload.title ?? map.title);
       else if (map.tone === "error") toast.error(payload.title ?? map.title);
       else toast(payload.title ?? map.title, { description: payload.body ?? "" });
@@ -176,17 +171,18 @@ export function PortalShell({
       .catch(() => {});
   }, []);
 
-  async function markRead() {
+  const markRead = React.useCallback(async () => {
     await fetch("/api/notifications", { method: "POST" }).catch(() => {});
     setUnread(0);
     setNotifs((n) => n.map((x) => ({ ...x, read: true })));
-  }
+  }, []);
 
-  async function logout() {
+  const logout = React.useCallback(async () => {
+    await unsubscribeAll();
     await fetch("/api/auth/logout", { method: "POST" });
     router.push("/login");
     router.refresh();
-  }
+  }, [router, unsubscribeAll]);
 
   const RoleIcon = ROLE_ICON[user.role] ?? LayoutDashboard;
 
@@ -207,7 +203,7 @@ export function PortalShell({
       <nav className="flex-1 space-y-1 px-3">
         {nav.map((item) => {
           const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
-          const Icon = NAV_ICONS[item.icon];
+          const Icon = NAV_ICONS[item.icon] ?? LayoutDashboard;
           return (
             <Link
               key={item.href}
@@ -269,7 +265,6 @@ export function PortalShell({
         {sidebar}
       </aside>
 
-      {/* Mobile drawer */}
       <AnimatePresence>
         {drawerOpen && (
           <>

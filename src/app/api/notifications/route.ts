@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireRoles } from "@/lib/guard";
+import { getCached, setCached } from "@/lib/cache";
+
+const NOTIF_TTL = 15000;
 
 export const runtime = "nodejs";
 
@@ -8,6 +11,10 @@ export async function GET(req: Request) {
   const guard = await requireRoles(req, ["OWNER", "MANAGER", "KITCHEN", "WAITER"]);
   if ("response" in guard) return guard.response;
   const session = guard.session;
+
+  const cacheKey = `notifs:${session.id}:${session.restaurantId ?? "none"}`;
+  const cached = getCached<unknown>(cacheKey);
+  if (cached) return NextResponse.json(cached);
 
   const notifications = await prisma.notification.findMany({
     where: {
@@ -22,11 +29,21 @@ export async function GET(req: Request) {
     },
     orderBy: { createdAt: "desc" },
     take: 50,
+    select: {
+      id: true,
+      title: true,
+      body: true,
+      type: true,
+      read: true,
+      createdAt: true,
+    },
   });
 
   const unread = notifications.filter((n) => !n.read).length;
 
-  return NextResponse.json({ notifications, unread });
+  const result = { notifications, unread };
+  setCached(cacheKey, result, NOTIF_TTL);
+  return NextResponse.json(result);
 }
 
 export async function POST(req: Request) {
@@ -56,6 +73,10 @@ export async function POST(req: Request) {
       data: { read: true },
     });
   }
+
+  const cacheKey = `notifs:${session.id}:${session.restaurantId ?? "none"}`;
+  const { invalidateCache } = await import("@/lib/cache");
+  invalidateCache(`^${cacheKey.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`);
 
   return NextResponse.json({ ok: true });
 }

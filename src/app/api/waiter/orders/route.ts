@@ -17,7 +17,7 @@ export async function GET(req: Request) {
       status: { in: ["PENDING", "ACCEPTED", "COOKING", "READY", "SERVED"] },
     },
     include: {
-      items: true,
+      items: { select: { id: true, name: true, quantity: true, price: true } },
       receipt: { select: { subtotal: true, tax: true, total: true } },
       table: { select: { number: true, code: true } },
       waiter: { select: { id: true, name: true } },

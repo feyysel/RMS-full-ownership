@@ -12,7 +12,17 @@ const adapter =
     connectionString: process.env.DATABASE_URL ?? "",
   });
 
-export const prisma = globalForPrisma.prisma ?? new PrismaClient({ adapter });
+const logConfig =
+  process.env.NODE_ENV === "production"
+    ? ["error" as const]
+    : ["warn" as const, "error" as const];
+
+export const prisma =
+  globalForPrisma.prisma ??
+  new PrismaClient({
+    adapter,
+    log: logConfig,
+  });
 
 if (process.env.NODE_ENV !== "production") {
   globalForPrisma.adapter = adapter;

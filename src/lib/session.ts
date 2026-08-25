@@ -17,6 +17,12 @@ function getSecret() {
   );
 }
 
+let secretCache: ReturnType<typeof getSecret> | null = null;
+function getSecretCached() {
+  if (!secretCache) secretCache = getSecret();
+  return secretCache;
+}
+
 export async function createSession(user: SessionUser) {
   const token = await new SignJWT({
     name: user.name,
@@ -28,7 +34,7 @@ export async function createSession(user: SessionUser) {
     .setSubject(user.id)
     .setIssuedAt()
     .setExpirationTime("12h")
-    .sign(getSecret());
+    .sign(getSecretCached());
 
   const store = await cookies();
   store.set(COOKIE_NAME, token, {
@@ -45,47 +51,43 @@ export async function destroySession() {
   store.delete(COOKIE_NAME);
 }
 
-export async function getSession(): Promise<SessionUser | null> {
-  const store = await cookies();
-  const token = store.get(COOKIE_NAME)?.value;
-  if (!token) return null;
+const sessionCache = new WeakMap<Request, SessionUser | null>();
+
+async function verifyToken(token: string): Promise<SessionUser | null> {
   try {
-    const { payload } = await jwtVerify(token, getSecret());
+    const { payload } = await jwtVerify(token, getSecretCached());
     if (!payload.sub) return null;
-    const role = payload.role as SessionUser["role"];
-    const restaurantId = (payload.restaurantId as string | null) ?? null;
     return {
       id: payload.sub,
       name: (payload.name as string) ?? "",
       phone: (payload.phone as string) ?? "",
-      role,
-      restaurantId,
+      role: payload.role as SessionUser["role"],
+      restaurantId: (payload.restaurantId as string | null) ?? null,
     };
   } catch {
     return null;
   }
 }
 
+export async function getSession(): Promise<SessionUser | null> {
+  const store = await cookies();
+  const token = store.get(COOKIE_NAME)?.value;
+  if (!token) return null;
+  return verifyToken(token);
+}
+
 export async function getSessionFromRequest(req: Request) {
+  if (sessionCache.has(req)) return sessionCache.get(req)!;
   const cookieHeader = req.headers.get("cookie") ?? "";
   const match = cookieHeader.match(/(?:^|;\s*)rms_session=([^;]+)/);
   const token = match?.[1];
-  if (!token) return null;
-  try {
-    const { payload } = await jwtVerify(token, getSecret());
-    if (!payload.sub) return null;
-    const role = payload.role as SessionUser["role"];
-    const restaurantId = (payload.restaurantId as string | null) ?? null;
-    return {
-      id: payload.sub,
-      name: (payload.name as string) ?? "",
-      phone: (payload.phone as string) ?? "",
-      role,
-      restaurantId,
-    };
-  } catch {
+  if (!token) {
+    sessionCache.set(req, null);
     return null;
   }
+  const result = await verifyToken(token);
+  sessionCache.set(req, result);
+  return result;
 }
 
 export { COOKIE_NAME };

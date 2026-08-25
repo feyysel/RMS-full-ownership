@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { hashPassword } from "@/lib/auth";
 import { requireRoles } from "@/lib/guard";
-import { emitOwner } from "@/lib/notify";
+import { emitOwner, notify } from "@/lib/notify";
 import { treeRestaurantIds } from "@/lib/restaurant-tree";
 
 export const runtime = "nodejs";
@@ -70,6 +70,13 @@ export async function POST(req: Request) {
     });
 
     await emitOwner("USER_CREATED", { id: user.id, name: user.name, role: user.role });
+    await notify({
+      role: "OWNER",
+      restaurantId: targetRestaurantId,
+      type: "USER_CREATED",
+      title: "New employee added",
+      body: `${user.name} (${user.role.toLowerCase()}) has been added to your team.`,
+    });
 
     return NextResponse.json({ user });
   } catch (err) {

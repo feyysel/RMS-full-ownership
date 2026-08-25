@@ -48,11 +48,9 @@ type ManagerStats = {
 };
 
 export default function ManagerOverview() {
-  const { data, refresh } = useFetch<ManagerStats>(
-    "/api/stats"
-  );
+  const { data, refresh } = useFetch<ManagerStats>("/api/stats");
   const [restaurantId, setRestaurantId] = React.useState<string | null>(null);
-  const refreshDebounced = useDebouncedCallback(refresh, 250);
+  const refreshDebounced = useDebouncedCallback(refresh, 500);
 
   useRealtime(
     restaurantId ? [{ scope: "restaurant", id: restaurantId }] : [],

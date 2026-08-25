@@ -2,30 +2,37 @@
 
 import * as React from "react";
 
+const inflight = new Map<string, Promise<unknown>>();
+
 export function useFetch<T>(url: string | null, deps: unknown[] = []) {
   const [data, setData] = React.useState<T | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
+
   const refresh = React.useCallback(async () => {
     if (!url) return;
     try {
-      const res = await fetch(url);
-      if (!res.ok) {
-        const d = await res.json().catch(() => null);
-        setError(d?.error ?? "Failed to load");
-      } else {
-        setData(await res.json());
-        setError(null);
+      let p = inflight.get(url);
+      if (!p) {
+        p = fetch(url).then((res) => {
+          if (!res.ok) return res.json().then((d) => { throw new Error(d?.error ?? "Failed"); });
+          return res.json();
+        });
+        inflight.set(url, p);
       }
-    } catch {
-      setError("Network error");
+      const result = await p;
+      setData(result as T);
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Network error");
     } finally {
       setLoading(false);
+      if (url) inflight.delete(url);
     }
   }, [url]);
 
   React.useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLoading(true);
     refresh();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);

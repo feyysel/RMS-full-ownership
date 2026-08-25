@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { hashPassword } from "@/lib/auth";
 import { requireRoles } from "@/lib/guard";
-import { emitOwner } from "@/lib/notify";
+import { emitOwner, notify } from "@/lib/notify";
 import { treeRestaurantIds } from "@/lib/restaurant-tree";
 
 export const runtime = "nodejs";
@@ -68,6 +68,13 @@ export async function PATCH(req: Request, ctx: Ctx) {
     const user = await prisma.user.update({ where: { id }, data });
 
     await emitOwner("USER_UPDATED", { id: user.id, isActive: user.isActive });
+    await notify({
+      role: "OWNER",
+      restaurantId: user.restaurantId,
+      type: "USER_UPDATED",
+      title: "Employee updated",
+      body: `${user.name}'s account has been updated.`,
+    });
     return NextResponse.json({ user });
   } catch (err) {
     console.error("update user error", err);
@@ -94,6 +101,13 @@ export async function DELETE(req: Request, ctx: Ctx) {
 
     await prisma.user.delete({ where: { id } });
     await emitOwner("USER_DELETED", { id });
+    await notify({
+      role: "OWNER",
+      restaurantId: target.restaurantId,
+      type: "USER_DELETED",
+      title: "Employee removed",
+      body: `${target.name} has been removed from your team.`,
+    });
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error("delete user error", err);

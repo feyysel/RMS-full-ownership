@@ -8,19 +8,22 @@ datasource db {
 }
 
 model User {
-  id            String         @id @default(cuid())
-  name          String
-  phone         String         @unique
-  passwordHash  String
-  role          Role
-  isActive      Boolean        @default(true)
-  createdAt     DateTime       @default(now())
-  restaurantId  String?
-  notifications Notification[]
-  orders        Order[]        @relation("OrderWaiter")
-  receipts      Receipt[]      @relation("ReceiptKitchen")
-  tables        Table[]        @relation("TableWaiter")
-  restaurant    Restaurant?    @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  id                  String             @id @default(cuid())
+  name                String
+  phone               String             @unique
+  passwordHash        String
+  role                Role
+  isActive            Boolean            @default(true)
+  createdAt           DateTime           @default(now())
+  restaurantId        String?
+  notifications       Notification[]
+  orders              Order[]            @relation("OrderWaiter")
+  receipts            Receipt[]          @relation("ReceiptKitchen")
+  tables              Table[]            @relation("TableWaiter")
+  pushSubscriptions   PushSubscription[]
+  restaurant          Restaurant?        @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@index([restaurantId, role])
 }
 
 model Restaurant {
@@ -57,6 +60,8 @@ model Table {
 
   @@unique([restaurantId, number])
   @@index([waiterId])
+  @@index([restaurantId, status])
+  @@index([restaurantId, waiterId])
 }
 
 model Category {
@@ -89,6 +94,7 @@ model MenuItem {
   @@index([categoryId])
   @@index([restaurantId, categoryId])
   @@index([restaurantId, available])
+  @@index([restaurantId, createdAt])
 }
 
 model Order {
@@ -117,6 +123,8 @@ model Order {
   @@index([restaurantId, status, createdAt])
   @@index([waiterId, status, createdAt])
   @@index([tableId, status])
+  @@index([restaurantId, waiterId, status])
+  @@index([status, createdAt])
 }
 
 model OrderItem {
@@ -132,6 +140,7 @@ model OrderItem {
 
   @@index([orderId])
   @@index([menuItemId])
+  @@index([name])
 }
 
 model Receipt {
@@ -149,6 +158,7 @@ model Receipt {
   restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
 
   @@index([restaurantId])
+  @@index([restaurantId, generatedAt])
 }
 
 model BellCall {
@@ -161,6 +171,7 @@ model BellCall {
   table       Table      @relation(fields: [tableId], references: [id], onDelete: Cascade)
 
   @@index([tableId, status])
+  @@index([tableId, status, createdAt])
 }
 
 model Notification {
@@ -180,6 +191,8 @@ model Notification {
 
   @@index([restaurantId, createdAt])
   @@index([userId, createdAt])
+  @@index([userId, read])
+  @@index([restaurantId, role, read])
 }
 
 model EventLog {
@@ -192,6 +205,7 @@ model EventLog {
 
   @@index([scope, scopeId, createdAt])
   @@index([createdAt])
+  @@index([scope, createdAt])
 }
 
 enum Role {
@@ -228,4 +242,20 @@ enum BellStatus {
   RINGING
   RESPONDED
   DISMISSED
+}
+
+model PushSubscription {
+  id            String   @id @default(cuid())
+  endpoint      String
+  p256dh        String
+  auth          String
+  userId        String
+  restaurantId  String?
+  userAgent     String?
+  createdAt     DateTime @default(now())
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([restaurantId])
+  @@index([endpoint])
 }

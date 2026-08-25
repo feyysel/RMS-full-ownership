@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireRoles } from "@/lib/guard";
+import { getCached, setCached } from "@/lib/cache";
+
+const STATS_TTL = 10_000;
 
 export const runtime = "nodejs";
 
@@ -12,7 +15,12 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "No restaurant assigned" }, { status: 400 });
 
   const rid = session.restaurantId;
-  const startOfDay = new Date();
+  const cacheKey = `stats:${rid}`;
+  const cached = getCached<unknown>(cacheKey);
+  if (cached) return NextResponse.json(cached);
+
+  const now = new Date();
+  const startOfDay = new Date(now);
   startOfDay.setHours(0, 0, 0, 0);
   const sevenDaysAgo = new Date(startOfDay);
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
@@ -57,7 +65,7 @@ export async function GET(req: Request) {
       where: { restaurantId: rid },
       orderBy: { createdAt: "desc" },
       take: 8,
-      include: { items: true, table: { select: { number: true } }, waiter: { select: { name: true } } },
+      include: { items: { select: { name: true, quantity: true } }, table: { select: { number: true } }, waiter: { select: { name: true } } },
     }),
     prisma.order.findMany({
       where: { restaurantId: rid, createdAt: { gte: sevenDaysAgo }, status: { notIn: ["CANCELLED"] } },
@@ -84,7 +92,7 @@ export async function GET(req: Request) {
     dayRevenue.push(Math.round(dayTotal * 100) / 100);
   }
 
-  return NextResponse.json({
+  const result = {
     stats: {
       revenueToday: revenueToday._sum.total ?? 0,
       ordersToday,
@@ -101,5 +109,8 @@ export async function GET(req: Request) {
     recentOrders,
     topItems: topItems.map((t) => ({ name: t.name, qty: t._sum.quantity ?? 0 })),
     trend: { labels: dayLabels, revenue: dayRevenue },
-  });
+  };
+
+  setCached(cacheKey, result, STATS_TTL);
+  return NextResponse.json(result);
 }

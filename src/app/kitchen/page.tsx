@@ -48,23 +48,28 @@ export default function KitchenPage() {
   const [receiptFor, setReceiptFor] = React.useState<Order | null>(null);
   const [newOrderId, setNewOrderId] = React.useState<string | null>(null);
 
-  async function refreshNow() {
+  const refreshNow = React.useCallback(async () => {
     const res = await fetch("/api/kitchen/queue");
     if (res.ok) setData(await res.json());
-  }
-  const refresh = useDebouncedCallback(refreshNow, 250);
+  }, []);
+  const refresh = useDebouncedCallback(refreshNow, 500);
 
   useRealtime(
     restaurantId ? [{ scope: "restaurant", id: restaurantId }] : [],
-    (evt) => {
-      if (evt.type === "ORDER_NEW") {
-        const p = evt.payload as { id?: string; title?: string };
-        if (p.id) setNewOrderId(p.id);
-        setTimeout(() => setNewOrderId(null), 4000);
-        playChime();
-      }
-      refresh();
-    }
+    React.useCallback(
+      (evt: { type: string; payload: unknown }) => {
+        if (evt.type === "ORDER_NEW") {
+          const p = evt.payload as { id?: string };
+          if (p.id) {
+            setNewOrderId(p.id);
+            setTimeout(() => setNewOrderId(null), 4000);
+          }
+          playChime();
+        }
+        refresh();
+      },
+      [refresh]
+    )
   );
 
   React.useEffect(() => {
@@ -75,11 +80,10 @@ export default function KitchenPage() {
   }, []);
 
   React.useEffect(() => {
-    refresh();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    refreshNow();
+  }, [refreshNow]);
 
-  async function act(orderId: string, action: "accept" | "cook" | "ready") {
+  const act = React.useCallback(async (orderId: string, action: "accept" | "cook" | "ready") => {
     const labels: Record<string, string> = {
       accept: "Order accepted — start prepping",
       cook: "Now cooking",
@@ -101,7 +105,7 @@ export default function KitchenPage() {
     } catch {
       toast.error("Network error");
     }
-  }
+  }, [refresh]);
 
   const queue = data?.active ?? [];
   const pending = queue.filter((o) => o.status === "PENDING");

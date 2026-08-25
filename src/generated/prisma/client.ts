@@ -96,3 +96,8 @@ export type Notification = Prisma.NotificationModel
  * 
  */
 export type EventLog = Prisma.EventLogModel
+/**
+ * Model PushSubscription
+ * 
+ */
+export type PushSubscription = Prisma.PushSubscriptionModel

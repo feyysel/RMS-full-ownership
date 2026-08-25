@@ -9,6 +9,8 @@ const NAV: NavItem[] = [
   { label: "Receipts", href: "/kitchen/receipts", icon: "ReceiptText" },
 ];
 
+const RESTAURANT_SELECT = { name: true, logoUrl: true } as const;
+
 export default async function KitchenLayout({ children }: LayoutProps<"/kitchen">) {
   const session = await getSession();
   if (!session) redirect("/login");
@@ -19,7 +21,7 @@ export default async function KitchenLayout({ children }: LayoutProps<"/kitchen"
   if (session.restaurantId) {
     const restaurant = await prisma.restaurant.findUnique({
       where: { id: session.restaurantId },
-      select: { name: true, logoUrl: true },
+      select: RESTAURANT_SELECT,
     });
     restaurantName = restaurant?.name ?? null;
     restaurantLogo = restaurant?.logoUrl ?? null;
