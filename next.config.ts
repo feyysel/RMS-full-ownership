@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   devIndicators: false,
   poweredByHeader: false,
   compress: true,
-  output: "standalone",
+  output: process.env.VERCEL ? undefined : "standalone",
   experimental: {
     optimizePackageImports: ["lucide-react", "motion/react", "sonner"],
     staleTimes: {
