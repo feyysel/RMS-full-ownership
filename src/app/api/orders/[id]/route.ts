@@ -1,7 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireRoles } from "@/lib/guard";
 import { notify, emitToTable } from "@/lib/notify";
+import { invalidateCache, escapeRegExp } from "@/lib/cache";
 import { TAX_RATE } from "@/lib/constants";
 import type { OrderStatus, OrderItemStatus } from "@/generated/prisma/client";
 
@@ -70,7 +71,7 @@ export async function PATCH(req: Request, ctx: Ctx) {
 
     const order = await prisma.order.findUnique({
       where: { id },
-      include: { items: true, table: true, waiter: true, receipt: true },
+      select: { id: true, restaurantId: true, orderNumber: true, status: true, tableId: true, tableLabel: true, waiterId: true, total: true },
     });
     if (!order || order.restaurantId !== session.restaurantId)
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
@@ -91,7 +92,12 @@ export async function PATCH(req: Request, ctx: Ctx) {
       return NextResponse.json({ error: "Invalid amount collected" }, { status: 400 });
 
     const updated = await prisma.$transaction(async (tx) => {
-      const payable = order.receipt?.total ?? order.total;
+      const full = await tx.order.findUniqueOrThrow({
+        where: { id },
+        include: { items: true, table: true, receipt: true },
+      });
+
+      const payable = full.receipt?.total ?? full.total;
       const tip =
         collected != null
           ? Math.max(0, Math.round((collected - payable) * 100) / 100)
@@ -114,14 +120,14 @@ export async function PATCH(req: Request, ctx: Ctx) {
       }
 
       if (action === "ready") {
-        const subtotal = order.items.reduce((s, i) => s + i.price * i.quantity, 0);
+        const subtotal = full.items.reduce((s, i) => s + i.price * i.quantity, 0);
         const tax = Math.round(subtotal * TAX_RATE * 100) / 100;
         const total = Math.round((subtotal + tax) * 100) / 100;
         await tx.receipt.upsert({
           where: { orderId: id },
           update: {
             items: JSON.stringify(
-              order.items.map((i) => ({ name: i.name, price: i.price, quantity: i.quantity }))
+              full.items.map((i) => ({ name: i.name, price: i.price, quantity: i.quantity }))
             ),
             subtotal,
             tax,
@@ -131,26 +137,26 @@ export async function PATCH(req: Request, ctx: Ctx) {
           create: {
             orderId: id,
             items: JSON.stringify(
-              order.items.map((i) => ({ name: i.name, price: i.price, quantity: i.quantity }))
+              full.items.map((i) => ({ name: i.name, price: i.price, quantity: i.quantity }))
             ),
             subtotal,
             tax,
             total,
             kitchenId: session.id,
-            restaurantId: order.restaurantId,
+            restaurantId: full.restaurantId,
           },
         });
       }
 
-      if ((action === "complete" || action === "cancel") && order.tableId) {
+      if ((action === "complete" || action === "cancel") && full.tableId) {
         const otherActive = await tx.order.count({
           where: {
-            tableId: order.tableId,
+            tableId: full.tableId,
             status: { in: ["PENDING", "ACCEPTED", "COOKING", "READY", "SERVED"] },
           },
         });
         if (otherActive === 0) {
-          await tx.table.update({ where: { id: order.tableId }, data: { status: "free" } });
+          await tx.table.update({ where: { id: full.tableId }, data: { status: "free" } });
         }
       }
 
@@ -158,68 +164,79 @@ export async function PATCH(req: Request, ctx: Ctx) {
     });
 
     const summary = `Order #${updated.orderNumber}`;
-    const tableCode = updated.sourceTableCode ?? updated.table?.code;
+    const restaurantId = order.restaurantId;
 
-    if (action === "ready") {
-      const receipt = await prisma.receipt.findUnique({ where: { orderId: id } });
-      if (updated.waiterId) {
-        await notify({
-          userId: updated.waiterId,
-          restaurantId: order.restaurantId,
-          type: "ORDER_READY",
-          title: `${summary} is ready`,
-          body: `Ready for delivery — total ${receipt?.total.toFixed(2)} ETB`,
-          orderId: id,
-          tableId: updated.tableId ?? undefined,
-        });
-      }
-      if (tableCode) {
-        await emitToTable(tableCode, "ORDER_UPDATE", {
-          id,
-          orderNumber: updated.orderNumber,
-          status: "READY",
-          receipt: receipt
-            ? {
-                subtotal: receipt.subtotal,
-                tax: receipt.tax,
-                total: receipt.total,
-                items: JSON.parse(receipt.items),
-              }
-            : null,
-        });
-      }
-    } else if (tableCode) {
-      await emitToTable(tableCode, "ORDER_UPDATE", {
-        id,
-        orderNumber: updated.orderNumber,
-        status: updated.status,
-      });
-    }
+    invalidateCache(`^kitchen-queue:${escapeRegExp(restaurantId)}$`);
+    invalidateCache(`^notifs:.*:${escapeRegExp(restaurantId)}$`);
 
-    if (action === "accept" || action === "cook") {
-      const statusText = action === "accept" ? "accepted" : "now cooking";
-      if (updated.waiterId) {
-        await notify({
-          userId: updated.waiterId,
-          restaurantId: order.restaurantId,
-          type: "ORDER_STATUS",
-          title: `${summary} ${statusText}`,
-          body: `${updated.tableLabel} is ${action === "accept" ? "accepted by the kitchen" : "being cooked"}.`,
-          orderId: id,
-          tableId: updated.tableId ?? undefined,
-        });
-      } else {
-        await notify({
-          role: "WAITER",
-          restaurantId: order.restaurantId,
-          type: "ORDER_STATUS",
-          title: `${summary} ${statusText}`,
-          body: `${updated.tableLabel} is ${action === "accept" ? "accepted by the kitchen" : "being cooked"}.`,
-          orderId: id,
-          tableId: updated.tableId ?? undefined,
-        });
+    after(async () => {
+      try {
+        const tableCode = updated.sourceTableCode ?? updated.table?.code;
+
+        if (action === "ready") {
+          const receipt = await prisma.receipt.findUnique({ where: { orderId: id } });
+          if (updated.waiterId) {
+            await notify({
+              userId: updated.waiterId,
+              restaurantId,
+              type: "ORDER_READY",
+              title: `${summary} is ready`,
+              body: `Ready for delivery — total ${receipt?.total.toFixed(2)} ETB`,
+              orderId: id,
+              tableId: updated.tableId ?? undefined,
+            });
+          }
+          if (tableCode) {
+            await emitToTable(tableCode, "ORDER_UPDATE", {
+              id,
+              orderNumber: updated.orderNumber,
+              status: "READY",
+              receipt: receipt
+                ? {
+                    subtotal: receipt.subtotal,
+                    tax: receipt.tax,
+                    total: receipt.total,
+                    items: JSON.parse(receipt.items),
+                  }
+                : null,
+            });
+          }
+        } else if (tableCode) {
+          await emitToTable(tableCode, "ORDER_UPDATE", {
+            id,
+            orderNumber: updated.orderNumber,
+            status: updated.status,
+          });
+        }
+
+        if (action === "accept" || action === "cook") {
+          const statusText = action === "accept" ? "accepted" : "now cooking";
+          if (updated.waiterId) {
+            await notify({
+              userId: updated.waiterId,
+              restaurantId,
+              type: "ORDER_STATUS",
+              title: `${summary} ${statusText}`,
+              body: `${updated.tableLabel} is ${action === "accept" ? "accepted by the kitchen" : "being cooked"}.`,
+              orderId: id,
+              tableId: updated.tableId ?? undefined,
+            });
+          } else {
+            await notify({
+              role: "WAITER",
+              restaurantId,
+              type: "ORDER_STATUS",
+              title: `${summary} ${statusText}`,
+              body: `${updated.tableLabel} is ${action === "accept" ? "accepted by the kitchen" : "being cooked"}.`,
+              orderId: id,
+              tableId: updated.tableId ?? undefined,
+            });
+          }
+        }
+      } catch (err) {
+        console.error("order action side-effect failed", err);
       }
-    }
+    });
 
     return NextResponse.json({ order: updated });
   } catch (err) {

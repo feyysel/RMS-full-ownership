@@ -89,6 +89,21 @@ export default function KitchenPage() {
       cook: "Now cooking",
       ready: "Order ready — receipt sent to waiter",
     };
+    const toStatus = { accept: "ACCEPTED", cook: "COOKING", ready: "READY" } as const;
+
+    setData((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        active: prev.active.map((o) =>
+          o.id === orderId ? { ...o, status: toStatus[action] } : o
+        ),
+        recent: prev.recent.map((o) =>
+          o.id === orderId ? { ...o, status: toStatus[action] } : o
+        ),
+      };
+    });
+
     try {
       const res = await fetch(`/api/orders/${orderId}`, {
         method: "PATCH",
@@ -98,12 +113,13 @@ export default function KitchenPage() {
       const d = await res.json();
       if (!res.ok) {
         toast.error(d.error ?? "Action failed");
+        refresh();
         return;
       }
       toast.success(labels[action]);
-      refresh();
     } catch {
       toast.error("Network error");
+      refresh();
     }
   }, [refresh]);
 

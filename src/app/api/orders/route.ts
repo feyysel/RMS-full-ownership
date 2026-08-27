@@ -1,7 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireRoles } from "@/lib/guard";
 import { notify, emitToTable } from "@/lib/notify";
+import { invalidateCache, escapeRegExp } from "@/lib/cache";
 
 export const runtime = "nodejs";
 
@@ -95,38 +96,46 @@ export async function POST(req: Request) {
       return created;
     });
 
-    await notify({
-      role: "KITCHEN",
-      restaurantId,
-      type: "ORDER_NEW",
-      title: `New order #${order.orderNumber}`,
-      body: `${order.tableLabel} — ${order.items.length} item(s), total ${order.total.toFixed(2)} ETB`,
-      orderId: order.id,
-      tableId: order.tableId ?? undefined,
+    invalidateCache(`^kitchen-queue:${escapeRegExp(restaurantId)}$`);
+
+    after(async () => {
+      try {
+        await notify({
+          role: "KITCHEN",
+          restaurantId,
+          type: "ORDER_NEW",
+          title: `New order #${order.orderNumber}`,
+          body: `${order.tableLabel} — ${order.items.length} item(s), total ${order.total.toFixed(2)} ETB`,
+          orderId: order.id,
+          tableId: order.tableId ?? undefined,
+        });
+
+        if (table?.waiterId && table.waiterId !== session.id) {
+          await notify({
+            userId: table.waiterId,
+            restaurantId,
+            type: "ORDER_CUSTOMER",
+            title: `New order at Table ${table.number}`,
+            body: `#${order.orderNumber} was placed by a customer.`,
+            orderId: order.id,
+            tableId: order.tableId ?? undefined,
+          });
+        }
+
+        if (table?.code) {
+          await emitToTable(table.code, "ORDER_UPDATE", {
+            id: order.id,
+            orderNumber: order.orderNumber,
+            status: order.status,
+            total: order.total,
+            items: order.items.map((i) => ({ name: i.name, price: i.price, quantity: i.quantity })),
+            createdAt: order.createdAt.toISOString(),
+          });
+        }
+      } catch (err) {
+        console.error("create order side-effect failed", err);
+      }
     });
-
-    if (table?.waiterId && table.waiterId !== session.id) {
-      await notify({
-        userId: table.waiterId,
-        restaurantId,
-        type: "ORDER_CUSTOMER",
-        title: `New order at Table ${table.number}`,
-        body: `#${order.orderNumber} was placed by a customer.`,
-        orderId: order.id,
-        tableId: order.tableId ?? undefined,
-      });
-    }
-
-    if (table?.code) {
-      await emitToTable(table.code, "ORDER_UPDATE", {
-        id: order.id,
-        orderNumber: order.orderNumber,
-        status: order.status,
-        total: order.total,
-        items: order.items.map((i) => ({ name: i.name, price: i.price, quantity: i.quantity })),
-        createdAt: order.createdAt.toISOString(),
-      });
-    }
 
     return NextResponse.json({ order });
   } catch (err) {

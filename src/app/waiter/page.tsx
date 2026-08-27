@@ -145,6 +145,13 @@ export default function WaiterDashboard() {
   );
 
   async function act(orderId: string, action: string, label: string) {
+    const toStatus =
+      action === "serve" ? "SERVED" : action === "cancel" ? "CANCELLED" : action === "complete" ? "COMPLETED" : undefined;
+    if (toStatus) {
+      setOrders((prev) =>
+        prev.map((o) => (o.id === orderId ? { ...o, status: toStatus } : o))
+      );
+    }
     try {
       const res = await fetch(`/api/orders/${orderId}`, {
         method: "PATCH",
@@ -154,12 +161,13 @@ export default function WaiterDashboard() {
       const d = await res.json();
       if (!res.ok) {
         toast.error(d.error ?? "Action failed");
+        refresh();
         return;
       }
       toast.success(label);
-      refresh();
     } catch {
       toast.error("Network error");
+      refresh();
     }
   }
 

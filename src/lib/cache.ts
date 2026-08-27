@@ -1,6 +1,12 @@
+import { subscribeLocal, publishEvent } from "@/lib/realtime-bus";
+
 type CacheEntry<T> = { value: T; expires: number };
 
 const store = new Map<string, CacheEntry<unknown>>();
+
+export function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
 
 export function getCached<T>(key: string): T | null {
   const entry = store.get(key);
@@ -23,32 +29,15 @@ export function invalidateCache(pattern: string): void {
   }
 }
 
-const EVENT_SUBSCRIBERS = new Map<string, Set<(event: unknown) => void>>();
-
 export function subscribeEvents(
   key: string,
   listener: (event: unknown) => void
 ): () => void {
-  let set = EVENT_SUBSCRIBERS.get(key);
-  if (!set) {
-    set = new Set();
-    EVENT_SUBSCRIBERS.set(key, set);
-  }
-  set.add(listener);
-  return () => {
-    set!.delete(listener);
-    if (set!.size === 0) EVENT_SUBSCRIBERS.delete(key);
-  };
+  return subscribeLocal(key, listener);
 }
 
 export function broadcastEvent(key: string, event: unknown): void {
-  const set = EVENT_SUBSCRIBERS.get(key);
-  if (!set) return;
-  for (const listener of set) {
-    try {
-      listener(event);
-    } catch {}
-  }
+  void publishEvent(key, event);
 }
 
 export function cleanupStaleEntries(maxAgeMs: number): void {

@@ -1,6 +1,7 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { notify, emitToTable } from "@/lib/notify";
+import { invalidateCache, escapeRegExp } from "@/lib/cache";
 
 export const runtime = "nodejs";
 
@@ -82,35 +83,43 @@ export async function POST(req: Request) {
       return created;
     });
 
-    await notify({
-      role: "KITCHEN",
-      restaurantId,
-      type: "ORDER_NEW",
-      title: `New order #${order.orderNumber}`,
-      body: `${order.tableLabel} — ${order.items.reduce((s, i) => s + i.quantity, 0)} item(s)`,
-      orderId: order.id,
-      tableId: order.tableId ?? undefined,
-    });
+    invalidateCache(`^kitchen-queue:${escapeRegExp(restaurantId)}$`);
 
-    if (table.waiterId) {
-      await notify({
-        userId: table.waiterId,
-        restaurantId,
-        type: "ORDER_CUSTOMER",
-        title: `New order at Table ${table.number}`,
-        body: `Order #${order.orderNumber} placed by customer.`,
-        orderId: order.id,
-        tableId: order.tableId ?? undefined,
-      });
-    }
+    after(async () => {
+      try {
+        await notify({
+          role: "KITCHEN",
+          restaurantId,
+          type: "ORDER_NEW",
+          title: `New order #${order.orderNumber}`,
+          body: `${order.tableLabel} — ${order.items.reduce((s, i) => s + i.quantity, 0)} item(s)`,
+          orderId: order.id,
+          tableId: order.tableId ?? undefined,
+        });
 
-    await emitToTable(table.code, "ORDER_UPDATE", {
-      id: order.id,
-      orderNumber: order.orderNumber,
-      status: order.status,
-      total: order.total,
-      items: order.items.map((i) => ({ name: i.name, price: i.price, quantity: i.quantity })),
-      createdAt: order.createdAt.toISOString(),
+        if (table.waiterId) {
+          await notify({
+            userId: table.waiterId,
+            restaurantId,
+            type: "ORDER_CUSTOMER",
+            title: `New order at Table ${table.number}`,
+            body: `Order #${order.orderNumber} placed by customer.`,
+            orderId: order.id,
+            tableId: order.tableId ?? undefined,
+          });
+        }
+
+        await emitToTable(table.code, "ORDER_UPDATE", {
+          id: order.id,
+          orderNumber: order.orderNumber,
+          status: order.status,
+          total: order.total,
+          items: order.items.map((i) => ({ name: i.name, price: i.price, quantity: i.quantity })),
+          createdAt: order.createdAt.toISOString(),
+        });
+      } catch (err) {
+        console.error("customer order side-effect failed", err);
+      }
     });
 
     return NextResponse.json({

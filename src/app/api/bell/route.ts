@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { notify, emitToTable } from "@/lib/notify";
 
@@ -53,31 +53,37 @@ export async function POST(req: Request) {
       data: { tableId: table.id },
     });
 
-    if (table.waiterId) {
-      await notify({
-        userId: table.waiterId,
-        restaurantId: table.restaurantId,
-        type: "BELL",
-        title: `Bell at Table ${table.number}`,
-        body: "A customer is requesting service.",
-        tableId: table.id,
-      });
-    } else {
-      await notify({
-        role: "WAITER",
-        restaurantId: table.restaurantId,
-        type: "BELL",
-        title: `Bell at Table ${table.number}`,
-        body: "A customer is requesting service. No waiter assigned.",
-        tableId: table.id,
-      });
-    }
+    after(async () => {
+      try {
+        if (table.waiterId) {
+          await notify({
+            userId: table.waiterId,
+            restaurantId: table.restaurantId,
+            type: "BELL",
+            title: `Bell at Table ${table.number}`,
+            body: "A customer is requesting service.",
+            tableId: table.id,
+          });
+        } else {
+          await notify({
+            role: "WAITER",
+            restaurantId: table.restaurantId,
+            type: "BELL",
+            title: `Bell at Table ${table.number}`,
+            body: "A customer is requesting service. No waiter assigned.",
+            tableId: table.id,
+          });
+        }
 
-    await emitToTable(table.code, "BELL", {
-      id: bellCall.id,
-      tableNumber: table.number,
-      status: "RINGING",
-      createdAt: bellCall.createdAt.toISOString(),
+        await emitToTable(table.code, "BELL", {
+          id: bellCall.id,
+          tableNumber: table.number,
+          status: "RINGING",
+          createdAt: bellCall.createdAt.toISOString(),
+        });
+      } catch (err) {
+        console.error("bell side-effect failed", err);
+      }
     });
 
     return NextResponse.json({ bellCall });
