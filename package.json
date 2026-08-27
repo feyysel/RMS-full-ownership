@@ -18,10 +18,10 @@
     "seed": "tsx prisma/seed.ts"
   },
   "allowScripts": {
-    "@prisma/engines": true,
-    "prisma": true,
-    "esbuild": true,
-    "unrs-resolver": true
+    "@prisma/engines@7.9.1": true,
+    "prisma@7.9.1": true,
+    "esbuild@0.28.2": true,
+    "unrs-resolver@1.12.2": true
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.9.1",
