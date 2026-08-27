@@ -9,6 +9,7 @@ const LOCAL_SUBSCRIBERS = new Map<string, Set<Listener>>();
 let pool: Pool | null = null;
 let gatewayClient: PoolClient | null = null;
 let gatewayReady: Promise<void> | null = null;
+let keepAliveTimer: ReturnType<typeof setInterval> | null = null;
 
 function getPool(): Pool {
   if (!pool) {
@@ -51,11 +52,50 @@ async function connectGateway(client: PoolClient) {
   client.on("error", () => {
     gatewayClient = null;
     gatewayReady = null;
+    startGatewayKeepAlive();
   });
   client.on("end", () => {
     gatewayClient = null;
     gatewayReady = null;
+    startGatewayKeepAlive();
   });
+}
+
+function clearGateway() {
+  if (gatewayClient) {
+    try {
+      gatewayClient.removeAllListeners();
+    } catch {}
+    try {
+      gatewayClient.release(true);
+    } catch {}
+  }
+  gatewayClient = null;
+  gatewayReady = null;
+}
+
+function startGatewayKeepAlive() {
+  if (keepAliveTimer) return;
+  keepAliveTimer = setInterval(async () => {
+    const client = gatewayClient;
+    if (!client) {
+      if (LOCAL_SUBSCRIBERS.size > 0) void ensureGateway();
+      return;
+    }
+    try {
+      await client.query("SELECT 1");
+    } catch {
+      clearGateway();
+      if (LOCAL_SUBSCRIBERS.size > 0) void ensureGateway();
+    }
+  }, 25_000);
+}
+
+function stopGatewayKeepAlive() {
+  if (keepAliveTimer) {
+    clearInterval(keepAliveTimer);
+    keepAliveTimer = null;
+  }
 }
 
 async function ensureGateway(): Promise<void> {
@@ -66,9 +106,11 @@ async function ensureGateway(): Promise<void> {
       const client = await getPool().connect();
       gatewayClient = client;
       await connectGateway(client);
+      startGatewayKeepAlive();
     } catch (err) {
       gatewayClient = null;
       console.error("listener gateway connect failed", err);
+      stopGatewayKeepAlive();
     } finally {
       gatewayReady = null;
     }

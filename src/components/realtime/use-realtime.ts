@@ -71,34 +71,71 @@ function useSSE(
   React.useEffect(() => {
     if (channels.length === 0) return;
 
-    const params = buildParams(channels);
-    params.set("sse", "1");
+    const sseParams = buildParams(channels);
+    sseParams.set("sse", "1");
+    const pollParams = buildParams(channels);
 
     let eventSource: EventSource | null = null;
     let reconnectDelay = SSE_RECONNECT_DELAY;
     let cancelled = false;
+    let lastSeen = Date.now() - 1000;
+    const seen = new Set<string>();
+
+    function backfill() {
+      if (cancelled || channels.length === 0) return;
+      pollParams.set("since", new Date(lastSeen).toISOString());
+      fetch(`/api/events?${pollParams.toString()}`)
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (!data || cancelled) return;
+          const events = (data.events ?? []) as PollEvent[];
+          for (const raw of events) {
+            if (cancelled || seen.has(raw.id)) continue;
+            seen.add(raw.id);
+            const created = Date.parse(raw.createdAt);
+            if (created > lastSeen) lastSeen = created;
+            const evt: RealtimeEvent = {
+              id: raw.id,
+              channel: toChannel(raw),
+              type: raw.type,
+              payload: raw.payload,
+              createdAt: created,
+            };
+            onEventRef.current(evt);
+          }
+        })
+        .catch(() => {});
+    }
+
+    function handleMessage(raw: PollEvent & { type?: string }) {
+      if (raw.type === "connected" || raw.type === "keepalive") return;
+      if (seen.has(raw.id)) return;
+      seen.add(raw.id);
+      const created = Date.parse(raw.createdAt);
+      if (created > lastSeen) lastSeen = created;
+      const evt: RealtimeEvent = {
+        id: raw.id,
+        channel: toChannel(raw),
+        type: raw.type,
+        payload: raw.payload,
+        createdAt: created,
+      };
+      onEventRef.current(evt);
+    }
 
     function connect() {
       if (cancelled) return;
-      eventSource = new EventSource(`/api/events?${params.toString()}`);
+      eventSource = new EventSource(`/api/events?${sseParams.toString()}`);
 
       eventSource.onopen = () => {
         setConnected(true);
         reconnectDelay = SSE_RECONNECT_DELAY;
+        backfill();
       };
 
       eventSource.onmessage = (e) => {
         try {
-          const raw = JSON.parse(e.data) as PollEvent & { type?: string };
-          if (raw.type === "connected" || raw.type === "keepalive") return;
-          const evt: RealtimeEvent = {
-            id: raw.id,
-            channel: toChannel(raw),
-            type: raw.type,
-            payload: raw.payload,
-            createdAt: Date.parse(raw.createdAt),
-          };
-          onEventRef.current(evt);
+          handleMessage(JSON.parse(e.data) as PollEvent & { type?: string });
         } catch {}
       };
 

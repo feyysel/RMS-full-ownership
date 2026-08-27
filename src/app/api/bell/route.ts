@@ -1,6 +1,7 @@
 import { NextResponse, after } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { notify, emitToTable } from "@/lib/notify";
+import { persistEvent } from "@/lib/realtime";
 
 export const runtime = "nodejs";
 
@@ -81,6 +82,18 @@ export async function POST(req: Request) {
           status: "RINGING",
           createdAt: bellCall.createdAt.toISOString(),
         });
+
+        await persistEvent(
+          { scope: "restaurant", restaurantId: table.restaurantId },
+          "BELL",
+          {
+            id: bellCall.id,
+            tableId: table.id,
+            tableNumber: table.number,
+            status: "RINGING",
+            createdAt: bellCall.createdAt.toISOString(),
+          }
+        );
       } catch (err) {
         console.error("bell side-effect failed", err);
       }
