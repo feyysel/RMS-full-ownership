@@ -157,6 +157,9 @@ export default function TableMenuPage({
     if (evt.type === "BELL") {
       setBellState("ringing");
     }
+    if (evt.type === "BELL_RESOLVED") {
+      setBellState("idle");
+    }
   });
 
   async function refreshMenu() {

@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireRoles } from "@/lib/guard";
+import { emitToTable } from "@/lib/notify";
+import { persistEvent } from "@/lib/realtime";
 
 export const runtime = "nodejs";
 
@@ -24,6 +26,19 @@ export async function PATCH(req: Request, ctx: Ctx) {
       where: { id },
       data: { status: "RESPONDED", resolvedAt: new Date(), respondedBy: session.id },
     });
+
+    if (bell.table.code) {
+      await emitToTable(bell.table.code, "BELL_RESOLVED", {
+        id: updated.id,
+        tableNumber: bell.table.number,
+      });
+    }
+
+    await persistEvent(
+      { scope: "restaurant", restaurantId: bell.table.restaurantId },
+      "BELL_RESOLVED",
+      { id: updated.id, tableId: bell.table.id }
+    );
 
     return NextResponse.json({ bellCall: updated });
   } catch (err) {

@@ -21,6 +21,8 @@ import { QrCode } from "@/components/ui/qr-code";
 import { cn } from "@/lib/utils";
 import { formatCurrency } from "@/lib/utils";
 import { useFetch } from "@/lib/use-fetch";
+import { useRealtime } from "@/components/realtime/use-realtime";
+import { useDebouncedCallback } from "@/lib/use-debounced";
 
 type TableRow = {
   id: string;
@@ -40,6 +42,20 @@ type UsersData = { users: Employee[] };
 export default function ManagerTables() {
   const tables = useFetch<TablesData>("/api/tables");
   const employees = useFetch<UsersData>("/api/users");
+  const [restaurantId, setRestaurantId] = React.useState<string | null>(null);
+  const refresh = useDebouncedCallback(() => {
+    tables.refresh();
+    employees.refresh();
+  }, 500);
+
+  useRealtime(restaurantId ? [{ scope: "restaurant", id: restaurantId }] : [], () => refresh());
+
+  React.useEffect(() => {
+    fetch("/api/me")
+      .then((r) => r.json())
+      .then((d) => setRestaurantId(d.user?.restaurantId ?? null))
+      .catch(() => {});
+  }, []);
 
   const [modal, setModal] = React.useState(false);
   const [saving, setSaving] = React.useState(false);

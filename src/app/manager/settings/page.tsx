@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { PageHeader } from "@/components/ui/stat-card";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useRealtime } from "@/components/realtime/use-realtime";
 
 type Restaurant = {
   id: string;
@@ -20,7 +21,7 @@ export default function ManagerSettings() {
   const [saving, setSaving] = React.useState(false);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
-  React.useEffect(() => {
+  const load = React.useCallback(() => {
     fetch("/api/me/restaurant")
       .then((r) => r.json())
       .then((d) => {
@@ -31,6 +32,12 @@ export default function ManagerSettings() {
       })
       .catch(() => {});
   }, []);
+
+  React.useEffect(() => {
+    load();
+  }, [load]);
+
+  useRealtime(restaurant?.id ? [{ scope: "restaurant", id: restaurant.id }] : [], load);
 
   const dirty = logoUrl !== (restaurant?.logoUrl ?? null);
 

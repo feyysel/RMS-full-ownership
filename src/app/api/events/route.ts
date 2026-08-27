@@ -67,18 +67,18 @@ export async function GET(req: Request) {
   }
 }
 
-function buildChannelKey(req: Request): string {
+function buildChannelKeys(req: Request): string[] {
   const url = new URL(req.url);
-  const parts: string[] = [];
-  if (url.searchParams.get("owner")) parts.push("owner");
-  if (url.searchParams.get("restaurant")) parts.push(`r:${url.searchParams.get("restaurant")}`);
-  if (url.searchParams.get("user")) parts.push(`u:${url.searchParams.get("user")}`);
-  if (url.searchParams.get("table")) parts.push(`t:${url.searchParams.get("table")}`);
-  return parts.sort().join("|");
+  const keys: string[] = [];
+  if (url.searchParams.get("owner")) keys.push("owner");
+  if (url.searchParams.get("restaurant")) keys.push(`r:${url.searchParams.get("restaurant")}`);
+  if (url.searchParams.get("user")) keys.push(`u:${url.searchParams.get("user")}`);
+  if (url.searchParams.get("table")) keys.push(`t:${url.searchParams.get("table")}`);
+  return keys;
 }
 
 function handleSSE(req: Request) {
-  const channelKey = buildChannelKey(req);
+  const channelKeys = buildChannelKeys(req);
 
   const encoder = new TextEncoder();
   let cancelled = false;
@@ -93,20 +93,22 @@ function handleSSE(req: Request) {
         } catch {}
       };
 
-      send(`data: ${JSON.stringify({ type: "connected", channelKey })}\n\n`);
+      send(`data: ${JSON.stringify({ type: "connected", channelKeys })}\n\n`);
 
       keepAliveTimer = setInterval(() => {
         send(`: keepalive ${Date.now()}\n\n`);
       }, 15_000);
 
-      const unsubscribe = subscribeEvents(channelKey, (event: unknown) => {
-        send(`data: ${JSON.stringify(event)}\n\n`);
-      });
+      const unsubs = channelKeys.map((channelKey) =>
+        subscribeEvents(channelKey, (event: unknown) => {
+          send(`data: ${JSON.stringify(event)}\n\n`);
+        })
+      );
 
       req.signal.addEventListener("abort", () => {
         cancelled = true;
         if (keepAliveTimer) clearInterval(keepAliveTimer);
-        unsubscribe();
+        unsubs.forEach((u) => u());
         try {
           controller.close();
         } catch {}

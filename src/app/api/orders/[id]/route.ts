@@ -2,6 +2,7 @@ import { NextResponse, after } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireRoles } from "@/lib/guard";
 import { notify, emitToTable } from "@/lib/notify";
+import { persistEvent } from "@/lib/realtime";
 import { invalidateCache, escapeRegExp } from "@/lib/cache";
 import { TAX_RATE } from "@/lib/constants";
 import type { OrderStatus, OrderItemStatus } from "@/generated/prisma/client";
@@ -168,10 +169,27 @@ export async function PATCH(req: Request, ctx: Ctx) {
 
     invalidateCache(`^kitchen-queue:${escapeRegExp(restaurantId)}$`);
     invalidateCache(`^notifs:.*:${escapeRegExp(restaurantId)}$`);
+    invalidateCache(`^stats:${escapeRegExp(restaurantId)}$`);
+
+    if (action === "complete" || action === "cancel") {
+      invalidateCache(`^tables:${escapeRegExp(restaurantId)}`);
+    }
 
     after(async () => {
       try {
         const tableCode = updated.sourceTableCode ?? updated.table?.code;
+
+        await persistEvent(
+          { scope: "restaurant", restaurantId },
+          "ORDER_STATUS_CHANGED",
+          {
+            id,
+            orderNumber: updated.orderNumber,
+            status: updated.status,
+            tableLabel: updated.tableLabel,
+            action,
+          }
+        );
 
         if (action === "ready") {
           const receipt = await prisma.receipt.findUnique({ where: { orderId: id } });

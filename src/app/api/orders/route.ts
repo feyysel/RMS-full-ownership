@@ -97,6 +97,7 @@ export async function POST(req: Request) {
     });
 
     invalidateCache(`^kitchen-queue:${escapeRegExp(restaurantId)}$`);
+    invalidateCache(`^stats:${escapeRegExp(restaurantId)}$`);
 
     after(async () => {
       try {

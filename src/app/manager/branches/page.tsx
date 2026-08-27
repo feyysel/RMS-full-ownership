@@ -13,6 +13,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/lib/utils";
 import { useFetch } from "@/lib/use-fetch";
+import { useRealtime } from "@/components/realtime/use-realtime";
+import { useDebouncedCallback } from "@/lib/use-debounced";
 
 type BranchRestaurant = {
   id: string;
@@ -33,6 +35,12 @@ type BranchesData = {
 export default function ManagerBranches() {
   const router = useRouter();
   const { data, loading, refresh } = useFetch<BranchesData>("/api/manager/branches");
+  const refreshDebounced = useDebouncedCallback(refresh, 500);
+  const activeRestaurantId = data?.activeRestaurantId ?? null;
+  useRealtime(
+    activeRestaurantId ? [{ scope: "restaurant", id: activeRestaurantId }] : [],
+    () => refreshDebounced()
+  );
   const [modal, setModal] = React.useState(false);
   const [switching, setSwitching] = React.useState<string | null>(null);
   const [saving, setSaving] = React.useState(false);

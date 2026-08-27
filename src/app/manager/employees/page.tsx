@@ -12,6 +12,8 @@ import { Skeleton, Avatar } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { useFetch } from "@/lib/use-fetch";
+import { useRealtime } from "@/components/realtime/use-realtime";
+import { useDebouncedCallback } from "@/lib/use-debounced";
 
 type Employee = {
   id: string;
@@ -25,11 +27,18 @@ type Employee = {
 export default function ManagerEmployees() {
   const { data, loading, refresh } = useFetch<{ users: Employee[] }>("/api/users");
   const [isOwner, setIsOwner] = React.useState(false);
+  const [restaurantId, setRestaurantId] = React.useState<string | null>(null);
+  const refreshDebounced = useDebouncedCallback(refresh, 500);
+
+  useRealtime(restaurantId ? [{ scope: "restaurant", id: restaurantId }] : [], () => refreshDebounced());
 
   React.useEffect(() => {
     fetch("/api/me")
       .then((r) => r.json())
-      .then((d) => setIsOwner(d.user?.role === "OWNER"))
+      .then((d) => {
+        setIsOwner(d.user?.role === "OWNER");
+        setRestaurantId(d.user?.restaurantId ?? null);
+      })
       .catch(() => {});
   }, []);
 
