@@ -17,6 +17,7 @@ export async function GET(req: Request) {
       order: {
         status: { in: ["ACCEPTED", "COOKING", "READY", "SERVED", "COMPLETED"] },
       },
+      ...(session.role === "KITCHEN" ? { kitchenId: session.id } : {}),
     },
     include: {
       order: {
