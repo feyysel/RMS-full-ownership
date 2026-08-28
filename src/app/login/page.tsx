@@ -172,6 +172,16 @@ export default function LoginPage() {
               >
                 <span>Kitchen</span> <span className="text-zinc-500">09171234571</span>
               </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setPhone("09171234573");
+                  setPassword("cashier123");
+                }}
+                className="flex items-center justify-between rounded-lg px-2 py-1.5 text-left transition-colors hover:bg-white/5 hover:text-gold-light"
+              >
+                <span>Cashier</span> <span className="text-zinc-500">09171234573</span>
+              </button>
             </div>
           </div>
 

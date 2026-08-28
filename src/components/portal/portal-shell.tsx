@@ -51,6 +51,7 @@ const ROLE_ICON: Record<string, React.ComponentType<{ className?: string }>> = {
   MANAGER: LayoutDashboard,
   KITCHEN: UtensilsCrossed,
   WAITER: UtensilsCrossed,
+  CASHIER: UtensilsCrossed,
 };
 
 function RestaurantLogo({

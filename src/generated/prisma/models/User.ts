@@ -208,6 +208,7 @@ export type UserWhereInput = {
   restaurantId?: Prisma.StringNullableFilter<"User"> | string | null
   notifications?: Prisma.NotificationListRelationFilter
   orders?: Prisma.OrderListRelationFilter
+  cashierOrders?: Prisma.OrderListRelationFilter
   receipts?: Prisma.ReceiptListRelationFilter
   tables?: Prisma.TableListRelationFilter
   pushSubscriptions?: Prisma.PushSubscriptionListRelationFilter
@@ -225,6 +226,7 @@ export type UserOrderByWithRelationInput = {
   restaurantId?: Prisma.SortOrderInput | Prisma.SortOrder
   notifications?: Prisma.NotificationOrderByRelationAggregateInput
   orders?: Prisma.OrderOrderByRelationAggregateInput
+  cashierOrders?: Prisma.OrderOrderByRelationAggregateInput
   receipts?: Prisma.ReceiptOrderByRelationAggregateInput
   tables?: Prisma.TableOrderByRelationAggregateInput
   pushSubscriptions?: Prisma.PushSubscriptionOrderByRelationAggregateInput
@@ -245,6 +247,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   restaurantId?: Prisma.StringNullableFilter<"User"> | string | null
   notifications?: Prisma.NotificationListRelationFilter
   orders?: Prisma.OrderListRelationFilter
+  cashierOrders?: Prisma.OrderListRelationFilter
   receipts?: Prisma.ReceiptListRelationFilter
   tables?: Prisma.TableListRelationFilter
   pushSubscriptions?: Prisma.PushSubscriptionListRelationFilter
@@ -289,6 +292,7 @@ export type UserCreateInput = {
   createdAt?: Date | string
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutWaiterInput
+  cashierOrders?: Prisma.OrderCreateNestedManyWithoutCashierInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutKitchenInput
   tables?: Prisma.TableCreateNestedManyWithoutWaiterInput
   pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
@@ -306,6 +310,7 @@ export type UserUncheckedCreateInput = {
   restaurantId?: string | null
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutWaiterInput
+  cashierOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutCashierInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutKitchenInput
   tables?: Prisma.TableUncheckedCreateNestedManyWithoutWaiterInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
@@ -321,6 +326,7 @@ export type UserUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutWaiterNestedInput
+  cashierOrders?: Prisma.OrderUpdateManyWithoutCashierNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutKitchenNestedInput
   tables?: Prisma.TableUpdateManyWithoutWaiterNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
@@ -338,6 +344,7 @@ export type UserUncheckedUpdateInput = {
   restaurantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutWaiterNestedInput
+  cashierOrders?: Prisma.OrderUncheckedUpdateManyWithoutCashierNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutKitchenNestedInput
   tables?: Prisma.TableUncheckedUpdateManyWithoutWaiterNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
@@ -512,6 +519,12 @@ export type UserCreateNestedOneWithoutOrdersInput = {
   connect?: Prisma.UserWhereUniqueInput
 }
 
+export type UserCreateNestedOneWithoutCashierOrdersInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCashierOrdersInput, Prisma.UserUncheckedCreateWithoutCashierOrdersInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCashierOrdersInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
 export type UserUpdateOneWithoutOrdersNestedInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutOrdersInput, Prisma.UserUncheckedCreateWithoutOrdersInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutOrdersInput
@@ -520,6 +533,16 @@ export type UserUpdateOneWithoutOrdersNestedInput = {
   delete?: Prisma.UserWhereInput | boolean
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutOrdersInput, Prisma.UserUpdateWithoutOrdersInput>, Prisma.UserUncheckedUpdateWithoutOrdersInput>
+}
+
+export type UserUpdateOneWithoutCashierOrdersNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCashierOrdersInput, Prisma.UserUncheckedCreateWithoutCashierOrdersInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCashierOrdersInput
+  upsert?: Prisma.UserUpsertWithoutCashierOrdersInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCashierOrdersInput, Prisma.UserUpdateWithoutCashierOrdersInput>, Prisma.UserUncheckedUpdateWithoutCashierOrdersInput>
 }
 
 export type UserCreateNestedOneWithoutReceiptsInput = {
@@ -578,6 +601,7 @@ export type UserCreateWithoutRestaurantInput = {
   createdAt?: Date | string
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutWaiterInput
+  cashierOrders?: Prisma.OrderCreateNestedManyWithoutCashierInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutKitchenInput
   tables?: Prisma.TableCreateNestedManyWithoutWaiterInput
   pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
@@ -593,6 +617,7 @@ export type UserUncheckedCreateWithoutRestaurantInput = {
   createdAt?: Date | string
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutWaiterInput
+  cashierOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutCashierInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutKitchenInput
   tables?: Prisma.TableUncheckedCreateNestedManyWithoutWaiterInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
@@ -648,6 +673,7 @@ export type UserCreateWithoutTablesInput = {
   createdAt?: Date | string
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutWaiterInput
+  cashierOrders?: Prisma.OrderCreateNestedManyWithoutCashierInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutKitchenInput
   pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
   restaurant?: Prisma.RestaurantCreateNestedOneWithoutUsersInput
@@ -664,6 +690,7 @@ export type UserUncheckedCreateWithoutTablesInput = {
   restaurantId?: string | null
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutWaiterInput
+  cashierOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutCashierInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutKitchenInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
 }
@@ -694,6 +721,7 @@ export type UserUpdateWithoutTablesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutWaiterNestedInput
+  cashierOrders?: Prisma.OrderUpdateManyWithoutCashierNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutKitchenNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
   restaurant?: Prisma.RestaurantUpdateOneWithoutUsersNestedInput
@@ -710,6 +738,7 @@ export type UserUncheckedUpdateWithoutTablesInput = {
   restaurantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutWaiterNestedInput
+  cashierOrders?: Prisma.OrderUncheckedUpdateManyWithoutCashierNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutKitchenNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -723,6 +752,7 @@ export type UserCreateWithoutOrdersInput = {
   isActive?: boolean
   createdAt?: Date | string
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  cashierOrders?: Prisma.OrderCreateNestedManyWithoutCashierInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutKitchenInput
   tables?: Prisma.TableCreateNestedManyWithoutWaiterInput
   pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
@@ -739,6 +769,7 @@ export type UserUncheckedCreateWithoutOrdersInput = {
   createdAt?: Date | string
   restaurantId?: string | null
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  cashierOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutCashierInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutKitchenInput
   tables?: Prisma.TableUncheckedCreateNestedManyWithoutWaiterInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
@@ -747,6 +778,43 @@ export type UserUncheckedCreateWithoutOrdersInput = {
 export type UserCreateOrConnectWithoutOrdersInput = {
   where: Prisma.UserWhereUniqueInput
   create: Prisma.XOR<Prisma.UserCreateWithoutOrdersInput, Prisma.UserUncheckedCreateWithoutOrdersInput>
+}
+
+export type UserCreateWithoutCashierOrdersInput = {
+  id?: string
+  name: string
+  phone: string
+  passwordHash: string
+  role: $Enums.Role
+  isActive?: boolean
+  createdAt?: Date | string
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderCreateNestedManyWithoutWaiterInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutKitchenInput
+  tables?: Prisma.TableCreateNestedManyWithoutWaiterInput
+  pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  restaurant?: Prisma.RestaurantCreateNestedOneWithoutUsersInput
+}
+
+export type UserUncheckedCreateWithoutCashierOrdersInput = {
+  id?: string
+  name: string
+  phone: string
+  passwordHash: string
+  role: $Enums.Role
+  isActive?: boolean
+  createdAt?: Date | string
+  restaurantId?: string | null
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutWaiterInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutKitchenInput
+  tables?: Prisma.TableUncheckedCreateNestedManyWithoutWaiterInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutCashierOrdersInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCashierOrdersInput, Prisma.UserUncheckedCreateWithoutCashierOrdersInput>
 }
 
 export type UserUpsertWithoutOrdersInput = {
@@ -769,6 +837,7 @@ export type UserUpdateWithoutOrdersInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  cashierOrders?: Prisma.OrderUpdateManyWithoutCashierNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutKitchenNestedInput
   tables?: Prisma.TableUpdateManyWithoutWaiterNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
@@ -785,6 +854,50 @@ export type UserUncheckedUpdateWithoutOrdersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   restaurantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  cashierOrders?: Prisma.OrderUncheckedUpdateManyWithoutCashierNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutKitchenNestedInput
+  tables?: Prisma.TableUncheckedUpdateManyWithoutWaiterNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserUpsertWithoutCashierOrdersInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCashierOrdersInput, Prisma.UserUncheckedUpdateWithoutCashierOrdersInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCashierOrdersInput, Prisma.UserUncheckedCreateWithoutCashierOrdersInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCashierOrdersInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCashierOrdersInput, Prisma.UserUncheckedUpdateWithoutCashierOrdersInput>
+}
+
+export type UserUpdateWithoutCashierOrdersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutWaiterNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutKitchenNestedInput
+  tables?: Prisma.TableUpdateManyWithoutWaiterNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  restaurant?: Prisma.RestaurantUpdateOneWithoutUsersNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCashierOrdersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  restaurantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutWaiterNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutKitchenNestedInput
   tables?: Prisma.TableUncheckedUpdateManyWithoutWaiterNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
@@ -800,6 +913,7 @@ export type UserCreateWithoutReceiptsInput = {
   createdAt?: Date | string
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutWaiterInput
+  cashierOrders?: Prisma.OrderCreateNestedManyWithoutCashierInput
   tables?: Prisma.TableCreateNestedManyWithoutWaiterInput
   pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
   restaurant?: Prisma.RestaurantCreateNestedOneWithoutUsersInput
@@ -816,6 +930,7 @@ export type UserUncheckedCreateWithoutReceiptsInput = {
   restaurantId?: string | null
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutWaiterInput
+  cashierOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutCashierInput
   tables?: Prisma.TableUncheckedCreateNestedManyWithoutWaiterInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
 }
@@ -846,6 +961,7 @@ export type UserUpdateWithoutReceiptsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutWaiterNestedInput
+  cashierOrders?: Prisma.OrderUpdateManyWithoutCashierNestedInput
   tables?: Prisma.TableUpdateManyWithoutWaiterNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
   restaurant?: Prisma.RestaurantUpdateOneWithoutUsersNestedInput
@@ -862,6 +978,7 @@ export type UserUncheckedUpdateWithoutReceiptsInput = {
   restaurantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutWaiterNestedInput
+  cashierOrders?: Prisma.OrderUncheckedUpdateManyWithoutCashierNestedInput
   tables?: Prisma.TableUncheckedUpdateManyWithoutWaiterNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -875,6 +992,7 @@ export type UserCreateWithoutNotificationsInput = {
   isActive?: boolean
   createdAt?: Date | string
   orders?: Prisma.OrderCreateNestedManyWithoutWaiterInput
+  cashierOrders?: Prisma.OrderCreateNestedManyWithoutCashierInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutKitchenInput
   tables?: Prisma.TableCreateNestedManyWithoutWaiterInput
   pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
@@ -891,6 +1009,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   createdAt?: Date | string
   restaurantId?: string | null
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutWaiterInput
+  cashierOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutCashierInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutKitchenInput
   tables?: Prisma.TableUncheckedCreateNestedManyWithoutWaiterInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
@@ -921,6 +1040,7 @@ export type UserUpdateWithoutNotificationsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   orders?: Prisma.OrderUpdateManyWithoutWaiterNestedInput
+  cashierOrders?: Prisma.OrderUpdateManyWithoutCashierNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutKitchenNestedInput
   tables?: Prisma.TableUpdateManyWithoutWaiterNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
@@ -937,6 +1057,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   restaurantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orders?: Prisma.OrderUncheckedUpdateManyWithoutWaiterNestedInput
+  cashierOrders?: Prisma.OrderUncheckedUpdateManyWithoutCashierNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutKitchenNestedInput
   tables?: Prisma.TableUncheckedUpdateManyWithoutWaiterNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
@@ -952,6 +1073,7 @@ export type UserCreateWithoutPushSubscriptionsInput = {
   createdAt?: Date | string
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderCreateNestedManyWithoutWaiterInput
+  cashierOrders?: Prisma.OrderCreateNestedManyWithoutCashierInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutKitchenInput
   tables?: Prisma.TableCreateNestedManyWithoutWaiterInput
   restaurant?: Prisma.RestaurantCreateNestedOneWithoutUsersInput
@@ -968,6 +1090,7 @@ export type UserUncheckedCreateWithoutPushSubscriptionsInput = {
   restaurantId?: string | null
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutWaiterInput
+  cashierOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutCashierInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutKitchenInput
   tables?: Prisma.TableUncheckedCreateNestedManyWithoutWaiterInput
 }
@@ -998,6 +1121,7 @@ export type UserUpdateWithoutPushSubscriptionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutWaiterNestedInput
+  cashierOrders?: Prisma.OrderUpdateManyWithoutCashierNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutKitchenNestedInput
   tables?: Prisma.TableUpdateManyWithoutWaiterNestedInput
   restaurant?: Prisma.RestaurantUpdateOneWithoutUsersNestedInput
@@ -1014,6 +1138,7 @@ export type UserUncheckedUpdateWithoutPushSubscriptionsInput = {
   restaurantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutWaiterNestedInput
+  cashierOrders?: Prisma.OrderUncheckedUpdateManyWithoutCashierNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutKitchenNestedInput
   tables?: Prisma.TableUncheckedUpdateManyWithoutWaiterNestedInput
 }
@@ -1038,6 +1163,7 @@ export type UserUpdateWithoutRestaurantInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUpdateManyWithoutWaiterNestedInput
+  cashierOrders?: Prisma.OrderUpdateManyWithoutCashierNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutKitchenNestedInput
   tables?: Prisma.TableUpdateManyWithoutWaiterNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
@@ -1053,6 +1179,7 @@ export type UserUncheckedUpdateWithoutRestaurantInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutWaiterNestedInput
+  cashierOrders?: Prisma.OrderUncheckedUpdateManyWithoutCashierNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutKitchenNestedInput
   tables?: Prisma.TableUncheckedUpdateManyWithoutWaiterNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
@@ -1076,6 +1203,7 @@ export type UserUncheckedUpdateManyWithoutRestaurantInput = {
 export type UserCountOutputType = {
   notifications: number
   orders: number
+  cashierOrders: number
   receipts: number
   tables: number
   pushSubscriptions: number
@@ -1084,6 +1212,7 @@ export type UserCountOutputType = {
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
   orders?: boolean | UserCountOutputTypeCountOrdersArgs
+  cashierOrders?: boolean | UserCountOutputTypeCountCashierOrdersArgs
   receipts?: boolean | UserCountOutputTypeCountReceiptsArgs
   tables?: boolean | UserCountOutputTypeCountTablesArgs
   pushSubscriptions?: boolean | UserCountOutputTypeCountPushSubscriptionsArgs
@@ -1110,6 +1239,13 @@ export type UserCountOutputTypeCountNotificationsArgs<ExtArgs extends runtime.Ty
  * UserCountOutputType without action
  */
 export type UserCountOutputTypeCountOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrderWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCashierOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.OrderWhereInput
 }
 
@@ -1146,6 +1282,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   restaurantId?: boolean
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   orders?: boolean | Prisma.User$ordersArgs<ExtArgs>
+  cashierOrders?: boolean | Prisma.User$cashierOrdersArgs<ExtArgs>
   receipts?: boolean | Prisma.User$receiptsArgs<ExtArgs>
   tables?: boolean | Prisma.User$tablesArgs<ExtArgs>
   pushSubscriptions?: boolean | Prisma.User$pushSubscriptionsArgs<ExtArgs>
@@ -1192,6 +1329,7 @@ export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = run
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   orders?: boolean | Prisma.User$ordersArgs<ExtArgs>
+  cashierOrders?: boolean | Prisma.User$cashierOrdersArgs<ExtArgs>
   receipts?: boolean | Prisma.User$receiptsArgs<ExtArgs>
   tables?: boolean | Prisma.User$tablesArgs<ExtArgs>
   pushSubscriptions?: boolean | Prisma.User$pushSubscriptionsArgs<ExtArgs>
@@ -1210,6 +1348,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     notifications: Prisma.$NotificationPayload<ExtArgs>[]
     orders: Prisma.$OrderPayload<ExtArgs>[]
+    cashierOrders: Prisma.$OrderPayload<ExtArgs>[]
     receipts: Prisma.$ReceiptPayload<ExtArgs>[]
     tables: Prisma.$TablePayload<ExtArgs>[]
     pushSubscriptions: Prisma.$PushSubscriptionPayload<ExtArgs>[]
@@ -1620,6 +1759,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   notifications<T extends Prisma.User$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   orders<T extends Prisma.User$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  cashierOrders<T extends Prisma.User$cashierOrdersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$cashierOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   receipts<T extends Prisma.User$receiptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$receiptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReceiptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   tables<T extends Prisma.User$tablesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$tablesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TablePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   pushSubscriptions<T extends Prisma.User$pushSubscriptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pushSubscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PushSubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2089,6 +2229,30 @@ export type User$notificationsArgs<ExtArgs extends runtime.Types.Extensions.Inte
  * User.orders
  */
 export type User$ordersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Order
+   */
+  select?: Prisma.OrderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Order
+   */
+  omit?: Prisma.OrderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrderInclude<ExtArgs> | null
+  where?: Prisma.OrderWhereInput
+  orderBy?: Prisma.OrderOrderByWithRelationInput | Prisma.OrderOrderByWithRelationInput[]
+  cursor?: Prisma.OrderWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrderScalarFieldEnum | Prisma.OrderScalarFieldEnum[]
+}
+
+/**
+ * User.cashierOrders
+ */
+export type User$cashierOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the Order
    */

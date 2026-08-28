@@ -8,7 +8,7 @@ const STATS_TTL = 10_000;
 export const runtime = "nodejs";
 
 export async function GET(req: Request) {
-  const guard = await requireRoles(req, ["OWNER", "MANAGER", "KITCHEN", "WAITER"]);
+  const guard = await requireRoles(req, ["OWNER", "MANAGER", "KITCHEN", "WAITER", "CASHIER"]);
   if ("response" in guard) return guard.response;
   const session = guard.session;
   if (!session.restaurantId)

@@ -8,7 +8,7 @@ const NOTIF_TTL = 15000;
 export const runtime = "nodejs";
 
 export async function GET(req: Request) {
-  const guard = await requireRoles(req, ["OWNER", "MANAGER", "KITCHEN", "WAITER"]);
+  const guard = await requireRoles(req, ["OWNER", "MANAGER", "KITCHEN", "WAITER", "CASHIER"]);
   if ("response" in guard) return guard.response;
   const session = guard.session;
 
@@ -47,7 +47,7 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  const guard = await requireRoles(req, ["OWNER", "MANAGER", "KITCHEN", "WAITER"]);
+  const guard = await requireRoles(req, ["OWNER", "MANAGER", "KITCHEN", "WAITER", "CASHIER"]);
   if ("response" in guard) return guard.response;
   const session = guard.session;
 

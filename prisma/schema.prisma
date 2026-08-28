@@ -18,6 +18,7 @@ model User {
   restaurantId        String?
   notifications       Notification[]
   orders              Order[]            @relation("OrderWaiter")
+  cashierOrders       Order[]            @relation("OrderCashier")
   receipts            Receipt[]          @relation("ReceiptKitchen")
   tables              Table[]            @relation("TableWaiter")
   pushSubscriptions   PushSubscription[]
@@ -110,18 +111,21 @@ model Order {
   tableLabel      String?
   sourceTableCode String?
   waiterId        String?
+  cashierId       String?
   restaurantId    String
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
   restaurant      Restaurant  @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
   table           Table?      @relation(fields: [tableId], references: [id])
   waiter          User?       @relation("OrderWaiter", fields: [waiterId], references: [id])
+  cashier         User?       @relation("OrderCashier", fields: [cashierId], references: [id])
   items           OrderItem[]
   receipt         Receipt?
 
   @@unique([restaurantId, orderNumber])
   @@index([restaurantId, status, createdAt])
   @@index([waiterId, status, createdAt])
+  @@index([cashierId, status, createdAt])
   @@index([tableId, status])
   @@index([restaurantId, waiterId, status])
   @@index([status, createdAt])
@@ -213,10 +217,13 @@ enum Role {
   MANAGER
   KITCHEN
   WAITER
+  CASHIER
 }
 
 enum OrderStatus {
   PENDING
+  TAKEN
+  PAID
   ACCEPTED
   COOKING
   READY

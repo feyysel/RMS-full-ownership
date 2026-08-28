@@ -5,7 +5,7 @@ export type SessionUser = {
   id: string;
   name: string;
   phone: string;
-  role: "OWNER" | "MANAGER" | "KITCHEN" | "WAITER";
+  role: "OWNER" | "MANAGER" | "KITCHEN" | "WAITER" | "CASHIER";
   restaurantId: string | null;
 };
 

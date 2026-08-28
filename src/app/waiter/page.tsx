@@ -69,9 +69,11 @@ type MenuItem = {
   category: string | null;
 };
 
-const statusTone: Record<string, "amber" | "sky" | "violet" | "emerald" | "teal" | "rose"> = {
+const statusTone: Record<string, "amber" | "sky" | "violet" | "emerald" | "teal" | "rose" | "gold"> = {
   PENDING: "amber",
-  ACCEPTED: "sky",
+  TAKEN: "sky",
+  PAID: "gold",
+  ACCEPTED: "violet",
   COOKING: "violet",
   READY: "emerald",
   SERVED: "teal",
@@ -141,12 +143,20 @@ export default function WaiterDashboard() {
   const occupied = myTables.filter((t) => t.status === "occupied").length;
   const ready = myOrders.filter((o) => o.status === "READY");
   const inProgress = myOrders.filter((o) =>
-    ["PENDING", "ACCEPTED", "COOKING"].includes(o.status)
+    ["PENDING", "TAKEN", "PAID", "ACCEPTED", "COOKING"].includes(o.status)
   );
 
   async function act(orderId: string, action: string, label: string) {
     const toStatus =
-      action === "serve" ? "SERVED" : action === "cancel" ? "CANCELLED" : action === "complete" ? "COMPLETED" : undefined;
+      action === "take"
+        ? "TAKEN"
+        : action === "serve"
+          ? "SERVED"
+          : action === "cancel"
+            ? "CANCELLED"
+            : action === "complete"
+              ? "COMPLETED"
+              : undefined;
     if (toStatus) {
       setOrders((prev) =>
         prev.map((o) => (o.id === orderId ? { ...o, status: toStatus } : o))
@@ -445,6 +455,15 @@ function OrderRow({
       <div className="mt-3 flex items-center justify-between border-t border-white/[0.06] pt-3">
         <p className="text-sm font-semibold text-gold-light">{formatCurrency(order.total)}</p>
         <div className="flex gap-2">
+          {order.status === "PENDING" && (
+            <Button
+              size="sm"
+              variant="success"
+              onClick={() => onAction(order.id, "take", `Order #${order.orderNumber} taken — sent to cashier`)}
+            >
+              <CheckCircle2 className="h-4 w-4" /> Take order
+            </Button>
+          )}
           {order.status === "READY" && (
             <Button size="sm" variant="success" onClick={() => onAction(order.id, "serve", `Order #${order.orderNumber} served`)}>
               <Check className="h-4 w-4" /> Serve
@@ -455,7 +474,7 @@ function OrderRow({
               <CheckCircle2 className="h-4 w-4" /> Complete
             </Button>
           )}
-          {["PENDING", "ACCEPTED", "COOKING"].includes(order.status) && (
+          {["PENDING", "TAKEN", "PAID", "ACCEPTED", "COOKING"].includes(order.status) && (
             <Button
               size="sm"
               variant="ghost"

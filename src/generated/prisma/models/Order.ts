@@ -53,6 +53,7 @@ export type OrderMinAggregateOutputType = {
   tableLabel: string | null
   sourceTableCode: string | null
   waiterId: string | null
+  cashierId: string | null
   restaurantId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -71,6 +72,7 @@ export type OrderMaxAggregateOutputType = {
   tableLabel: string | null
   sourceTableCode: string | null
   waiterId: string | null
+  cashierId: string | null
   restaurantId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -89,6 +91,7 @@ export type OrderCountAggregateOutputType = {
   tableLabel: number
   sourceTableCode: number
   waiterId: number
+  cashierId: number
   restaurantId: number
   createdAt: number
   updatedAt: number
@@ -123,6 +126,7 @@ export type OrderMinAggregateInputType = {
   tableLabel?: true
   sourceTableCode?: true
   waiterId?: true
+  cashierId?: true
   restaurantId?: true
   createdAt?: true
   updatedAt?: true
@@ -141,6 +145,7 @@ export type OrderMaxAggregateInputType = {
   tableLabel?: true
   sourceTableCode?: true
   waiterId?: true
+  cashierId?: true
   restaurantId?: true
   createdAt?: true
   updatedAt?: true
@@ -159,6 +164,7 @@ export type OrderCountAggregateInputType = {
   tableLabel?: true
   sourceTableCode?: true
   waiterId?: true
+  cashierId?: true
   restaurantId?: true
   createdAt?: true
   updatedAt?: true
@@ -264,6 +270,7 @@ export type OrderGroupByOutputType = {
   tableLabel: string | null
   sourceTableCode: string | null
   waiterId: string | null
+  cashierId: string | null
   restaurantId: string
   createdAt: Date
   updatedAt: Date
@@ -305,12 +312,14 @@ export type OrderWhereInput = {
   tableLabel?: Prisma.StringNullableFilter<"Order"> | string | null
   sourceTableCode?: Prisma.StringNullableFilter<"Order"> | string | null
   waiterId?: Prisma.StringNullableFilter<"Order"> | string | null
+  cashierId?: Prisma.StringNullableFilter<"Order"> | string | null
   restaurantId?: Prisma.StringFilter<"Order"> | string
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   restaurant?: Prisma.XOR<Prisma.RestaurantScalarRelationFilter, Prisma.RestaurantWhereInput>
   table?: Prisma.XOR<Prisma.TableNullableScalarRelationFilter, Prisma.TableWhereInput> | null
   waiter?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  cashier?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   items?: Prisma.OrderItemListRelationFilter
   receipt?: Prisma.XOR<Prisma.ReceiptNullableScalarRelationFilter, Prisma.ReceiptWhereInput> | null
 }
@@ -328,12 +337,14 @@ export type OrderOrderByWithRelationInput = {
   tableLabel?: Prisma.SortOrderInput | Prisma.SortOrder
   sourceTableCode?: Prisma.SortOrderInput | Prisma.SortOrder
   waiterId?: Prisma.SortOrderInput | Prisma.SortOrder
+  cashierId?: Prisma.SortOrderInput | Prisma.SortOrder
   restaurantId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   restaurant?: Prisma.RestaurantOrderByWithRelationInput
   table?: Prisma.TableOrderByWithRelationInput
   waiter?: Prisma.UserOrderByWithRelationInput
+  cashier?: Prisma.UserOrderByWithRelationInput
   items?: Prisma.OrderItemOrderByRelationAggregateInput
   receipt?: Prisma.ReceiptOrderByWithRelationInput
 }
@@ -355,12 +366,14 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   tableLabel?: Prisma.StringNullableFilter<"Order"> | string | null
   sourceTableCode?: Prisma.StringNullableFilter<"Order"> | string | null
   waiterId?: Prisma.StringNullableFilter<"Order"> | string | null
+  cashierId?: Prisma.StringNullableFilter<"Order"> | string | null
   restaurantId?: Prisma.StringFilter<"Order"> | string
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   restaurant?: Prisma.XOR<Prisma.RestaurantScalarRelationFilter, Prisma.RestaurantWhereInput>
   table?: Prisma.XOR<Prisma.TableNullableScalarRelationFilter, Prisma.TableWhereInput> | null
   waiter?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  cashier?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   items?: Prisma.OrderItemListRelationFilter
   receipt?: Prisma.XOR<Prisma.ReceiptNullableScalarRelationFilter, Prisma.ReceiptWhereInput> | null
 }, "id" | "restaurantId_orderNumber">
@@ -378,6 +391,7 @@ export type OrderOrderByWithAggregationInput = {
   tableLabel?: Prisma.SortOrderInput | Prisma.SortOrder
   sourceTableCode?: Prisma.SortOrderInput | Prisma.SortOrder
   waiterId?: Prisma.SortOrderInput | Prisma.SortOrder
+  cashierId?: Prisma.SortOrderInput | Prisma.SortOrder
   restaurantId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -404,6 +418,7 @@ export type OrderScalarWhereWithAggregatesInput = {
   tableLabel?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   sourceTableCode?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   waiterId?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  cashierId?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   restaurantId?: Prisma.StringWithAggregatesFilter<"Order"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Order"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Order"> | Date | string
@@ -425,6 +440,7 @@ export type OrderCreateInput = {
   restaurant: Prisma.RestaurantCreateNestedOneWithoutOrdersInput
   table?: Prisma.TableCreateNestedOneWithoutOrdersInput
   waiter?: Prisma.UserCreateNestedOneWithoutOrdersInput
+  cashier?: Prisma.UserCreateNestedOneWithoutCashierOrdersInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
   receipt?: Prisma.ReceiptCreateNestedOneWithoutOrderInput
 }
@@ -442,6 +458,7 @@ export type OrderUncheckedCreateInput = {
   tableLabel?: string | null
   sourceTableCode?: string | null
   waiterId?: string | null
+  cashierId?: string | null
   restaurantId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -465,6 +482,7 @@ export type OrderUpdateInput = {
   restaurant?: Prisma.RestaurantUpdateOneRequiredWithoutOrdersNestedInput
   table?: Prisma.TableUpdateOneWithoutOrdersNestedInput
   waiter?: Prisma.UserUpdateOneWithoutOrdersNestedInput
+  cashier?: Prisma.UserUpdateOneWithoutCashierOrdersNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
   receipt?: Prisma.ReceiptUpdateOneWithoutOrderNestedInput
 }
@@ -482,6 +500,7 @@ export type OrderUncheckedUpdateInput = {
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waiterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cashierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   restaurantId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -502,6 +521,7 @@ export type OrderCreateManyInput = {
   tableLabel?: string | null
   sourceTableCode?: string | null
   waiterId?: string | null
+  cashierId?: string | null
   restaurantId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -535,6 +555,7 @@ export type OrderUncheckedUpdateManyInput = {
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waiterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cashierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   restaurantId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -568,6 +589,7 @@ export type OrderCountOrderByAggregateInput = {
   tableLabel?: Prisma.SortOrder
   sourceTableCode?: Prisma.SortOrder
   waiterId?: Prisma.SortOrder
+  cashierId?: Prisma.SortOrder
   restaurantId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -593,6 +615,7 @@ export type OrderMaxOrderByAggregateInput = {
   tableLabel?: Prisma.SortOrder
   sourceTableCode?: Prisma.SortOrder
   waiterId?: Prisma.SortOrder
+  cashierId?: Prisma.SortOrder
   restaurantId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -611,6 +634,7 @@ export type OrderMinOrderByAggregateInput = {
   tableLabel?: Prisma.SortOrder
   sourceTableCode?: Prisma.SortOrder
   waiterId?: Prisma.SortOrder
+  cashierId?: Prisma.SortOrder
   restaurantId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -635,10 +659,24 @@ export type OrderCreateNestedManyWithoutWaiterInput = {
   connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
 }
 
+export type OrderCreateNestedManyWithoutCashierInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutCashierInput, Prisma.OrderUncheckedCreateWithoutCashierInput> | Prisma.OrderCreateWithoutCashierInput[] | Prisma.OrderUncheckedCreateWithoutCashierInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutCashierInput | Prisma.OrderCreateOrConnectWithoutCashierInput[]
+  createMany?: Prisma.OrderCreateManyCashierInputEnvelope
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+}
+
 export type OrderUncheckedCreateNestedManyWithoutWaiterInput = {
   create?: Prisma.XOR<Prisma.OrderCreateWithoutWaiterInput, Prisma.OrderUncheckedCreateWithoutWaiterInput> | Prisma.OrderCreateWithoutWaiterInput[] | Prisma.OrderUncheckedCreateWithoutWaiterInput[]
   connectOrCreate?: Prisma.OrderCreateOrConnectWithoutWaiterInput | Prisma.OrderCreateOrConnectWithoutWaiterInput[]
   createMany?: Prisma.OrderCreateManyWaiterInputEnvelope
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+}
+
+export type OrderUncheckedCreateNestedManyWithoutCashierInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutCashierInput, Prisma.OrderUncheckedCreateWithoutCashierInput> | Prisma.OrderCreateWithoutCashierInput[] | Prisma.OrderUncheckedCreateWithoutCashierInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutCashierInput | Prisma.OrderCreateOrConnectWithoutCashierInput[]
+  createMany?: Prisma.OrderCreateManyCashierInputEnvelope
   connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
 }
 
@@ -656,6 +694,20 @@ export type OrderUpdateManyWithoutWaiterNestedInput = {
   deleteMany?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
 }
 
+export type OrderUpdateManyWithoutCashierNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutCashierInput, Prisma.OrderUncheckedCreateWithoutCashierInput> | Prisma.OrderCreateWithoutCashierInput[] | Prisma.OrderUncheckedCreateWithoutCashierInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutCashierInput | Prisma.OrderCreateOrConnectWithoutCashierInput[]
+  upsert?: Prisma.OrderUpsertWithWhereUniqueWithoutCashierInput | Prisma.OrderUpsertWithWhereUniqueWithoutCashierInput[]
+  createMany?: Prisma.OrderCreateManyCashierInputEnvelope
+  set?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  disconnect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  delete?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  update?: Prisma.OrderUpdateWithWhereUniqueWithoutCashierInput | Prisma.OrderUpdateWithWhereUniqueWithoutCashierInput[]
+  updateMany?: Prisma.OrderUpdateManyWithWhereWithoutCashierInput | Prisma.OrderUpdateManyWithWhereWithoutCashierInput[]
+  deleteMany?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
+}
+
 export type OrderUncheckedUpdateManyWithoutWaiterNestedInput = {
   create?: Prisma.XOR<Prisma.OrderCreateWithoutWaiterInput, Prisma.OrderUncheckedCreateWithoutWaiterInput> | Prisma.OrderCreateWithoutWaiterInput[] | Prisma.OrderUncheckedCreateWithoutWaiterInput[]
   connectOrCreate?: Prisma.OrderCreateOrConnectWithoutWaiterInput | Prisma.OrderCreateOrConnectWithoutWaiterInput[]
@@ -667,6 +719,20 @@ export type OrderUncheckedUpdateManyWithoutWaiterNestedInput = {
   connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
   update?: Prisma.OrderUpdateWithWhereUniqueWithoutWaiterInput | Prisma.OrderUpdateWithWhereUniqueWithoutWaiterInput[]
   updateMany?: Prisma.OrderUpdateManyWithWhereWithoutWaiterInput | Prisma.OrderUpdateManyWithWhereWithoutWaiterInput[]
+  deleteMany?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
+}
+
+export type OrderUncheckedUpdateManyWithoutCashierNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutCashierInput, Prisma.OrderUncheckedCreateWithoutCashierInput> | Prisma.OrderCreateWithoutCashierInput[] | Prisma.OrderUncheckedCreateWithoutCashierInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutCashierInput | Prisma.OrderCreateOrConnectWithoutCashierInput[]
+  upsert?: Prisma.OrderUpsertWithWhereUniqueWithoutCashierInput | Prisma.OrderUpsertWithWhereUniqueWithoutCashierInput[]
+  createMany?: Prisma.OrderCreateManyCashierInputEnvelope
+  set?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  disconnect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  delete?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  update?: Prisma.OrderUpdateWithWhereUniqueWithoutCashierInput | Prisma.OrderUpdateWithWhereUniqueWithoutCashierInput[]
+  updateMany?: Prisma.OrderUpdateManyWithWhereWithoutCashierInput | Prisma.OrderUpdateManyWithWhereWithoutCashierInput[]
   deleteMany?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
 }
 
@@ -813,6 +879,7 @@ export type OrderCreateWithoutWaiterInput = {
   updatedAt?: Date | string
   restaurant: Prisma.RestaurantCreateNestedOneWithoutOrdersInput
   table?: Prisma.TableCreateNestedOneWithoutOrdersInput
+  cashier?: Prisma.UserCreateNestedOneWithoutCashierOrdersInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
   receipt?: Prisma.ReceiptCreateNestedOneWithoutOrderInput
 }
@@ -829,6 +896,7 @@ export type OrderUncheckedCreateWithoutWaiterInput = {
   tableId?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
+  cashierId?: string | null
   restaurantId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -843,6 +911,56 @@ export type OrderCreateOrConnectWithoutWaiterInput = {
 
 export type OrderCreateManyWaiterInputEnvelope = {
   data: Prisma.OrderCreateManyWaiterInput | Prisma.OrderCreateManyWaiterInput[]
+  skipDuplicates?: boolean
+}
+
+export type OrderCreateWithoutCashierInput = {
+  id?: string
+  orderNumber: number
+  type?: $Enums.OrderType
+  status?: $Enums.OrderStatus
+  note?: string | null
+  total?: number
+  collectedAmount?: number | null
+  tip?: number | null
+  tableLabel?: string | null
+  sourceTableCode?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  restaurant: Prisma.RestaurantCreateNestedOneWithoutOrdersInput
+  table?: Prisma.TableCreateNestedOneWithoutOrdersInput
+  waiter?: Prisma.UserCreateNestedOneWithoutOrdersInput
+  items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
+  receipt?: Prisma.ReceiptCreateNestedOneWithoutOrderInput
+}
+
+export type OrderUncheckedCreateWithoutCashierInput = {
+  id?: string
+  orderNumber: number
+  type?: $Enums.OrderType
+  status?: $Enums.OrderStatus
+  note?: string | null
+  total?: number
+  collectedAmount?: number | null
+  tip?: number | null
+  tableId?: string | null
+  tableLabel?: string | null
+  sourceTableCode?: string | null
+  waiterId?: string | null
+  restaurantId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
+  receipt?: Prisma.ReceiptUncheckedCreateNestedOneWithoutOrderInput
+}
+
+export type OrderCreateOrConnectWithoutCashierInput = {
+  where: Prisma.OrderWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrderCreateWithoutCashierInput, Prisma.OrderUncheckedCreateWithoutCashierInput>
+}
+
+export type OrderCreateManyCashierInputEnvelope = {
+  data: Prisma.OrderCreateManyCashierInput | Prisma.OrderCreateManyCashierInput[]
   skipDuplicates?: boolean
 }
 
@@ -878,9 +996,26 @@ export type OrderScalarWhereInput = {
   tableLabel?: Prisma.StringNullableFilter<"Order"> | string | null
   sourceTableCode?: Prisma.StringNullableFilter<"Order"> | string | null
   waiterId?: Prisma.StringNullableFilter<"Order"> | string | null
+  cashierId?: Prisma.StringNullableFilter<"Order"> | string | null
   restaurantId?: Prisma.StringFilter<"Order"> | string
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Order"> | Date | string
+}
+
+export type OrderUpsertWithWhereUniqueWithoutCashierInput = {
+  where: Prisma.OrderWhereUniqueInput
+  update: Prisma.XOR<Prisma.OrderUpdateWithoutCashierInput, Prisma.OrderUncheckedUpdateWithoutCashierInput>
+  create: Prisma.XOR<Prisma.OrderCreateWithoutCashierInput, Prisma.OrderUncheckedCreateWithoutCashierInput>
+}
+
+export type OrderUpdateWithWhereUniqueWithoutCashierInput = {
+  where: Prisma.OrderWhereUniqueInput
+  data: Prisma.XOR<Prisma.OrderUpdateWithoutCashierInput, Prisma.OrderUncheckedUpdateWithoutCashierInput>
+}
+
+export type OrderUpdateManyWithWhereWithoutCashierInput = {
+  where: Prisma.OrderScalarWhereInput
+  data: Prisma.XOR<Prisma.OrderUpdateManyMutationInput, Prisma.OrderUncheckedUpdateManyWithoutCashierInput>
 }
 
 export type OrderCreateWithoutRestaurantInput = {
@@ -898,6 +1033,7 @@ export type OrderCreateWithoutRestaurantInput = {
   updatedAt?: Date | string
   table?: Prisma.TableCreateNestedOneWithoutOrdersInput
   waiter?: Prisma.UserCreateNestedOneWithoutOrdersInput
+  cashier?: Prisma.UserCreateNestedOneWithoutCashierOrdersInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
   receipt?: Prisma.ReceiptCreateNestedOneWithoutOrderInput
 }
@@ -915,6 +1051,7 @@ export type OrderUncheckedCreateWithoutRestaurantInput = {
   tableLabel?: string | null
   sourceTableCode?: string | null
   waiterId?: string | null
+  cashierId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
@@ -962,6 +1099,7 @@ export type OrderCreateWithoutTableInput = {
   updatedAt?: Date | string
   restaurant: Prisma.RestaurantCreateNestedOneWithoutOrdersInput
   waiter?: Prisma.UserCreateNestedOneWithoutOrdersInput
+  cashier?: Prisma.UserCreateNestedOneWithoutCashierOrdersInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
   receipt?: Prisma.ReceiptCreateNestedOneWithoutOrderInput
 }
@@ -978,6 +1116,7 @@ export type OrderUncheckedCreateWithoutTableInput = {
   tableLabel?: string | null
   sourceTableCode?: string | null
   waiterId?: string | null
+  cashierId?: string | null
   restaurantId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1027,6 +1166,7 @@ export type OrderCreateWithoutItemsInput = {
   restaurant: Prisma.RestaurantCreateNestedOneWithoutOrdersInput
   table?: Prisma.TableCreateNestedOneWithoutOrdersInput
   waiter?: Prisma.UserCreateNestedOneWithoutOrdersInput
+  cashier?: Prisma.UserCreateNestedOneWithoutCashierOrdersInput
   receipt?: Prisma.ReceiptCreateNestedOneWithoutOrderInput
 }
 
@@ -1043,6 +1183,7 @@ export type OrderUncheckedCreateWithoutItemsInput = {
   tableLabel?: string | null
   sourceTableCode?: string | null
   waiterId?: string | null
+  cashierId?: string | null
   restaurantId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1081,6 +1222,7 @@ export type OrderUpdateWithoutItemsInput = {
   restaurant?: Prisma.RestaurantUpdateOneRequiredWithoutOrdersNestedInput
   table?: Prisma.TableUpdateOneWithoutOrdersNestedInput
   waiter?: Prisma.UserUpdateOneWithoutOrdersNestedInput
+  cashier?: Prisma.UserUpdateOneWithoutCashierOrdersNestedInput
   receipt?: Prisma.ReceiptUpdateOneWithoutOrderNestedInput
 }
 
@@ -1097,6 +1239,7 @@ export type OrderUncheckedUpdateWithoutItemsInput = {
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waiterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cashierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   restaurantId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1119,6 +1262,7 @@ export type OrderCreateWithoutReceiptInput = {
   restaurant: Prisma.RestaurantCreateNestedOneWithoutOrdersInput
   table?: Prisma.TableCreateNestedOneWithoutOrdersInput
   waiter?: Prisma.UserCreateNestedOneWithoutOrdersInput
+  cashier?: Prisma.UserCreateNestedOneWithoutCashierOrdersInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
 }
 
@@ -1135,6 +1279,7 @@ export type OrderUncheckedCreateWithoutReceiptInput = {
   tableLabel?: string | null
   sourceTableCode?: string | null
   waiterId?: string | null
+  cashierId?: string | null
   restaurantId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1173,6 +1318,7 @@ export type OrderUpdateWithoutReceiptInput = {
   restaurant?: Prisma.RestaurantUpdateOneRequiredWithoutOrdersNestedInput
   table?: Prisma.TableUpdateOneWithoutOrdersNestedInput
   waiter?: Prisma.UserUpdateOneWithoutOrdersNestedInput
+  cashier?: Prisma.UserUpdateOneWithoutCashierOrdersNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
 }
 
@@ -1189,6 +1335,7 @@ export type OrderUncheckedUpdateWithoutReceiptInput = {
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waiterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cashierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   restaurantId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1207,6 +1354,25 @@ export type OrderCreateManyWaiterInput = {
   tableId?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
+  cashierId?: string | null
+  restaurantId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type OrderCreateManyCashierInput = {
+  id?: string
+  orderNumber: number
+  type?: $Enums.OrderType
+  status?: $Enums.OrderStatus
+  note?: string | null
+  total?: number
+  collectedAmount?: number | null
+  tip?: number | null
+  tableId?: string | null
+  tableLabel?: string | null
+  sourceTableCode?: string | null
+  waiterId?: string | null
   restaurantId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1227,6 +1393,7 @@ export type OrderUpdateWithoutWaiterInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   restaurant?: Prisma.RestaurantUpdateOneRequiredWithoutOrdersNestedInput
   table?: Prisma.TableUpdateOneWithoutOrdersNestedInput
+  cashier?: Prisma.UserUpdateOneWithoutCashierOrdersNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
   receipt?: Prisma.ReceiptUpdateOneWithoutOrderNestedInput
 }
@@ -1243,6 +1410,7 @@ export type OrderUncheckedUpdateWithoutWaiterInput = {
   tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cashierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   restaurantId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1262,6 +1430,65 @@ export type OrderUncheckedUpdateManyWithoutWaiterInput = {
   tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cashierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  restaurantId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type OrderUpdateWithoutCashierInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.IntFieldUpdateOperationsInput | number
+  type?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  total?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tip?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  restaurant?: Prisma.RestaurantUpdateOneRequiredWithoutOrdersNestedInput
+  table?: Prisma.TableUpdateOneWithoutOrdersNestedInput
+  waiter?: Prisma.UserUpdateOneWithoutOrdersNestedInput
+  items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
+  receipt?: Prisma.ReceiptUpdateOneWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateWithoutCashierInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.IntFieldUpdateOperationsInput | number
+  type?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  total?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tip?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  waiterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  restaurantId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
+  receipt?: Prisma.ReceiptUncheckedUpdateOneWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateManyWithoutCashierInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.IntFieldUpdateOperationsInput | number
+  type?: Prisma.EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  total?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tip?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  waiterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   restaurantId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1280,6 +1507,7 @@ export type OrderCreateManyRestaurantInput = {
   tableLabel?: string | null
   sourceTableCode?: string | null
   waiterId?: string | null
+  cashierId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1299,6 +1527,7 @@ export type OrderUpdateWithoutRestaurantInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   table?: Prisma.TableUpdateOneWithoutOrdersNestedInput
   waiter?: Prisma.UserUpdateOneWithoutOrdersNestedInput
+  cashier?: Prisma.UserUpdateOneWithoutCashierOrdersNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
   receipt?: Prisma.ReceiptUpdateOneWithoutOrderNestedInput
 }
@@ -1316,6 +1545,7 @@ export type OrderUncheckedUpdateWithoutRestaurantInput = {
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waiterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cashierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
@@ -1335,6 +1565,7 @@ export type OrderUncheckedUpdateManyWithoutRestaurantInput = {
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waiterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cashierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1351,6 +1582,7 @@ export type OrderCreateManyTableInput = {
   tableLabel?: string | null
   sourceTableCode?: string | null
   waiterId?: string | null
+  cashierId?: string | null
   restaurantId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1371,6 +1603,7 @@ export type OrderUpdateWithoutTableInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   restaurant?: Prisma.RestaurantUpdateOneRequiredWithoutOrdersNestedInput
   waiter?: Prisma.UserUpdateOneWithoutOrdersNestedInput
+  cashier?: Prisma.UserUpdateOneWithoutCashierOrdersNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
   receipt?: Prisma.ReceiptUpdateOneWithoutOrderNestedInput
 }
@@ -1387,6 +1620,7 @@ export type OrderUncheckedUpdateWithoutTableInput = {
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waiterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cashierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   restaurantId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1406,6 +1640,7 @@ export type OrderUncheckedUpdateManyWithoutTableInput = {
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waiterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cashierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   restaurantId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1455,12 +1690,14 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   tableLabel?: boolean
   sourceTableCode?: boolean
   waiterId?: boolean
+  cashierId?: boolean
   restaurantId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   restaurant?: boolean | Prisma.RestaurantDefaultArgs<ExtArgs>
   table?: boolean | Prisma.Order$tableArgs<ExtArgs>
   waiter?: boolean | Prisma.Order$waiterArgs<ExtArgs>
+  cashier?: boolean | Prisma.Order$cashierArgs<ExtArgs>
   items?: boolean | Prisma.Order$itemsArgs<ExtArgs>
   receipt?: boolean | Prisma.Order$receiptArgs<ExtArgs>
   _count?: boolean | Prisma.OrderCountOutputTypeDefaultArgs<ExtArgs>
@@ -1479,12 +1716,14 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   tableLabel?: boolean
   sourceTableCode?: boolean
   waiterId?: boolean
+  cashierId?: boolean
   restaurantId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   restaurant?: boolean | Prisma.RestaurantDefaultArgs<ExtArgs>
   table?: boolean | Prisma.Order$tableArgs<ExtArgs>
   waiter?: boolean | Prisma.Order$waiterArgs<ExtArgs>
+  cashier?: boolean | Prisma.Order$cashierArgs<ExtArgs>
 }, ExtArgs["result"]["order"]>
 
 export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1500,12 +1739,14 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   tableLabel?: boolean
   sourceTableCode?: boolean
   waiterId?: boolean
+  cashierId?: boolean
   restaurantId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   restaurant?: boolean | Prisma.RestaurantDefaultArgs<ExtArgs>
   table?: boolean | Prisma.Order$tableArgs<ExtArgs>
   waiter?: boolean | Prisma.Order$waiterArgs<ExtArgs>
+  cashier?: boolean | Prisma.Order$cashierArgs<ExtArgs>
 }, ExtArgs["result"]["order"]>
 
 export type OrderSelectScalar = {
@@ -1521,16 +1762,18 @@ export type OrderSelectScalar = {
   tableLabel?: boolean
   sourceTableCode?: boolean
   waiterId?: boolean
+  cashierId?: boolean
   restaurantId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderNumber" | "type" | "status" | "note" | "total" | "collectedAmount" | "tip" | "tableId" | "tableLabel" | "sourceTableCode" | "waiterId" | "restaurantId" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderNumber" | "type" | "status" | "note" | "total" | "collectedAmount" | "tip" | "tableId" | "tableLabel" | "sourceTableCode" | "waiterId" | "cashierId" | "restaurantId" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
 export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   restaurant?: boolean | Prisma.RestaurantDefaultArgs<ExtArgs>
   table?: boolean | Prisma.Order$tableArgs<ExtArgs>
   waiter?: boolean | Prisma.Order$waiterArgs<ExtArgs>
+  cashier?: boolean | Prisma.Order$cashierArgs<ExtArgs>
   items?: boolean | Prisma.Order$itemsArgs<ExtArgs>
   receipt?: boolean | Prisma.Order$receiptArgs<ExtArgs>
   _count?: boolean | Prisma.OrderCountOutputTypeDefaultArgs<ExtArgs>
@@ -1539,11 +1782,13 @@ export type OrderIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   restaurant?: boolean | Prisma.RestaurantDefaultArgs<ExtArgs>
   table?: boolean | Prisma.Order$tableArgs<ExtArgs>
   waiter?: boolean | Prisma.Order$waiterArgs<ExtArgs>
+  cashier?: boolean | Prisma.Order$cashierArgs<ExtArgs>
 }
 export type OrderIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   restaurant?: boolean | Prisma.RestaurantDefaultArgs<ExtArgs>
   table?: boolean | Prisma.Order$tableArgs<ExtArgs>
   waiter?: boolean | Prisma.Order$waiterArgs<ExtArgs>
+  cashier?: boolean | Prisma.Order$cashierArgs<ExtArgs>
 }
 
 export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1552,6 +1797,7 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     restaurant: Prisma.$RestaurantPayload<ExtArgs>
     table: Prisma.$TablePayload<ExtArgs> | null
     waiter: Prisma.$UserPayload<ExtArgs> | null
+    cashier: Prisma.$UserPayload<ExtArgs> | null
     items: Prisma.$OrderItemPayload<ExtArgs>[]
     receipt: Prisma.$ReceiptPayload<ExtArgs> | null
   }
@@ -1568,6 +1814,7 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     tableLabel: string | null
     sourceTableCode: string | null
     waiterId: string | null
+    cashierId: string | null
     restaurantId: string
     createdAt: Date
     updatedAt: Date
@@ -1968,6 +2215,7 @@ export interface Prisma__OrderClient<T, Null = never, ExtArgs extends runtime.Ty
   restaurant<T extends Prisma.RestaurantDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RestaurantDefaultArgs<ExtArgs>>): Prisma.Prisma__RestaurantClient<runtime.Types.Result.GetResult<Prisma.$RestaurantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   table<T extends Prisma.Order$tableArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$tableArgs<ExtArgs>>): Prisma.Prisma__TableClient<runtime.Types.Result.GetResult<Prisma.$TablePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   waiter<T extends Prisma.Order$waiterArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$waiterArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  cashier<T extends Prisma.Order$cashierArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$cashierArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   items<T extends Prisma.Order$itemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   receipt<T extends Prisma.Order$receiptArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$receiptArgs<ExtArgs>>): Prisma.Prisma__ReceiptClient<runtime.Types.Result.GetResult<Prisma.$ReceiptPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
@@ -2011,6 +2259,7 @@ export interface OrderFieldRefs {
   readonly tableLabel: Prisma.FieldRef<"Order", 'String'>
   readonly sourceTableCode: Prisma.FieldRef<"Order", 'String'>
   readonly waiterId: Prisma.FieldRef<"Order", 'String'>
+  readonly cashierId: Prisma.FieldRef<"Order", 'String'>
   readonly restaurantId: Prisma.FieldRef<"Order", 'String'>
   readonly createdAt: Prisma.FieldRef<"Order", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Order", 'DateTime'>
@@ -2437,6 +2686,25 @@ export type Order$tableArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
  * Order.waiter
  */
 export type Order$waiterArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
+}
+
+/**
+ * Order.cashier
+ */
+export type Order$cashierArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the User
    */

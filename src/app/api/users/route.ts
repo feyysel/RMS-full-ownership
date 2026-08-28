@@ -9,6 +9,7 @@ export const runtime = "nodejs";
 
 const ASSIGNABLE_ROLES: Record<string, string> = {
   MANAGER: "MANAGER",
+  CASHIER: "CASHIER",
   KITCHEN: "KITCHEN",
   WAITER: "WAITER",
 };
@@ -107,7 +108,7 @@ export async function GET(req: Request) {
     });
   } else {
     users = await prisma.user.findMany({
-      where: { restaurantId: session.restaurantId, role: { in: ["WAITER", "KITCHEN"] } },
+      where: { restaurantId: session.restaurantId, role: { in: ["WAITER", "KITCHEN", "CASHIER"] } },
       include: { restaurant: { select: { id: true, name: true } } },
       orderBy: { createdAt: "desc" },
     });

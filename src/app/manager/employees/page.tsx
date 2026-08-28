@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Plus, Trash2, ChefHat, UtensilsCrossed, KeyRound, Users } from "lucide-react";
+import { Plus, Trash2, ChefHat, UtensilsCrossed, KeyRound, Users, Banknote } from "lucide-react";
 import { toast } from "sonner";
 import { PageHeader } from "@/components/ui/stat-card";
 import { Button } from "@/components/ui/button";
@@ -124,6 +124,7 @@ export default function ManagerEmployees() {
 
   const managers = data?.users.filter((u) => u.role === "MANAGER") ?? [];
   const waiters = data?.users.filter((u) => u.role === "WAITER") ?? [];
+  const cashiers = data?.users.filter((u) => u.role === "CASHIER") ?? [];
   const kitchen = data?.users.filter((u) => u.role === "KITCHEN") ?? [];
 
   return (
@@ -157,6 +158,16 @@ export default function ManagerEmployees() {
           loading={loading}
           users={waiters}
           tone="emerald"
+          onToggle={toggleActive}
+          onResetPassword={setPasswordModal}
+          onDelete={setDeleting}
+        />
+        <StaffGroup
+          title="Cashiers"
+          icon={<Banknote className="h-4 w-4 text-gold-light" />}
+          loading={loading}
+          users={cashiers}
+          tone="gold"
           onToggle={toggleActive}
           onResetPassword={setPasswordModal}
           onDelete={setDeleting}
@@ -199,6 +210,7 @@ export default function ManagerEmployees() {
             <Select id="e-role" value={role} onChange={(e) => setRole(e.target.value)}>
               {isOwner && <option value="MANAGER">Manager</option>}
               <option value="WAITER">Waiter</option>
+              <option value="CASHIER">Cashier</option>
               <option value="KITCHEN">Kitchen</option>
             </Select>
           </div>

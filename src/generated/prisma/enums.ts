@@ -13,7 +13,8 @@ export const Role = {
   OWNER: 'OWNER',
   MANAGER: 'MANAGER',
   KITCHEN: 'KITCHEN',
-  WAITER: 'WAITER'
+  WAITER: 'WAITER',
+  CASHIER: 'CASHIER'
 } as const
 
 export type Role = (typeof Role)[keyof typeof Role]
@@ -21,6 +22,8 @@ export type Role = (typeof Role)[keyof typeof Role]
 
 export const OrderStatus = {
   PENDING: 'PENDING',
+  TAKEN: 'TAKEN',
+  PAID: 'PAID',
   ACCEPTED: 'ACCEPTED',
   COOKING: 'COOKING',
   READY: 'READY',

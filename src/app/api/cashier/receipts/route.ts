@@ -5,14 +5,19 @@ import { requireRoles } from "@/lib/guard";
 export const runtime = "nodejs";
 
 export async function GET(req: Request) {
-  const guard = await requireRoles(req, ["KITCHEN", "MANAGER", "OWNER"]);
+  const guard = await requireRoles(req, ["CASHIER", "MANAGER", "OWNER"]);
   if ("response" in guard) return guard.response;
   const session = guard.session;
   if (!session.restaurantId)
     return NextResponse.json({ error: "No restaurant assigned" }, { status: 400 });
 
   const receipts = await prisma.receipt.findMany({
-    where: { restaurantId: session.restaurantId },
+    where: {
+      restaurantId: session.restaurantId,
+      ...(session.role === "CASHIER"
+        ? { order: { cashierId: session.id } }
+        : {}),
+    },
     include: {
       order: {
         include: {
@@ -24,7 +29,7 @@ export async function GET(req: Request) {
       kitchen: { select: { id: true, name: true } },
     },
     orderBy: { generatedAt: "desc" },
-    take: 50,
+    take: 100,
   });
 
   return NextResponse.json({
@@ -43,8 +48,8 @@ export async function GET(req: Request) {
       tax: r.tax,
       total: r.total,
       kitchenName: r.kitchen?.name ?? "Kitchen",
-      cashierName: r.order.cashier?.name ?? "Cashier",
       waiterName: r.order.waiter?.name ?? "—",
+      cashierName: r.order.cashier?.name ?? "Cashier",
       generatedAt: r.generatedAt,
     })),
   });

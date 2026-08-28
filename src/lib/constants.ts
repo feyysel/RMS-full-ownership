@@ -1,6 +1,7 @@
 export const ROLES = [
   { value: "OWNER", label: "Restaurant Owner" },
   { value: "MANAGER", label: "Restaurant Manager" },
+  { value: "CASHIER", label: "Cashier" },
   { value: "KITCHEN", label: "Kitchen" },
   { value: "WAITER", label: "Waiter" },
 ] as const;
@@ -12,10 +13,12 @@ export const roleLabel = (role: string) =>
 
 export const ORDER_STATUS = [
   { value: "PENDING", label: "Pending", tone: "amber" },
-  { value: "ACCEPTED", label: "Accepted", tone: "sky" },
-  { value: "COOKING", label: "Cooking", tone: "violet" },
+  { value: "TAKEN", label: "Taken", tone: "sky" },
+  { value: "PAID", label: "Paid", tone: "gold" },
+  { value: "ACCEPTED", label: "Accepted", tone: "violet" },
+  { value: "COOKING", label: "Cooking", tone: "teal" },
   { value: "READY", label: "Ready", tone: "emerald" },
-  { value: "SERVED", label: "Served", tone: "teal" },
+  { value: "SERVED", label: "Served", tone: "sky" },
   { value: "COMPLETED", label: "Completed", tone: "zinc" },
   { value: "CANCELLED", label: "Cancelled", tone: "rose" },
 ] as const;
@@ -36,6 +39,7 @@ export const TAX_RATE = 0.08;
 export const ROLE_HOME: Record<string, string> = {
   OWNER: "/manager",
   MANAGER: "/manager",
+  CASHIER: "/cashier",
   KITCHEN: "/kitchen",
   WAITER: "/waiter",
 };

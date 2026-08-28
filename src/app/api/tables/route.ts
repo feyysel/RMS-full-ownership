@@ -5,7 +5,7 @@ import { requireRoles } from "@/lib/guard";
 export const runtime = "nodejs";
 
 export async function GET(req: Request) {
-  const guard = await requireRoles(req, ["OWNER", "MANAGER", "WAITER"]);
+  const guard = await requireRoles(req, ["OWNER", "MANAGER", "WAITER", "CASHIER"]);
   if ("response" in guard) return guard.response;
   const session = guard.session;
   if (!session.restaurantId)

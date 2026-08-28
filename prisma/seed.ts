@@ -43,6 +43,7 @@ async function main() {
     { name: "Liam Johnson", phone: "09171234570", role: "WAITER", pass: "waiter123", rest: restaurant.id },
     { name: "Emma Chen", phone: "09171234571", role: "KITCHEN", pass: "kitchen123", rest: restaurant.id },
     { name: "Marco Rossi", phone: "09171234572", role: "KITCHEN", pass: "kitchen123", rest: restaurant.id },
+    { name: "Ava Torres", phone: "09171234573", role: "CASHIER", pass: "cashier123", rest: restaurant.id },
   ];
 
   for (const s of staff) {
@@ -156,6 +157,7 @@ async function main() {
   console.log("  09171234568       / manager123");
   console.log("  09171234569       / waiter123");
   console.log("  09171234571       / kitchen123");
+  console.log("  09171234573       / cashier123");
 }
 
 main()

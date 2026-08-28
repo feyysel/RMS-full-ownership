@@ -33,49 +33,61 @@ function channelKeyFor(channel: Channel): string {
   }
 }
 
-export async function persistEvent(
+export function persistEvent(
   channel: Channel,
   type: string,
   payload: unknown
 ) {
-  try {
-    const event = await prisma.eventLog.create({
+  const ssePayload = {
+    id: `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`,
+    scope: channel.scope,
+    scopeId: scopeIdFor(channel),
+    type,
+    payload: payload ?? null,
+    createdAt: new Date().toISOString(),
+  };
+
+  broadcastEvent(channelKeyFor(channel), ssePayload);
+
+  if (channel.scope !== "owner" && channel.scope !== "table") {
+    broadcastEvent("owner", ssePayload);
+  }
+
+  prisma.eventLog
+    .create({
       data: {
         scope: channel.scope,
         scopeId: scopeIdFor(channel),
         type,
         ...(payload == null ? {} : { payload: payload as object }),
       },
-      select: {
-        id: true,
-        scope: true,
-        scopeId: true,
-        type: true,
-        payload: true,
-        createdAt: true,
-      },
+      select: { id: true },
+    })
+    .catch((err) => {
+      console.error("persistEvent DB write failed", err);
     });
 
-    const ssePayload = {
-      id: event.id,
-      scope: event.scope,
-      scopeId: event.scopeId,
-      type: event.type,
-      payload: event.payload,
-      createdAt: event.createdAt.toISOString(),
-    };
+  scheduleRetentionCleanup();
+}
 
-    broadcastEvent(channelKeyFor(channel), ssePayload);
+let retentionCleanupScheduled = false;
 
-    if (channel.scope !== "owner" && channel.scope !== "table") {
-      broadcastEvent("owner", ssePayload);
-    }
-
-    if (Math.random() < 0.005) {
-      const cutoff = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-      await prisma.eventLog.deleteMany({ where: { createdAt: { lt: cutoff } } });
-    }
-  } catch (err) {
-    console.error("persistEvent failed", err);
+function scheduleRetentionCleanup(): void {
+  if (
+    retentionCleanupScheduled ||
+    typeof setInterval === "undefined"
+  ) {
+    return;
   }
+  retentionCleanupScheduled = true;
+  setInterval(async () => {
+    try {
+      const cutoff = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+      await prisma.eventLog.deleteMany({
+        where: { createdAt: { lt: cutoff } },
+      });
+    } catch (err) {
+      console.error("eventLog retention cleanup failed", err);
+    }
+  }, 6 * 60 * 60 * 1000);
 }

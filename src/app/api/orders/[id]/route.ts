@@ -27,16 +27,22 @@ const ACTIONS: Record<
     roles: string[];
   }
 > = {
-  accept: { from: ["PENDING"], to: "ACCEPTED", roles: ["KITCHEN", "MANAGER"] },
+  take: { from: ["PENDING"], to: "TAKEN", roles: ["WAITER", "MANAGER"] },
+  takeout: { from: ["PENDING", "TAKEN"], to: "PAID", roles: ["CASHIER", "MANAGER"] },
+  accept: { from: ["PAID"], to: "ACCEPTED", roles: ["KITCHEN", "MANAGER"] },
   cook: { from: ["ACCEPTED"], to: "COOKING", roles: ["KITCHEN", "MANAGER"] },
   ready: { from: ["COOKING"], to: "READY", roles: ["KITCHEN", "MANAGER"] },
   serve: { from: ["READY"], to: "SERVED", roles: ["WAITER", "MANAGER"] },
   complete: { from: ["SERVED"], to: "COMPLETED", roles: ["WAITER", "MANAGER"] },
-  cancel: { from: ["PENDING", "ACCEPTED", "COOKING"], to: "CANCELLED", roles: ["KITCHEN", "WAITER", "MANAGER"] },
+  cancel: {
+    from: ["PENDING", "TAKEN", "PAID", "ACCEPTED", "COOKING"],
+    to: "CANCELLED",
+    roles: ["WAITER", "CASHIER", "KITCHEN", "MANAGER"],
+  },
 };
 
 export async function GET(req: Request, ctx: Ctx) {
-  const guard = await requireRoles(req, ["KITCHEN", "WAITER", "MANAGER", "OWNER"]);
+  const guard = await requireRoles(req, ["KITCHEN", "WAITER", "CASHIER", "MANAGER", "OWNER"]);
   if ("response" in guard) return guard.response;
   const session = guard.session;
   const { id } = await ctx.params;
@@ -58,7 +64,7 @@ export async function GET(req: Request, ctx: Ctx) {
 }
 
 export async function PATCH(req: Request, ctx: Ctx) {
-  const guard = await requireRoles(req, ["KITCHEN", "WAITER", "MANAGER", "OWNER"]);
+  const guard = await requireRoles(req, ["KITCHEN", "WAITER", "CASHIER", "MANAGER", "OWNER"]);
   if ("response" in guard) return guard.response;
   const session = guard.session;
   const { id } = await ctx.params;
@@ -108,6 +114,7 @@ export async function PATCH(req: Request, ctx: Ctx) {
         where: { id },
         data: {
           status: def.to,
+          ...(action === "takeout" ? { cashierId: session.id } : {}),
           ...(collected != null ? { collectedAmount: collected, tip } : {}),
         },
         include: { items: true, table: true, receipt: true },
@@ -120,7 +127,7 @@ export async function PATCH(req: Request, ctx: Ctx) {
         });
       }
 
-      if (action === "ready") {
+      if (action === "takeout") {
         const subtotal = full.items.reduce((s, i) => s + i.price * i.quantity, 0);
         const tax = Math.round(subtotal * TAX_RATE * 100) / 100;
         const total = Math.round((subtotal + tax) * 100) / 100;
@@ -133,7 +140,7 @@ export async function PATCH(req: Request, ctx: Ctx) {
             subtotal,
             tax,
             total,
-            kitchenId: session.id,
+            kitchenId: session.role === "KITCHEN" ? session.id : null,
           },
           create: {
             orderId: id,
@@ -143,7 +150,7 @@ export async function PATCH(req: Request, ctx: Ctx) {
             subtotal,
             tax,
             total,
-            kitchenId: session.id,
+            kitchenId: session.role === "KITCHEN" ? session.id : null,
             restaurantId: full.restaurantId,
           },
         });
@@ -153,7 +160,7 @@ export async function PATCH(req: Request, ctx: Ctx) {
         const otherActive = await tx.order.count({
           where: {
             tableId: full.tableId,
-            status: { in: ["PENDING", "ACCEPTED", "COOKING", "READY", "SERVED"] },
+            status: { in: ["PENDING", "TAKEN", "PAID", "ACCEPTED", "COOKING", "READY", "SERVED"] },
           },
         });
         if (otherActive === 0) {
@@ -168,6 +175,7 @@ export async function PATCH(req: Request, ctx: Ctx) {
     const restaurantId = order.restaurantId;
 
     invalidateCache(`^kitchen-queue:${escapeRegExp(restaurantId)}$`);
+    invalidateCache(`^cashier-orders:${escapeRegExp(restaurantId)}$`);
     invalidateCache(`^notifs:.*:${escapeRegExp(restaurantId)}$`);
     invalidateCache(`^stats:${escapeRegExp(restaurantId)}$`);
 
@@ -191,7 +199,33 @@ export async function PATCH(req: Request, ctx: Ctx) {
           }
         );
 
-        if (action === "ready") {
+        if (action === "takeout") {
+          const receipt = await prisma.receipt.findUnique({ where: { orderId: id } });
+          await notify({
+            role: "KITCHEN",
+            restaurantId,
+            type: "ORDER_NEW",
+            title: `${summary} paid — ready to cook`,
+            body: `${updated.tableLabel} — total ${receipt?.total.toFixed(2) ?? updated.total.toFixed(2)} ETB`,
+            orderId: id,
+            tableId: updated.tableId ?? undefined,
+          });
+          if (tableCode) {
+            await emitToTable(tableCode, "ORDER_UPDATE", {
+              id,
+              orderNumber: updated.orderNumber,
+              status: "PAID",
+              receipt: receipt
+                ? {
+                    subtotal: receipt.subtotal,
+                    tax: receipt.tax,
+                    total: receipt.total,
+                    items: JSON.parse(receipt.items),
+                  }
+                : null,
+            });
+          }
+        } else if (action === "ready") {
           const receipt = await prisma.receipt.findUnique({ where: { orderId: id } });
           if (updated.waiterId) {
             await notify({
@@ -199,7 +233,7 @@ export async function PATCH(req: Request, ctx: Ctx) {
               restaurantId,
               type: "ORDER_READY",
               title: `${summary} is ready`,
-              body: `Ready for delivery — total ${receipt?.total.toFixed(2)} ETB`,
+              body: `Ready for delivery — total ${receipt?.total.toFixed(2) ?? updated.total.toFixed(2)} ETB`,
               orderId: id,
               tableId: updated.tableId ?? undefined,
             });
@@ -224,6 +258,18 @@ export async function PATCH(req: Request, ctx: Ctx) {
             id,
             orderNumber: updated.orderNumber,
             status: updated.status,
+          });
+        }
+
+        if (action === "take") {
+          await notify({
+            role: "CASHIER",
+            restaurantId,
+            type: "ORDER_NEW",
+            title: `${summary} taken — take it out`,
+            body: `${updated.tableLabel} is ready for checkout. Generate the receipt to send it to the kitchen.`,
+            orderId: id,
+            tableId: updated.tableId ?? undefined,
           });
         }
 

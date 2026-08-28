@@ -20,7 +20,7 @@ async function canManage(
   if (sessionRole === "MANAGER") {
     return (
       targetRestaurantId === sessionRestaurantId &&
-      (targetRole === "WAITER" || targetRole === "KITCHEN")
+      (targetRole === "WAITER" || targetRole === "KITCHEN" || targetRole === "CASHIER")
     );
   }
   if (sessionRole === "OWNER") {

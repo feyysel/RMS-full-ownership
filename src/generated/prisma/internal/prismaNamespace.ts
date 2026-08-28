@@ -1435,6 +1435,7 @@ export const OrderScalarFieldEnum = {
   tableLabel: 'tableLabel',
   sourceTableCode: 'sourceTableCode',
   waiterId: 'waiterId',
+  cashierId: 'cashierId',
   restaurantId: 'restaurantId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

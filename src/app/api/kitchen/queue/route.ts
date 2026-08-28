@@ -22,7 +22,7 @@ export async function GET(req: Request) {
     prisma.order.findMany({
       where: {
         restaurantId: session.restaurantId,
-        status: { in: ["PENDING", "ACCEPTED", "COOKING"] },
+        status: { in: ["PAID", "ACCEPTED", "COOKING"] },
       },
       include: {
         items: { select: { id: true, name: true, quantity: true, price: true } },

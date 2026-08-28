@@ -3,21 +3,20 @@
 import * as React from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
-  Check,
-  CookingPot,
-  Flame,
-  Clock,
-  ChefHat,
-  ReceiptText,
-  Package,
+  Banknote,
   Bell,
+  Check,
+  Coins,
+  Package,
+  Printer,
+  ReceiptText,
 } from "lucide-react";
 import { toast } from "sonner";
 import { PageHeader } from "@/components/ui/stat-card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Modal } from "@/components/ui/modal";
 import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Modal } from "@/components/ui/modal";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatCurrency, formatTime } from "@/lib/utils";
 import { useRealtime } from "@/components/realtime/use-realtime";
@@ -26,30 +25,36 @@ import { useDebouncedCallback } from "@/lib/use-debounced";
 type Order = {
   id: string;
   orderNumber: number;
-  status: "PAID" | "ACCEPTED" | "COOKING" | "READY" | "SERVED" | "COMPLETED";
+  status: string;
   type: "DINE_IN" | "TAKEAWAY";
   tableLabel: string;
   note: string | null;
+  total: number;
   createdAt: string;
   items: { id: string; name: string; quantity: number; price: number }[];
   table: { number: number; code: string } | null;
   waiter: { id: string; name: string } | null;
+  receipt: { subtotal: number; tax: number; total: number } | null;
 };
 
-type QueueData = {
-  active: Order[];
-  recent: (Order & { receipt: { id: string; total: number } | null })[];
-  counts: Record<string, number>;
+const statusTone: Record<string, "amber" | "sky" | "gold" | "violet" | "teal" | "emerald" | "rose"> = {
+  PENDING: "amber",
+  TAKEN: "sky",
+  PAID: "gold",
+  ACCEPTED: "violet",
+  COOKING: "teal",
+  READY: "emerald",
+  CANCELLED: "rose",
 };
 
-export default function KitchenPage() {
-  const [data, setData] = React.useState<QueueData | null>(null);
+export default function CashierDashboard() {
+  const [data, setData] = React.useState<{ orders: Order[] } | null>(null);
   const [restaurantId, setRestaurantId] = React.useState<string | null>(null);
   const [receiptFor, setReceiptFor] = React.useState<Order | null>(null);
   const [newOrderId, setNewOrderId] = React.useState<string | null>(null);
 
   const refreshNow = React.useCallback(async () => {
-    const res = await fetch("/api/kitchen/queue");
+    const res = await fetch("/api/cashier/orders");
     if (res.ok) setData(await res.json());
   }, []);
   const refresh = useDebouncedCallback(refreshNow, 500);
@@ -80,69 +85,63 @@ export default function KitchenPage() {
   }, []);
 
   React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     refreshNow();
-  }, [refreshNow]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const act = React.useCallback(async (orderId: string, action: "accept" | "cook" | "ready") => {
-    const labels: Record<string, string> = {
-      accept: "Order accepted — start prepping",
-      cook: "Now cooking",
-      ready: "Order ready — send to waiter",
-    };
-    const toStatus = { accept: "ACCEPTED", cook: "COOKING", ready: "READY" } as const;
-
-    setData((prev) => {
-      if (!prev) return prev;
-      return {
-        ...prev,
-        active: prev.active.map((o) =>
-          o.id === orderId ? { ...o, status: toStatus[action] } : o
-        ),
-        recent: prev.recent.map((o) =>
-          o.id === orderId ? { ...o, status: toStatus[action] } : o
-        ),
-      };
-    });
-
-    try {
-      const res = await fetch(`/api/orders/${orderId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action }),
+  const act = React.useCallback(
+    async (orderId: string, action: "takeout", label: string) => {
+      setData((prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          orders: prev.orders.map((o) =>
+            o.id === orderId ? { ...o, status: "PAID" } : o
+          ),
+        };
       });
-      const d = await res.json();
-      if (!res.ok) {
-        toast.error(d.error ?? "Action failed");
-        refresh();
-        return;
-      }
-      toast.success(labels[action]);
-    } catch {
-      toast.error("Network error");
-      refresh();
-    }
-  }, [refresh]);
 
-  const queue = data?.active ?? [];
-  const paid = queue.filter((o) => o.status === "PAID");
-  const accepted = queue.filter((o) => o.status === "ACCEPTED");
-  const cooking = queue.filter((o) => o.status === "COOKING");
-  const ready = queue.filter((o) => o.status === "READY");
-  const recent = (data?.recent ?? []).filter((o) => o.status !== "READY");
+      try {
+        const res = await fetch(`/api/orders/${orderId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action }),
+        });
+        const d = await res.json();
+        if (!res.ok) {
+          toast.error(d.error ?? "Action failed");
+          refresh();
+          return;
+        }
+        toast.success(label);
+        setReceiptFor({ ...d.order, items: d.order.items ?? [], receipt: d.order.receipt ?? null });
+      } catch {
+        toast.error("Network error");
+        refresh();
+      }
+    },
+    [refresh]
+  );
+
+  const orders = data?.orders ?? [];
+  const taken = orders.filter((o) => o.status === "TAKEN" || o.status === "PENDING");
+  const active = orders.filter((o) => !["TAKEN", "PENDING", "CANCELLED"].includes(o.status));
+  const paid = active.filter((o) => o.status === "PAID");
 
   return (
     <div>
       <PageHeader
-        title="Kitchen Queue"
-        description="First come, first served. Accept, cook, and release orders — all in real time."
+        title="Cashier"
+        description="Take orders, print receipts, and push them to the kitchen — all in real time."
       />
 
       <div className="mb-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
         {[
-          { label: "To accept", value: paid.length, tone: "bg-sky-400", pulse: paid.length > 0 },
-          { label: "Accepted", value: accepted.length, tone: "bg-violet-400", pulse: false },
-          { label: "Cooking", value: cooking.length, tone: "bg-teal-400", pulse: cooking.length > 0 },
-          { label: "Ready", value: ready.length, tone: "bg-emerald-400", pulse: ready.length > 0 },
+          { label: "To take out", value: taken.length, tone: "bg-sky-400", pulse: taken.length > 0 },
+          { label: "Paid", value: paid.length, tone: "bg-gold", pulse: paid.length > 0 },
+          { label: "In kitchen", value: active.filter((o) => ["ACCEPTED", "COOKING"].includes(o.status)).length, tone: "bg-violet-400", pulse: false },
+          { label: "Ready / served", value: active.filter((o) => ["READY", "SERVED"].includes(o.status)).length, tone: "bg-emerald-400", pulse: false },
         ].map((s) => (
           <Card key={s.label} className="flex items-center justify-between p-4">
             <div>
@@ -168,19 +167,19 @@ export default function KitchenPage() {
           >
             <Bell className="h-5 w-5 animate-pulse-soft text-gold-light" />
             <p className="flex-1 text-sm font-medium text-gold-light">
-              New order incoming — check the queue!
+              Order taken by a waiter — take it out to generate the receipt!
             </p>
           </motion.div>
         )}
       </AnimatePresence>
 
       <div className="space-y-4">
-        {data && queue.length === 0 && (
+        {data && taken.length === 0 && active.length === 0 && (
           <Card className="flex flex-col items-center justify-center py-20 text-center">
-            <ChefHat className="mb-4 h-12 w-12 text-zinc-700" />
-            <p className="font-display text-xl font-semibold text-zinc-200">Kitchen is clear</p>
+            <Banknote className="mb-4 h-12 w-12 text-zinc-700" />
+            <p className="font-display text-xl font-semibold text-zinc-200">No orders to process</p>
             <p className="mt-1 text-sm text-zinc-500">
-              New orders will appear here the instant they&apos;re placed.
+              Orders take by waiters will appear here for you to take out.
             </p>
           </Card>
         )}
@@ -193,17 +192,28 @@ export default function KitchenPage() {
           </div>
         ) : (
           <>
-            {paid.length > 0 && (
+            {taken.length > 0 && (
               <section>
                 <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-sky-300">
-                  <Bell className="h-4 w-4" /> Paid &amp; waiting · accept to start
+                  <Coins className="h-4 w-4" /> Take out · generate receipt &amp; send to kitchen
                 </h2>
                 <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
-                  {paid.map((o) => (
+                  {taken.map((o) => (
                     <OrderCard key={o.id} order={o} highlight={o.id === newOrderId}>
                       <div className="flex gap-2">
-                        <Button onClick={() => act(o.id, "accept")} className="flex-1">
-                          <Check className="h-4 w-4" /> Accept order
+                        <Button
+                          onClick={() =>
+                            act(o.id, "takeout", `Order #${o.orderNumber} taken out — sent to kitchen`)
+                          }
+                          className="flex-1"
+                        >
+                          <Printer className="h-4 w-4" /> Take out &amp; print
+                        </Button>
+                        <Button
+                          variant="outline"
+                          onClick={() => setReceiptFor(o)}
+                        >
+                          <ReceiptText className="h-4 w-4" />
                         </Button>
                       </div>
                     </OrderCard>
@@ -212,67 +222,18 @@ export default function KitchenPage() {
               </section>
             )}
 
-            {accepted.length > 0 && (
+            {active.length > 0 && (
               <section>
-                <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-sky-300">
-                  <Clock className="h-4 w-4" /> Accepted
+                <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-zinc-400">
+                  <Package className="h-4 w-4 text-gold-light" /> Live orders
                 </h2>
                 <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
-                  {accepted.map((o) => (
-                    <OrderCard key={o.id} order={o}>
-                      <Button variant="success" onClick={() => act(o.id, "cook")} className="flex-1">
-                        <CookingPot className="h-4 w-4" /> Start cooking
-                      </Button>
-                    </OrderCard>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {cooking.length > 0 && (
-              <section>
-                <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-violet-300">
-                  <Flame className="h-4 w-4" /> On the stove
-                </h2>
-                <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
-                  {cooking.map((o) => (
-                    <OrderCard key={o.id} order={o} cooking>
-                      <Button variant="success" onClick={() => act(o.id, "ready")} className="flex-1">
-                        <Check className="h-4 w-4" /> Done — send to waiter
-                      </Button>
-                    </OrderCard>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {ready.length > 0 && (
-              <section>
-                <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-emerald-300">
-                  <Package className="h-4 w-4" /> Ready for pickup
-                </h2>
-                <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
-                  {ready.map((o) => (
+                  {active.map((o) => (
                     <OrderCard key={o.id} order={o}>
                       <Button variant="outline" onClick={() => setReceiptFor(o)} className="flex-1">
                         <ReceiptText className="h-4 w-4" /> View receipt
                       </Button>
                     </OrderCard>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {recent.length > 0 && (
-              <section className="pt-2">
-                <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-zinc-500">
-                  Recently completed
-                </h2>
-                <div className="flex flex-wrap gap-2">
-                  {recent.map((o) => (
-                    <Badge key={o.id} tone={o.status === "COMPLETED" ? "zinc" : "teal"}>
-                      #{o.orderNumber} · {o.tableLabel}
-                    </Badge>
                   ))}
                 </div>
               </section>
@@ -287,7 +248,16 @@ export default function KitchenPage() {
         title={`Receipt · Order #${receiptFor?.orderNumber}`}
         description={`Generated for ${receiptFor?.tableLabel}`}
       >
-        {receiptFor && <ReceiptContent order={receiptFor} />}
+        {receiptFor && (
+          <div>
+            <ReceiptContent order={receiptFor} />
+            <div className="mt-4 flex justify-end">
+              <Button onClick={() => printReceipt(receiptFor)}>
+                <Printer className="h-4 w-4" /> Print receipt
+              </Button>
+            </div>
+          </div>
+        )}
       </Modal>
     </div>
   );
@@ -297,12 +267,10 @@ function OrderCard({
   order,
   children,
   highlight,
-  cooking,
 }: {
   order: Order;
   children: React.ReactNode;
   highlight?: boolean;
-  cooking?: boolean;
 }) {
   return (
     <motion.div
@@ -312,11 +280,7 @@ function OrderCard({
       exit={{ opacity: 0, scale: 0.95 }}
       className={
         "rounded-2xl border bg-gradient-to-br from-white/[0.06] to-white/[0.01] p-5 shadow-soft backdrop-blur-sm " +
-        (highlight
-          ? "border-gold/50 ring-2 ring-gold/30"
-          : cooking
-            ? "border-violet-400/30"
-            : "border-white/10")
+        (highlight ? "border-gold/50 ring-2 ring-gold/30" : "border-white/10")
       }
     >
       <div className="mb-3 flex items-center justify-between">
@@ -331,9 +295,7 @@ function OrderCard({
             </p>
           </div>
         </div>
-        <Badge tone={order.type === "TAKEAWAY" ? "sky" : "amber"}>
-          {order.type === "TAKEAWAY" ? "Takeaway" : "Dine-in"}
-        </Badge>
+        <Badge tone={statusTone[order.status] ?? "amber"}>{order.status}</Badge>
       </div>
 
       <div className="mb-4 space-y-1.5">
@@ -357,8 +319,9 @@ function OrderCard({
       )}
 
       <div className="flex items-center justify-between border-t border-white/[0.06] pt-3">
-        <p className="text-sm text-zinc-500">
-          {order.items.reduce((s, i) => s + i.quantity, 0)} items
+        <p className="flex items-center gap-1 text-sm font-semibold text-gold-light">
+          <Check className="h-4 w-4" />
+          {formatCurrency(order.total)}
         </p>
         <div className="flex gap-2">{children}</div>
       </div>
@@ -367,9 +330,9 @@ function OrderCard({
 }
 
 function ReceiptContent({ order }: { order: Order }) {
-  const subtotal = order.items.reduce((s, i) => s + i.price * i.quantity, 0);
-  const tax = Math.round(subtotal * 0.08 * 100) / 100;
-  const total = subtotal + tax;
+  const subtotal = order.receipt?.subtotal ?? order.items.reduce((s, i) => s + i.price * i.quantity, 0);
+  const tax = order.receipt?.tax ?? Math.round(subtotal * 0.08 * 100) / 100;
+  const total = order.receipt?.total ?? subtotal + tax;
   return (
     <div className="rounded-2xl border border-white/10 bg-white p-5 text-zinc-900">
       <div className="border-b-2 border-dashed border-zinc-300 pb-4 text-center">
@@ -403,11 +366,77 @@ function ReceiptContent({ order }: { order: Order }) {
           <span>{formatCurrency(total)}</span>
         </div>
       </div>
-      <p className="mt-4 text-center text-xs text-zinc-400">
-        Thank you — enjoy your meal!
-      </p>
+      <p className="mt-4 text-center text-xs text-zinc-400">Thank you — enjoy your meal!</p>
     </div>
   );
+}
+
+function printReceipt(o: Order) {
+  const subtotal = o.receipt?.subtotal ?? o.items.reduce((s, i) => s + i.price * i.quantity, 0);
+  const tax = o.receipt?.tax ?? Math.round(subtotal * 0.08 * 100) / 100;
+  const total = o.receipt?.total ?? subtotal + tax;
+
+  const itemsHtml = o.items
+    .map(
+      (i) => `
+      <tr>
+        <td>${escapeHtml(i.name)} × ${i.quantity}</td>
+        <td class="r">${formatCurrency(i.price * i.quantity)}</td>
+      </tr>`
+    )
+    .join("");
+
+  const html = `<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Receipt #${o.orderNumber}</title>
+<style>
+  body { font-family: Georgia, 'Times New Roman', serif; color: #111; max-width: 320px; margin: 24px auto; }
+  .center { text-align: center; }
+  h1 { font-size: 20px; letter-spacing: 1px; margin: 0 0 4px; }
+  .dim { color: #666; font-size: 11px; margin: 2px 0; }
+  table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+  td { padding: 3px 0; vertical-align: top; }
+  td.r { text-align: right; }
+  .dash { border-top: 1px dashed #999; margin: 8px 0; }
+  .total-row td { padding-top: 8px; font-weight: bold; }
+  .thanks { text-align: center; font-size: 11px; color: #666; margin-top: 16px; }
+</style>
+</head>
+<body>
+  <div class="center">
+    <h1>THE GOLDEN FORK</h1>
+    <p class="dim">Receipt #${o.orderNumber}</p>
+    <p class="dim">${escapeHtml(o.tableLabel)} · ${new Date(o.createdAt).toLocaleString()}</p>
+  </div>
+  <table>
+    ${itemsHtml}
+  </table>
+  <div class="dash"></div>
+  <table>
+    <tr><td>Subtotal</td><td class="r">${formatCurrency(subtotal)}</td></tr>
+    <tr><td>Tax (8%)</td><td class="r">${formatCurrency(tax)}</td></tr>
+    <tr class="total-row"><td>Total</td><td class="r">${formatCurrency(total)}</td></tr>
+  </table>
+  <p class="thanks">Thank you — enjoy your meal!</p>
+</body>
+</html>`;
+
+  const win = window.open("", "_blank");
+  if (!win) return;
+  win.document.write(html);
+  win.document.close();
+  win.focus();
+  setTimeout(() => win.print(), 300);
+}
+
+function escapeHtml(s: string) {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
 
 let audioCtx: AudioContext | null = null;

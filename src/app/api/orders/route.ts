@@ -97,10 +97,20 @@ export async function POST(req: Request) {
     });
 
     invalidateCache(`^kitchen-queue:${escapeRegExp(restaurantId)}$`);
+    invalidateCache(`^cashier-orders:${escapeRegExp(restaurantId)}$`);
     invalidateCache(`^stats:${escapeRegExp(restaurantId)}$`);
 
     after(async () => {
       try {
+        await notify({
+          role: "CASHIER",
+          restaurantId,
+          type: "ORDER_NEW",
+          title: `New order #${order.orderNumber}`,
+          body: `${order.tableLabel} — ${order.items.length} item(s), total ${order.total.toFixed(2)} ETB. Take it out to generate the receipt.`,
+          orderId: order.id,
+          tableId: order.tableId ?? undefined,
+        });
         await notify({
           role: "KITCHEN",
           restaurantId,
