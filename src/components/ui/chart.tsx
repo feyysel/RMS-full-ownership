@@ -21,30 +21,34 @@ export function TrendChart({
       </CardHeader>
       <div className="flex h-52 items-end gap-2 sm:gap-3">
         {values.map((v, i) => {
-          const h = Math.max(4, (v / max) * 100);
+          const pct = Math.max(3, (v / max) * 100);
           return (
             <div
               key={labels[i]}
-              className="group flex flex-1 flex-col items-center gap-2"
+              className="group flex h-full flex-1 flex-col"
               title={`${labels[i]}: ${formatCurrency(v)}`}
             >
-              <span className="whitespace-nowrap text-[10px] font-medium tabular-nums text-zinc-500 transition-colors group-hover:text-gold-dark dark:text-zinc-400 dark:group-hover:text-gold-light">
-                {formatCurrency(v)}
-              </span>
-              <motion.div
-                initial={{ height: 0 }}
-                animate={{ height: `${h}%` }}
-                transition={{ duration: 0.7, delay: i * 0.05, ease: "easeOut" }}
-                className={cn(
-                  "w-full max-w-10 rounded-t-lg bg-gradient-to-t transition-all",
-                  v === max
-                    ? "from-gold-dark via-gold to-gold-light shadow-[0_0_20px_rgba(212,163,75,0.4)]"
-                    : "from-gold/30 to-gold/15 group-hover:from-gold/50 group-hover:to-gold/25"
-                )}
-              />
-              <span className="text-[10px] uppercase text-zinc-500">
-                {labels[i]}
-              </span>
+              <div className="flex flex-1 items-end justify-center">
+                <motion.div
+                  initial={{ height: 0 }}
+                  animate={{ height: `${pct}%` }}
+                  transition={{ duration: 0.7, delay: i * 0.05, ease: "easeOut" }}
+                  className={cn(
+                    "w-full max-w-10 rounded-t-lg bg-gradient-to-t transition-all",
+                    v === max
+                      ? "from-gold-dark via-gold to-gold-light shadow-[0_0_20px_rgba(212,163,75,0.4)]"
+                      : "from-gold/30 to-gold/15 group-hover:from-gold/50 group-hover:to-gold/25"
+                  )}
+                />
+              </div>
+              <div className="flex flex-col items-center gap-0.5 pt-2">
+                <span className="whitespace-nowrap text-[10px] font-medium tabular-nums text-zinc-500 transition-colors group-hover:text-gold-dark dark:text-zinc-400 dark:group-hover:text-gold-light">
+                  {formatCurrency(v)}
+                </span>
+                <span className="text-[10px] uppercase text-zinc-500">
+                  {labels[i]}
+                </span>
+              </div>
             </div>
           );
         })}
