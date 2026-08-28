@@ -29,6 +29,7 @@ import { Badge } from "@/components/ui/badge";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { Input, Label, Textarea } from "@/components/ui/input";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 
 type PublicItem = {
   id: string;
@@ -375,9 +376,15 @@ export default function TableMenuPage({
               </div>
             </div>
           </div>
-          <Badge tone="gold" className="hidden sm:inline-flex">
-            <Sparkles className="h-3 w-3" /> Order from your seat
-          </Badge>
+          <div className="flex items-center gap-2">
+            <Badge tone="gold" className="hidden sm:inline-flex">
+              <Sparkles className="h-3 w-3" /> Order from your seat
+            </Badge>
+            <ThemeToggle
+              size="sm"
+              className="border border-zinc-200 dark:border-white/10"
+            />
+          </div>
         </div>
       </header>
 
@@ -451,7 +458,7 @@ export default function TableMenuPage({
                     </Badge>
                   </div>
                 )}
-                <span className="absolute bottom-3 right-3 rounded-full bg-black/60 px-3 py-1 font-display text-base font-semibold text-gold-dark dark:text-gold-light backdrop-blur-sm">
+                <span className="absolute bottom-3 right-3 rounded-full bg-black/60 px-3 py-1 font-display text-base font-semibold text-gold-light backdrop-blur-sm">
                   {formatCurrency(item.price)}
                 </span>
               </div>
