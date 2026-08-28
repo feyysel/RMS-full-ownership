@@ -156,6 +156,16 @@ export async function PATCH(req: Request, ctx: Ctx) {
         });
       }
 
+      if (
+        ["accept", "cook", "ready"].includes(action) &&
+        session.role === "KITCHEN"
+      ) {
+        await tx.receipt.updateMany({
+          where: { orderId: id },
+          data: { kitchenId: session.id },
+        });
+      }
+
       if ((action === "complete" || action === "cancel") && full.tableId) {
         const otherActive = await tx.order.count({
           where: {

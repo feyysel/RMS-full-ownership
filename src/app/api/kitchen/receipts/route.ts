@@ -12,7 +12,12 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "No restaurant assigned" }, { status: 400 });
 
   const receipts = await prisma.receipt.findMany({
-    where: { restaurantId: session.restaurantId },
+    where: {
+      restaurantId: session.restaurantId,
+      order: {
+        status: { in: ["ACCEPTED", "COOKING", "READY", "SERVED", "COMPLETED"] },
+      },
+    },
     include: {
       order: {
         include: {
