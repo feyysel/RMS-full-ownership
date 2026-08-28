@@ -2,7 +2,7 @@
 
 import { motion } from "motion/react";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { cn, formatCurrency } from "@/lib/utils";
 
 export function TrendChart({
   labels,
@@ -19,16 +19,17 @@ export function TrendChart({
       <CardHeader>
         <CardTitle className="text-base">{title}</CardTitle>
       </CardHeader>
-      <div className="flex h-44 items-end gap-2 sm:gap-3">
+      <div className="flex h-52 items-end gap-2 sm:gap-3">
         {values.map((v, i) => {
           const h = Math.max(4, (v / max) * 100);
           return (
             <div
               key={labels[i]}
               className="group flex flex-1 flex-col items-center gap-2"
+              title={`${labels[i]}: ${formatCurrency(v)}`}
             >
-              <span className="text-[10px] text-zinc-500 opacity-0 transition-opacity group-hover:opacity-100">
-                {v.toFixed(0)} ETB
+              <span className="whitespace-nowrap text-[10px] font-medium tabular-nums text-zinc-500 transition-colors group-hover:text-gold-dark dark:text-zinc-400 dark:group-hover:text-gold-light">
+                {formatCurrency(v)}
               </span>
               <motion.div
                 initial={{ height: 0 }}
