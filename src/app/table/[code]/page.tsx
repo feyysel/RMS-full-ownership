@@ -88,7 +88,7 @@ function storageKey(code: string) {
 
 function loadOrders(code: string): TrackedOrder[] {
   try {
-    return JSON.parse(localStorage.getItem(storageKey(code)) ?? "[]");
+    return JSON.parse(sessionStorage.getItem(storageKey(code)) ?? "[]");
   } catch {
     return [];
   }
@@ -96,7 +96,7 @@ function loadOrders(code: string): TrackedOrder[] {
 
 function saveOrders(code: string, orders: TrackedOrder[]) {
   try {
-    localStorage.setItem(storageKey(code), JSON.stringify(orders));
+    sessionStorage.setItem(storageKey(code), JSON.stringify(orders));
   } catch {
     /* storage unavailable */
   }
@@ -184,21 +184,6 @@ export default function TableMenuPage({
   React.useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     refreshMenu();
-    fetch(`/api/orders/table?code=${encodeURIComponent(code)}`)
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d) => {
-        if (!d) return;
-        setOrders((prev) => {
-          const map = new Map(prev.map((o) => [o.id, o]));
-          for (const r of d.orders) map.set(r.id, { ...(map.get(r.id) ?? r), ...r });
-          const merged = [...map.values()].sort((a, b) =>
-            b.createdAt.localeCompare(a.createdAt)
-          );
-          saveOrders(code, merged);
-          return merged;
-        });
-      })
-      .catch(() => {});
     fetch(`/api/bell?code=${encodeURIComponent(code)}`)
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => {
