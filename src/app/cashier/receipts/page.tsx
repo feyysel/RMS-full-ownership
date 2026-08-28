@@ -95,7 +95,7 @@ export default function CashierReceipts() {
       ) : filtered.length === 0 ? (
         <Card className="flex flex-col items-center justify-center py-20 text-center">
           <ReceiptText className="mb-4 h-12 w-12 text-zinc-700" />
-          <p className="font-display text-xl font-semibold text-zinc-200">No receipts yet</p>
+          <p className="font-display text-xl font-semibold text-zinc-800 dark:text-zinc-200">No receipts yet</p>
           <p className="mt-1 text-sm text-zinc-500">
             Receipts you generate will appear here.
           </p>
@@ -111,14 +111,14 @@ export default function CashierReceipts() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.98 }}
                 onClick={() => setSelected(r)}
-                className="flex w-full items-center gap-4 rounded-2xl border border-white/[0.08] bg-gradient-to-br from-white/[0.06] to-white/[0.01] p-4 text-left shadow-soft backdrop-blur-sm transition-all hover:border-gold/30"
+                className="flex w-full items-center gap-4 rounded-2xl border border-zinc-200 bg-gradient-to-br from-zinc-100 to-zinc-100 p-4 text-left shadow-soft backdrop-blur-sm transition-all hover:border-gold/30 dark:border-white/[0.08] dark:from-white/[0.06] dark:to-white/[0.01]"
               >
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gold/10 ring-1 ring-gold/25">
-                  <ReceiptText className="h-5 w-5 text-gold-light" />
+                  <ReceiptText className="h-5 w-5 text-gold-dark dark:text-gold-light" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <p className="font-display text-base font-semibold text-zinc-50">
+                    <p className="font-display text-base font-semibold text-zinc-900 dark:text-zinc-50">
                       Order #{r.orderNumber}
                     </p>
                     <Badge tone={r.type === "TAKEAWAY" ? "sky" : "amber"}>
@@ -130,7 +130,7 @@ export default function CashierReceipts() {
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="font-display text-lg font-semibold text-gold-light">
+                  <p className="font-display text-lg font-semibold text-gold-dark dark:text-gold-light">
                     {formatCurrency(r.total)}
                   </p>
                   <p className="text-xs text-zinc-500">{r.items.length} item(s)</p>

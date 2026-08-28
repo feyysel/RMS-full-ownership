@@ -125,7 +125,7 @@ export default function ManagerBranches() {
             return (
               <Card key={r.id} className="flex flex-col overflow-hidden transition-all hover:border-gold/30">
                 <div className="mb-4 flex items-start justify-between">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-gold/20 to-gold/5 text-gold-light ring-1 ring-gold/25">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-gold/20 to-gold/5 text-gold-dark ring-1 ring-gold/25 dark:text-gold-light">
                     <Store className="h-6 w-6" />
                   </div>
                   <div className="flex gap-1.5">
@@ -133,7 +133,7 @@ export default function ManagerBranches() {
                     {!r.parentId && <Badge tone="gold">Main</Badge>}
                   </div>
                 </div>
-                <h3 className="font-display text-xl font-semibold text-zinc-50">{r.name}</h3>
+                <h3 className="font-display text-xl font-semibold text-zinc-900 dark:text-zinc-50">{r.name}</h3>
                 <p className="mt-1 line-clamp-1 text-sm text-zinc-500">
                   {r.address ?? "No address"} {r.phone ? `· ${r.phone}` : ""}
                 </p>
@@ -144,15 +144,15 @@ export default function ManagerBranches() {
                     { icon: Grid3X3, label: "Tables", value: r._count.tables },
                     { icon: UtensilsCrossed, label: "Menu", value: r._count.menuItems },
                   ].map((m) => (
-                    <div key={m.label} className="rounded-xl bg-white/[0.04] px-2.5 py-2.5 text-center">
-                      <m.icon className="mx-auto mb-1 h-4 w-4 text-gold-light/70" />
-                      <p className="text-sm font-semibold text-zinc-100">{m.value}</p>
+                    <div key={m.label} className="rounded-xl bg-zinc-100 px-2.5 py-2.5 text-center dark:bg-white/[0.04]">
+                      <m.icon className="mx-auto mb-1 h-4 w-4 text-gold-dark/70 dark:text-gold-light/70" />
+                      <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">{m.value}</p>
                       <p className="text-[10px] uppercase tracking-wide text-zinc-500">{m.label}</p>
                     </div>
                   ))}
                 </div>
 
-                <div className="mt-5 flex items-center justify-between border-t border-white/[0.06] pt-4">
+                <div className="mt-5 flex items-center justify-between border-t border-zinc-200 pt-4 dark:border-white/[0.06]">
                   <p className="text-xs text-zinc-500">Since {formatDate(r.createdAt)}</p>
                   {active ? (
                     <Button size="sm" variant="outline" disabled>
@@ -175,7 +175,7 @@ export default function ManagerBranches() {
           {data?.restaurants.length === 0 && (
             <Card className="flex flex-col items-center justify-center py-16 text-center sm:col-span-2 lg:col-span-3">
               <Store className="mb-3 h-8 w-8 text-zinc-600" />
-              <p className="text-sm text-zinc-400">No restaurants assigned</p>
+              <p className="text-sm text-zinc-500 dark:text-zinc-400">No restaurants assigned</p>
             </Card>
           )}
         </div>

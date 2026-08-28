@@ -102,7 +102,7 @@ export default function ManagerOverview() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
-              <ChefHat className="h-4 w-4 text-gold-light" />
+              <ChefHat className="h-4 w-4 text-gold-dark dark:text-gold-light" />
               Best sellers
             </CardTitle>
           </CardHeader>
@@ -113,10 +113,10 @@ export default function ManagerOverview() {
                 ))
               : d.topItems.map((item, i) => (
                   <div key={item.name} className="flex items-center gap-3">
-                    <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gold/10 text-xs font-bold text-gold-light ring-1 ring-gold/20">
+                    <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gold/10 text-xs font-bold text-gold-dark ring-1 ring-gold/20 dark:text-gold-light">
                       {i + 1}
                     </span>
-                    <p className="flex-1 truncate text-sm text-zinc-200">{item.name}</p>
+                    <p className="flex-1 truncate text-sm text-zinc-800 dark:text-zinc-200">{item.name}</p>
                     <Badge tone="amber">{item.qty} sold</Badge>
                   </div>
                 ))}
@@ -129,10 +129,10 @@ export default function ManagerOverview() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="flex items-center gap-2 text-base">
-              <UtensilsCrossed className="h-4 w-4 text-gold-light" />
+              <UtensilsCrossed className="h-4 w-4 text-gold-dark dark:text-gold-light" />
               Recent orders
             </CardTitle>
-            <Link href="/manager/menu" className="flex items-center gap-1 text-xs text-gold-light hover:underline">
+            <Link href="/manager/menu" className="flex items-center gap-1 text-xs text-gold-dark hover:underline dark:text-gold-light">
               Manage menu <ArrowUpRight className="h-3 w-3" />
             </Link>
           </CardHeader>
@@ -142,18 +142,18 @@ export default function ManagerOverview() {
                   <Skeleton key={i} className="h-12" />
                 ))
               : d.recentOrders.map((o) => (
-                  <div key={o.id} className="flex items-center gap-3 rounded-xl px-2 py-2.5 hover:bg-white/[0.03]">
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gold/10 font-display text-xs font-semibold text-gold-light ring-1 ring-gold/20">
+                  <div key={o.id} className="flex items-center gap-3 rounded-xl px-2 py-2.5 hover:bg-zinc-100 dark:hover:bg-white/[0.03]">
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gold/10 font-display text-xs font-semibold text-gold-dark ring-1 ring-gold/20 dark:text-gold-light">
                       #{o.orderNumber}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium text-zinc-100">{o.tableLabel}</p>
+                      <p className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-100">{o.tableLabel}</p>
                       <p className="truncate text-xs text-zinc-500">
                         {o.waiter?.name ?? "Customer"} · {timeAgo(o.createdAt)}
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-semibold text-zinc-100">{formatCurrency(o.total)}</p>
+                      <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">{formatCurrency(o.total)}</p>
                       <Badge tone={toneFor(o.status)}>{o.status}</Badge>
                     </div>
                   </div>

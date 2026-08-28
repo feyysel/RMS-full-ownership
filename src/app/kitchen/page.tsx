@@ -148,7 +148,7 @@ export default function KitchenPage() {
             <div>
               <p className="text-xs uppercase tracking-wider text-zinc-500">{s.label}</p>
               {data ? (
-                <p className="mt-1 font-display text-3xl font-semibold text-zinc-50">{s.value}</p>
+                <p className="mt-1 font-display text-3xl font-semibold text-zinc-900 dark:text-zinc-50">{s.value}</p>
               ) : (
                 <Skeleton className="mt-2 h-8 w-10" />
               )}
@@ -166,8 +166,8 @@ export default function KitchenPage() {
             exit={{ opacity: 0, y: -20 }}
             className="mb-4 flex items-center gap-3 rounded-2xl border border-gold/40 bg-gold/10 px-4 py-3"
           >
-            <Bell className="h-5 w-5 animate-pulse-soft text-gold-light" />
-            <p className="flex-1 text-sm font-medium text-gold-light">
+            <Bell className="h-5 w-5 animate-pulse-soft text-gold-dark dark:text-gold-light" />
+            <p className="flex-1 text-sm font-medium text-gold-dark dark:text-gold-light">
               New order incoming — check the queue!
             </p>
           </motion.div>
@@ -178,7 +178,7 @@ export default function KitchenPage() {
         {data && queue.length === 0 && (
           <Card className="flex flex-col items-center justify-center py-20 text-center">
             <ChefHat className="mb-4 h-12 w-12 text-zinc-700" />
-            <p className="font-display text-xl font-semibold text-zinc-200">Kitchen is clear</p>
+            <p className="font-display text-xl font-semibold text-zinc-800 dark:text-zinc-200">Kitchen is clear</p>
             <p className="mt-1 text-sm text-zinc-500">
               New orders will appear here the instant they&apos;re placed.
             </p>
@@ -195,7 +195,7 @@ export default function KitchenPage() {
           <>
             {paid.length > 0 && (
               <section>
-                <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-sky-300">
+                <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-sky-700 dark:text-sky-300">
                   <Bell className="h-4 w-4" /> Paid &amp; waiting · accept to start
                 </h2>
                 <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
@@ -214,7 +214,7 @@ export default function KitchenPage() {
 
             {accepted.length > 0 && (
               <section>
-                <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-sky-300">
+                <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-sky-700 dark:text-sky-300">
                   <Clock className="h-4 w-4" /> Accepted
                 </h2>
                 <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
@@ -231,7 +231,7 @@ export default function KitchenPage() {
 
             {cooking.length > 0 && (
               <section>
-                <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-violet-300">
+                <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-violet-700 dark:text-violet-300">
                   <Flame className="h-4 w-4" /> On the stove
                 </h2>
                 <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
@@ -248,7 +248,7 @@ export default function KitchenPage() {
 
             {ready.length > 0 && (
               <section>
-                <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-emerald-300">
+                <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">
                   <Package className="h-4 w-4" /> Ready for pickup
                 </h2>
                 <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
@@ -311,21 +311,21 @@ function OrderCard({
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
       className={
-        "rounded-2xl border bg-gradient-to-br from-white/[0.06] to-white/[0.01] p-5 shadow-soft backdrop-blur-sm " +
+        "rounded-2xl border bg-gradient-to-br from-zinc-100 to-zinc-100 p-5 shadow-soft backdrop-blur-sm dark:from-white/[0.06] dark:to-white/[0.01] " +
         (highlight
           ? "border-gold/50 ring-2 ring-gold/30"
           : cooking
             ? "border-violet-400/30"
-            : "border-white/10")
+            : "border-zinc-200 dark:border-white/10")
       }
     >
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gold/10 font-display text-sm font-bold text-gold-light ring-1 ring-gold/25">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gold/10 font-display text-sm font-bold text-gold-dark ring-1 ring-gold/25 dark:text-gold-light">
             #{order.orderNumber}
           </div>
           <div>
-            <p className="font-medium text-zinc-100">{order.tableLabel}</p>
+            <p className="font-medium text-zinc-900 dark:text-zinc-100">{order.tableLabel}</p>
             <p className="text-xs text-zinc-500">
               {formatTime(order.createdAt)} · {order.waiter?.name ?? "Customer"}
             </p>
@@ -338,9 +338,9 @@ function OrderCard({
 
       <div className="mb-4 space-y-1.5">
         {order.items.map((i) => (
-          <div key={i.id} className="flex items-center justify-between gap-2 rounded-lg bg-white/[0.03] px-3 py-2">
-            <p className="text-sm text-zinc-200">
-              <span className="mr-2 inline-flex h-5 min-w-6 items-center justify-center rounded-md bg-gold/15 px-1 text-xs font-bold text-gold-light">
+          <div key={i.id} className="flex items-center justify-between gap-2 rounded-lg bg-zinc-100 px-3 py-2 dark:bg-white/[0.03]">
+            <p className="text-sm text-zinc-800 dark:text-zinc-200">
+              <span className="mr-2 inline-flex h-5 min-w-6 items-center justify-center rounded-md bg-gold/15 px-1 text-xs font-bold text-gold-dark dark:text-gold-light">
                 ×{i.quantity}
               </span>
               {i.name}
@@ -351,12 +351,12 @@ function OrderCard({
       </div>
 
       {order.note && (
-        <p className="mb-4 rounded-lg border border-amber-400/20 bg-amber-400/5 px-3 py-2 text-xs text-amber-200">
+        <p className="mb-4 rounded-lg border border-amber-400/20 bg-amber-400/5 px-3 py-2 text-xs text-amber-700 dark:text-amber-200">
           Note: {order.note}
         </p>
       )}
 
-      <div className="flex items-center justify-between border-t border-white/[0.06] pt-3">
+      <div className="flex items-center justify-between border-t border-zinc-200 pt-3 dark:border-white/[0.06]">
         <p className="text-sm text-zinc-500">
           {order.items.reduce((s, i) => s + i.quantity, 0)} items
         </p>

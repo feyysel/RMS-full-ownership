@@ -8,6 +8,7 @@ import { Loader2, Lock, Phone, UtensilsCrossed, Eye, EyeOff } from "lucide-react
 import { ROLE_HOME } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { Input, Label } from "@/components/ui/input";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -42,10 +43,14 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#0a0a0b] px-4 py-10">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-4 py-10">
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute -top-32 left-1/2 h-[480px] w-[720px] -translate-x-1/2 rounded-full bg-gold/[0.12] blur-[130px]" />
         <div className="absolute bottom-0 right-0 h-[360px] w-[420px] rounded-full bg-amber-700/10 blur-[110px]" />
+      </div>
+
+      <div className="absolute top-4 right-4 z-20 sm:top-6 sm:right-6">
+        <ThemeToggle />
       </div>
 
       <motion.div
@@ -58,15 +63,15 @@ export default function LoginPage() {
           <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-3xl bg-gradient-to-br from-gold to-gold-dark shadow-[0_10px_40px_-10px_rgba(212,163,75,0.8)]">
             <UtensilsCrossed className="h-7 w-7 text-zinc-950" />
           </div>
-          <h1 className="font-display text-3xl font-semibold tracking-tight text-zinc-50">
+          <h1 className="font-display text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
             Welcome back
           </h1>
-          <p className="mt-2 text-sm text-zinc-400">
+          <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
             Sign in to your workspace — <span className="gold-gradient-text font-medium">Platform</span>
           </p>
         </div>
 
-        <div className="glass rounded-3xl p-8 shadow-soft">
+        <div className="glass-strong rounded-3xl p-8 shadow-soft">
           <form onSubmit={onSubmit} className="space-y-5">
             <div>
               <Label htmlFor="phone">Phone number</Label>
@@ -103,7 +108,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword((s) => !s)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 transition-colors hover:text-zinc-300"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 transition-colors hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300"
                   tabIndex={-1}
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -115,7 +120,7 @@ export default function LoginPage() {
               <motion.p
                 initial={{ opacity: 0, y: -6 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="rounded-xl border border-rose-500/30 bg-rose-500/10 px-3.5 py-2.5 text-sm text-rose-300"
+                className="rounded-xl border border-rose-500/30 bg-rose-500/10 px-3.5 py-2.5 text-sm text-rose-700 dark:text-rose-300"
               >
                 {error}
               </motion.p>
@@ -127,18 +132,18 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          <div className="mt-6 rounded-2xl border border-white/[0.07] bg-white/[0.02] p-4">
+          <div className="mt-6 rounded-2xl border border-zinc-200 bg-white/60 p-4 dark:border-white/[0.07] dark:bg-white/[0.02]">
             <p className="mb-2 text-center text-[11px] font-semibold uppercase tracking-widest text-zinc-500">
               Demo accounts
             </p>
-            <div className="grid grid-cols-1 gap-1.5 text-xs text-zinc-400">
+            <div className="grid grid-cols-1 gap-1.5 text-xs text-zinc-500 dark:text-zinc-400">
               <button
                 type="button"
                 onClick={() => {
                   setPhone("0982101908");
                   setPassword("owner123");
                 }}
-                className="flex items-center justify-between rounded-lg px-2 py-1.5 text-left transition-colors hover:bg-white/5 hover:text-gold-light"
+                className="flex items-center justify-between rounded-lg px-2 py-1.5 text-left transition-colors hover:bg-zinc-100 hover:text-gold-dark dark:hover:bg-white/5 dark:hover:text-gold-light"
               >
                 <span>Owner</span> <span className="text-zinc-500">0982101908</span>
               </button>
@@ -148,7 +153,7 @@ export default function LoginPage() {
                   setPhone("09171234568");
                   setPassword("manager123");
                 }}
-                className="flex items-center justify-between rounded-lg px-2 py-1.5 text-left transition-colors hover:bg-white/5 hover:text-gold-light"
+                className="flex items-center justify-between rounded-lg px-2 py-1.5 text-left transition-colors hover:bg-zinc-100 hover:text-gold-dark dark:hover:bg-white/5 dark:hover:text-gold-light"
               >
                 <span>Manager</span> <span className="text-zinc-500">09171234568</span>
               </button>
@@ -158,7 +163,7 @@ export default function LoginPage() {
                   setPhone("09171234569");
                   setPassword("waiter123");
                 }}
-                className="flex items-center justify-between rounded-lg px-2 py-1.5 text-left transition-colors hover:bg-white/5 hover:text-gold-light"
+                className="flex items-center justify-between rounded-lg px-2 py-1.5 text-left transition-colors hover:bg-zinc-100 hover:text-gold-dark dark:hover:bg-white/5 dark:hover:text-gold-light"
               >
                 <span>Waiter</span> <span className="text-zinc-500">09171234569</span>
               </button>
@@ -168,7 +173,7 @@ export default function LoginPage() {
                   setPhone("09171234571");
                   setPassword("kitchen123");
                 }}
-                className="flex items-center justify-between rounded-lg px-2 py-1.5 text-left transition-colors hover:bg-white/5 hover:text-gold-light"
+                className="flex items-center justify-between rounded-lg px-2 py-1.5 text-left transition-colors hover:bg-zinc-100 hover:text-gold-dark dark:hover:bg-white/5 dark:hover:text-gold-light"
               >
                 <span>Kitchen</span> <span className="text-zinc-500">09171234571</span>
               </button>
@@ -178,15 +183,15 @@ export default function LoginPage() {
                   setPhone("09171234573");
                   setPassword("cashier123");
                 }}
-                className="flex items-center justify-between rounded-lg px-2 py-1.5 text-left transition-colors hover:bg-white/5 hover:text-gold-light"
+                className="flex items-center justify-between rounded-lg px-2 py-1.5 text-left transition-colors hover:bg-zinc-100 hover:text-gold-dark dark:hover:bg-white/5 dark:hover:text-gold-light"
               >
                 <span>Cashier</span> <span className="text-zinc-500">09171234573</span>
               </button>
             </div>
           </div>
 
-          <div className="mt-6 rounded-2xl border border-white/[0.07] bg-white/[0.02] p-4">
-            <p className="text-center text-sm text-zinc-400">
+          <div className="mt-6 rounded-2xl border border-zinc-200 bg-white/60 p-4 dark:border-white/[0.07] dark:bg-white/[0.02]">
+            <p className="text-center text-sm text-zinc-500 dark:text-zinc-400">
               Don&apos;t have an account?
             </p>
             <Button
@@ -201,20 +206,20 @@ export default function LoginPage() {
               <motion.div
                 initial={{ opacity: 0, y: -6 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mt-3 space-y-1.5 border-t border-white/[0.07] pt-3"
+                className="mt-3 space-y-1.5 border-t border-zinc-200 pt-3 dark:border-white/[0.07]"
               >
                 <p className="text-xs text-zinc-500">
                   Staff accounts are created by the restaurant owner. Contact them to register:
                 </p>
                 <a
                   href="tel:+251982101908"
-                  className="flex items-center justify-between rounded-lg px-2 py-1.5 text-left text-xs transition-colors hover:bg-white/5 hover:text-gold-light"
+                  className="flex items-center justify-between rounded-lg px-2 py-1.5 text-left text-xs transition-colors hover:bg-zinc-100 hover:text-gold-dark dark:hover:bg-white/5 dark:hover:text-gold-light"
                 >
                   <span>Owner</span> <span className="text-zinc-500">+251 98 210 1908</span>
                 </a>
                 <a
                   href="tel:+251717136667"
-                  className="flex items-center justify-between rounded-lg px-2 py-1.5 text-left text-xs transition-colors hover:bg-white/5 hover:text-gold-light"
+                  className="flex items-center justify-between rounded-lg px-2 py-1.5 text-left text-xs transition-colors hover:bg-zinc-100 hover:text-gold-dark dark:hover:bg-white/5 dark:hover:text-gold-light"
                 >
                   <span>Optional contact</span> <span className="text-zinc-500">+251 71 713 6667</span>
                 </a>
@@ -224,7 +229,7 @@ export default function LoginPage() {
         </div>
 
         <p className="mt-6 text-center text-sm text-zinc-500">
-          <Link href="/" className="transition-colors hover:text-gold-light">
+          <Link href="/" className="transition-colors hover:text-gold-dark dark:hover:text-gold-light">
             ← Back to home
           </Link>
         </p>

@@ -95,9 +95,9 @@ export default function InsightsClient() {
           sub={
             <span className="inline-flex items-center gap-1">
               {delta >= 0 ? (
-                <ArrowUpRight className="h-3.5 w-3.5 text-emerald-400" />
+                <ArrowUpRight className="h-3.5 w-3.5 text-emerald-700 dark:text-emerald-400" />
               ) : (
-                <ArrowDownRight className="h-3.5 w-3.5 text-rose-400" />
+                <ArrowDownRight className="h-3.5 w-3.5 text-rose-700 dark:text-rose-400" />
               )}
               {Math.abs(delta).toFixed(1)}% vs yesterday
             </span>
@@ -130,7 +130,7 @@ export default function InsightsClient() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
-              <TrendingUp className="h-4 w-4 text-gold-light" />
+              <TrendingUp className="h-4 w-4 text-gold-dark dark:text-gold-light" />
               Revenue by location
             </CardTitle>
           </CardHeader>
@@ -142,20 +142,20 @@ export default function InsightsClient() {
               : d.restaurants.map((r, i) => (
                   <div
                     key={r.id}
-                    className="flex items-center gap-3 rounded-xl px-2 py-2.5 transition-colors hover:bg-white/[0.03]"
+                    className="flex items-center gap-3 rounded-xl px-2 py-2.5 transition-colors hover:bg-zinc-100 dark:hover:bg-white/[0.03]"
                   >
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/5 text-xs font-bold text-gold-light">
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-zinc-100 text-xs font-bold text-gold-dark dark:bg-white/5 dark:text-gold-light">
                       {i + 1}
                     </span>
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium text-zinc-100">{r.name}</p>
+                      <p className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-100">{r.name}</p>
                       <p className="text-xs text-zinc-500">
                         {r.tables} tables · {r.menuItems} items · {r.users} staff
                         {r.parentName ? ` · branch of ${r.parentName}` : ""}
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-semibold text-zinc-100">
+                      <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
                         {formatCurrency(r.revenue)}
                       </p>
                     </div>

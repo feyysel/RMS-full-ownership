@@ -23,6 +23,7 @@ import { useRealtime, type RealtimeChannel } from "@/components/realtime/use-rea
 import { useBrowserNotify } from "@/components/realtime/use-browser-notify";
 import { Avatar } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 
 export const NAV_ICONS = {
   LayoutDashboard,
@@ -195,7 +196,7 @@ export function PortalShell({
           <p className="font-display text-lg font-semibold leading-none tracking-tight">
             <span className="gold-gradient-text">Plateform</span>
           </p>
-          <p className="mt-1 text-[11px] uppercase tracking-widest text-zinc-500">
+          <p className="mt-1 text-[11px] uppercase tracking-widest text-zinc-500 dark:text-zinc-500">
             {restaurantName ?? "System Admin"}
           </p>
         </div>
@@ -213,8 +214,8 @@ export function PortalShell({
               className={cn(
                 "group relative flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium transition-all",
                 active
-                  ? "bg-gold/10 text-gold-light"
-                  : "text-zinc-400 hover:bg-white/5 hover:text-zinc-100"
+                  ? "bg-gold/10 text-gold-dark dark:text-gold-light"
+                  : "text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-white/5 dark:hover:text-zinc-100"
               )}
             >
               {active && (
@@ -234,22 +235,22 @@ export function PortalShell({
         <Link
           href="/account/password"
           onClick={() => setDrawerOpen(false)}
-          className="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium text-zinc-400 transition-colors hover:bg-white/5 hover:text-zinc-100"
+          className="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-white/5 dark:hover:text-zinc-100"
         >
           <KeyRound className="h-[18px] w-[18px]" />
           Change password
         </Link>
 
-        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+        <div className="rounded-2xl border border-zinc-200 bg-zinc-100/60 p-3 dark:border-white/10 dark:bg-white/[0.03]">
           <div className="flex items-center gap-3">
             <Avatar name={user.name} className="h-9 w-9 text-xs" />
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium text-zinc-100">{user.name}</p>
+              <p className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-100">{user.name}</p>
               <p className="truncate text-xs text-zinc-500">{user.phone}</p>
             </div>
             <button
               onClick={logout}
-              className="rounded-lg p-2 text-zinc-400 transition-colors hover:bg-white/10 hover:text-rose-300"
+              className="rounded-lg p-2 text-zinc-400 transition-colors hover:bg-zinc-200 hover:text-rose-600 dark:hover:bg-white/10 dark:hover:text-rose-300"
               title="Sign out"
             >
               <LogOut className="h-4 w-4" />
@@ -261,8 +262,8 @@ export function PortalShell({
   );
 
   return (
-    <div className="min-h-screen bg-[#0a0a0b] lg:pl-[260px]">
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-[260px] border-r border-white/[0.06] bg-[#0d0d0f]/90 backdrop-blur-xl lg:block">
+    <div className="min-h-screen bg-background lg:pl-[260px]">
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-[260px] border-r border-zinc-200 bg-surface/90 backdrop-blur-xl lg:block dark:border-white/[0.06] dark:bg-[#0d0d0f]/90">
         {sidebar}
       </aside>
 
@@ -281,7 +282,7 @@ export function PortalShell({
               animate={{ x: 0 }}
               exit={{ x: -280 }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="fixed inset-y-0 left-0 z-50 w-[280px] border-r border-white/10 bg-[#0d0d0f] lg:hidden"
+              className="fixed inset-y-0 left-0 z-50 w-[280px] border-r border-zinc-200 bg-surface lg:hidden dark:border-white/10 dark:bg-[#0d0d0f]"
             >
               {sidebar}
             </motion.aside>
@@ -289,10 +290,10 @@ export function PortalShell({
         )}
       </AnimatePresence>
 
-      <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-white/[0.06] bg-[#0a0a0b]/80 px-4 backdrop-blur-xl sm:px-6">
+      <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-zinc-200 bg-background/80 px-4 backdrop-blur-xl sm:px-6 dark:border-white/[0.06] dark:bg-[#0a0a0b]/80">
         <button
           onClick={() => setDrawerOpen(true)}
-          className="rounded-xl p-2 text-zinc-400 hover:bg-white/5 hover:text-white lg:hidden"
+          className="rounded-xl p-2 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-white/5 dark:hover:text-white lg:hidden"
         >
           <Menu className="h-5 w-5" />
         </button>
@@ -305,6 +306,8 @@ export function PortalShell({
         </div>
 
         <div className="ml-auto flex items-center gap-2.5">
+          <ThemeToggle size="sm" className="hidden sm:inline-flex" />
+
           <Badge
             tone={connected ? "emerald" : "zinc"}
             className="hidden sm:inline-flex"
@@ -316,10 +319,10 @@ export function PortalShell({
           {permission !== "granted" && permission !== "denied" && permission !== "unsupported" && (
             <button
               onClick={requestPermission}
-              className="relative flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2 text-xs font-medium text-zinc-300 transition-colors hover:border-gold/40 hover:text-gold-light"
+              className="relative flex items-center gap-1.5 rounded-xl border border-zinc-200 bg-zinc-100/60 px-3 py-2 text-xs font-medium text-zinc-600 transition-colors hover:border-gold/40 hover:text-gold-dark dark:border-white/10 dark:bg-white/[0.03] dark:text-zinc-300 dark:hover:text-gold-light"
               title="Enable push notifications"
             >
-              <BellRing className="h-4 w-4 text-gold-light" />
+              <BellRing className="h-4 w-4 text-gold-dark dark:text-gold-light" />
               <span className="hidden sm:inline">Enable push</span>
             </button>
           )}
@@ -330,7 +333,7 @@ export function PortalShell({
                 setBellOpen((o) => !o);
                 if (unread > 0) markRead();
               }}
-              className="relative rounded-xl p-2.5 text-zinc-300 transition-colors hover:bg-white/5 hover:text-white"
+              className="relative rounded-xl p-2.5 text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-white/5 dark:hover:text-white"
             >
               <Bell className="h-5 w-5" />
               {unread > 0 && (
@@ -346,13 +349,13 @@ export function PortalShell({
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -8, scale: 0.97 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute right-0 mt-2 w-80 overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/95 shadow-soft backdrop-blur-xl sm:w-96"
+                  className="absolute right-0 mt-2 w-80 overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-xl backdrop-blur-xl sm:w-96 dark:border-white/10 dark:bg-zinc-950/95 dark:shadow-soft"
                 >
-                  <div className="flex items-center justify-between border-b border-white/[0.06] px-4 py-3">
-                    <p className="text-sm font-semibold text-zinc-100">Notifications</p>
+                  <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 dark:border-white/[0.06]">
+                    <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Notifications</p>
                     <button
                       onClick={markRead}
-                      className="text-xs text-gold-light hover:underline"
+                      className="text-xs text-gold-dark hover:underline dark:text-gold-light"
                     >
                       Mark all read
                     </button>
@@ -367,7 +370,7 @@ export function PortalShell({
                         <div
                           key={n.id}
                           className={cn(
-                            "border-b border-white/[0.04] px-4 py-3 transition-colors hover:bg-white/[0.03]",
+                            "border-b border-zinc-200/70 px-4 py-3 transition-colors hover:bg-zinc-100/70 dark:border-white/[0.04] dark:hover:bg-white/[0.03]",
                             !n.read && "bg-gold/[0.05]"
                           )}
                         >
@@ -376,8 +379,8 @@ export function PortalShell({
                               <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-gold" />
                             )}
                             <div className="min-w-0">
-                              <p className="text-sm font-medium text-zinc-100">{n.title}</p>
-                              <p className="mt-0.5 line-clamp-2 text-xs text-zinc-400">{n.body}</p>
+                              <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{n.title}</p>
+                              <p className="mt-0.5 line-clamp-2 text-xs text-zinc-500 dark:text-zinc-400">{n.body}</p>
                             </div>
                           </div>
                         </div>
@@ -396,12 +399,12 @@ export function PortalShell({
               <Avatar name={user.name} className="h-8 w-8 text-xs" />
             )}
             <div className="leading-tight">
-              <p className="text-sm font-medium text-zinc-100">{user.name}</p>
+              <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{user.name}</p>
               <p className="text-[11px] capitalize text-zinc-500">{user.role.toLowerCase()}</p>
             </div>
           </div>
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 sm:hidden">
-            <RoleIcon className="h-4 w-4 text-gold-light" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-100 dark:bg-white/5 sm:hidden">
+            <RoleIcon className="h-4 w-4 text-gold-dark dark:text-gold-light" />
           </div>
         </div>
       </header>

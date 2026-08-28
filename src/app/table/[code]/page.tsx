@@ -319,17 +319,17 @@ export default function TableMenuPage({
 
   if (menuError || !menu) {
     return (
-      <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[#0a0a0b] px-6 text-center">
+      <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-background px-6 text-center">
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute left-1/2 top-0 h-96 w-[600px] -translate-x-1/2 rounded-full bg-gold/[0.1] blur-[130px]" />
         </div>
         <div className="relative z-10 flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-br from-gold to-gold-dark shadow-soft">
           <UtensilsCrossed className="h-8 w-8 text-zinc-950" />
         </div>
-        <h1 className="mt-6 font-display text-2xl font-semibold text-zinc-50">
+        <h1 className="mt-6 font-display text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
           {menuError ?? "Menu unavailable"}
         </h1>
-        <p className="mt-2 max-w-sm text-sm text-zinc-400">
+        <p className="mt-2 max-w-sm text-sm text-zinc-500 dark:text-zinc-400">
           Please ask a member of staff for help, or try scanning the QR code again.
         </p>
         <Button className="mt-6" onClick={refreshMenu}>
@@ -345,30 +345,30 @@ export default function TableMenuPage({
   ];
 
   return (
-    <div className="relative min-h-screen bg-[#0a0a0b] pb-32">
+    <div className="relative min-h-screen bg-background pb-32">
       <div className="pointer-events-none fixed inset-0">
         <div className="absolute -top-40 left-1/2 h-[420px] w-[720px] -translate-x-1/2 rounded-full bg-gold/[0.08] blur-[140px]" />
       </div>
 
-      <header className="sticky top-0 z-30 border-b border-white/[0.06] bg-[#0a0a0b]/85 backdrop-blur-xl">
+      <header className="sticky top-0 z-30 border-b border-zinc-200 dark:border-white/[0.06] bg-background/85 backdrop-blur-xl">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4 sm:px-6">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-gold to-gold-dark shadow-[0_8px_30px_-8px_rgba(212,163,75,0.6)]">
               <UtensilsCrossed className="h-5 w-5 text-zinc-950" />
             </div>
             <div>
-              <h1 className="font-display text-lg font-semibold leading-tight tracking-tight text-zinc-50">
+              <h1 className="font-display text-lg font-semibold leading-tight tracking-tight text-zinc-900 dark:text-zinc-50">
                 {menu.restaurant.name}
               </h1>
               <div className="flex items-center gap-2">
-                <span className="text-[11px] uppercase tracking-widest text-gold-light">
+                <span className="text-[11px] uppercase tracking-widest text-gold-dark dark:text-gold-light">
                   Table {menu.table.number}
                 </span>
                 <span className="flex items-center gap-1 text-[11px] text-zinc-500">
                   {connected ? (
                     <Wifi className="h-3 w-3 text-emerald-400" />
                   ) : (
-                    <WifiOff className="h-3 w-3 text-zinc-600" />
+                    <WifiOff className="h-3 w-3 text-zinc-600 dark:text-zinc-400" />
                   )}
                   {connected ? "live" : "offline"}
                 </span>
@@ -388,13 +388,13 @@ export default function TableMenuPage({
           transition={{ duration: 0.5 }}
           className="flex flex-col items-center pb-8 pt-10 text-center"
         >
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-gold-light">
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-gold-dark dark:text-gold-light">
             {menu.restaurant.name}
           </p>
-          <h2 className="mt-2 max-w-2xl font-display text-3xl font-semibold leading-tight text-zinc-50 sm:text-4xl">
+          <h2 className="mt-2 max-w-2xl font-display text-3xl font-semibold leading-tight text-zinc-900 dark:text-zinc-50 sm:text-4xl">
             Crafted to order, <span className="gold-gradient-text">served at your table</span>
           </h2>
-          <p className="mt-3 max-w-lg text-sm text-zinc-400">
+          <p className="mt-3 max-w-lg text-sm text-zinc-500 dark:text-zinc-400">
             Browse the full menu with ingredients and prices, order in seconds,
             and ring the bell whenever you need us.
           </p>
@@ -408,8 +408,8 @@ export default function TableMenuPage({
               className={cn(
                 "shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition-all",
                 activeCat === c.id
-                  ? "border-gold/60 bg-gold/10 text-gold-light shadow-[0_0_20px_-4px_rgba(212,163,75,0.4)]"
-                  : "border-white/10 bg-white/[0.03] text-zinc-400 hover:border-gold/30 hover:text-zinc-200"
+                  ? "border-gold/60 bg-gold/10 text-gold-dark dark:text-gold-light shadow-[0_0_20px_-4px_rgba(212,163,75,0.4)]"
+                  : "border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/[0.03] text-zinc-500 dark:text-zinc-400 hover:border-gold/30 hover:text-zinc-800 dark:hover:text-zinc-200"
               )}
             >
               {c.name}
@@ -427,7 +427,7 @@ export default function TableMenuPage({
               viewport={{ once: true, amount: 0.1 }}
               transition={{ duration: 0.4, delay: Math.min(i * 0.05, 0.3) }}
               onClick={() => setDetail({ item, qty: 1 })}
-              className="group relative overflow-hidden rounded-3xl border border-white/[0.08] bg-gradient-to-br from-white/[0.06] to-white/[0.01] text-left shadow-soft backdrop-blur-sm transition-all hover:-translate-y-1 hover:border-gold/30"
+              className="group relative overflow-hidden rounded-3xl border border-zinc-200 dark:border-white/[0.08] bg-gradient-to-br from-zinc-50 dark:from-white/[0.06] to-transparent dark:to-white/[0.01] text-left shadow-soft backdrop-blur-sm transition-all hover:-translate-y-1 hover:border-gold/30"
             >
               <div className="relative h-44 overflow-hidden">
                 {item.imageUrl ? (
@@ -440,10 +440,10 @@ export default function TableMenuPage({
                   />
                 ) : (
                   <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-gold/15 to-transparent">
-                    <UtensilsCrossed className="h-10 w-10 text-gold-light/40" />
+                    <UtensilsCrossed className="h-10 w-10 text-gold-dark/40 dark:text-gold-light/40" />
                   </div>
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0b]/70 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
                 {item.isPopular && (
                   <div className="absolute left-3 top-3">
                     <Badge tone="gold">
@@ -451,26 +451,26 @@ export default function TableMenuPage({
                     </Badge>
                   </div>
                 )}
-                <span className="absolute bottom-3 right-3 rounded-full bg-black/60 px-3 py-1 font-display text-base font-semibold text-gold-light backdrop-blur-sm">
+                <span className="absolute bottom-3 right-3 rounded-full bg-black/60 px-3 py-1 font-display text-base font-semibold text-gold-dark dark:text-gold-light backdrop-blur-sm">
                   {formatCurrency(item.price)}
                 </span>
               </div>
 
               <div className="p-4">
-                <h3 className="font-display text-lg font-semibold text-zinc-50">
+                <h3 className="font-display text-lg font-semibold text-zinc-900 dark:text-zinc-50">
                   {item.name}
                 </h3>
-                <p className="mt-1 line-clamp-2 text-sm text-zinc-400">
+                <p className="mt-1 line-clamp-2 text-sm text-zinc-500 dark:text-zinc-400">
                   {item.description ?? "—"}
                 </p>
                 <p className="mt-2 line-clamp-1 text-xs text-zinc-500">
-                  <span className="text-zinc-600">Ingredients:</span> {item.ingredients}
+                  <span className="text-zinc-600 dark:text-zinc-400">Ingredients:</span> {item.ingredients}
                 </p>
                 <div className="mt-3 flex items-center justify-between">
-                  <span className="text-[11px] uppercase tracking-wider text-gold-light/70">
+                  <span className="text-[11px] uppercase tracking-wider text-gold-dark/70 dark:text-gold-light/70">
                     Tap to order
                   </span>
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gold/15 text-gold-light ring-1 ring-gold/25 transition-transform group-hover:scale-110">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gold/15 text-gold-dark dark:text-gold-light ring-1 ring-gold/25 transition-transform group-hover:scale-110">
                     <Plus className="h-4 w-4" />
                   </span>
                 </div>
@@ -480,8 +480,8 @@ export default function TableMenuPage({
 
           {visibleItems.length === 0 && (
             <div className="col-span-full flex flex-col items-center py-16 text-center">
-              <UtensilsCrossed className="mb-3 h-10 w-10 text-zinc-700" />
-              <p className="text-sm text-zinc-400">Nothing in this section yet.</p>
+              <UtensilsCrossed className="mb-3 h-10 w-10 text-zinc-400 dark:text-zinc-700" />
+              <p className="text-sm text-zinc-500 dark:text-zinc-400">Nothing in this section yet.</p>
             </div>
           )}
         </div>
@@ -495,12 +495,12 @@ export default function TableMenuPage({
             exit={{ opacity: 0, y: 40 }}
             className="fixed inset-x-0 bottom-0 z-30 px-4 pb-4 sm:px-6"
           >
-            <div className="mx-auto flex max-w-5xl items-center gap-3 rounded-2xl border border-gold/25 bg-zinc-950/90 px-4 py-3 shadow-soft backdrop-blur-xl">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold/15 text-gold-light ring-1 ring-gold/25">
+            <div className="mx-auto flex max-w-5xl items-center gap-3 rounded-2xl border border-gold/25 bg-background/90 px-4 py-3 shadow-soft backdrop-blur-xl">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold/15 text-gold-dark dark:text-gold-light ring-1 ring-gold/25">
                 <ChefHat className="h-4 w-4" />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium text-zinc-100">
+                <p className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-100">
                   {activeOrders.length === 1
                     ? `Order #${activeOrders[0].orderNumber} is in the kitchen`
                     : `${activeOrders.length} orders cooking right now`}
@@ -515,11 +515,11 @@ export default function TableMenuPage({
         )}
       </AnimatePresence>
 
-      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-white/[0.06] bg-[#0a0a0b]/90 px-4 pb-[calc(env(safe-area-inset-bottom)+12px)] pt-3 backdrop-blur-xl sm:px-6">
+      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-zinc-200 dark:border-white/[0.06] bg-background/90 px-4 pb-[calc(env(safe-area-inset-bottom)+12px)] pt-3 backdrop-blur-xl sm:px-6">
         <div className="mx-auto flex max-w-5xl items-center gap-3">
           <button
             onClick={() => setOrdersOpen(true)}
-            className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] text-zinc-300 transition-colors hover:text-gold-light"
+            className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/[0.04] text-zinc-600 dark:text-zinc-300 transition-colors hover:text-gold-dark dark:hover:text-gold-light"
             aria-label="My orders"
           >
             <ReceiptText className="h-5 w-5" />
@@ -536,8 +536,8 @@ export default function TableMenuPage({
             className={cn(
               "relative flex h-12 shrink-0 items-center gap-2 rounded-2xl border px-4 text-sm font-semibold transition-all active:scale-[0.97]",
               bellState === "ringing"
-                ? "border-gold/60 bg-gold/15 text-gold-light"
-                : "border-white/10 bg-white/[0.04] text-zinc-200 hover:border-gold/40 hover:text-gold-light"
+                ? "border-gold/60 bg-gold/15 text-gold-dark dark:text-gold-light"
+                : "border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/[0.04] text-zinc-800 dark:text-zinc-200 hover:border-gold/40 hover:text-gold-dark dark:hover:text-gold-light"
             )}
           >
             {bellState === "calling" ? (
@@ -589,10 +589,10 @@ export default function TableMenuPage({
               />
             ) : (
               <div className="flex h-40 w-full items-center justify-center rounded-2xl bg-gold/10">
-                <UtensilsCrossed className="h-10 w-10 text-gold-light/40" />
+                <UtensilsCrossed className="h-10 w-10 text-gold-dark/40 dark:text-gold-light/40" />
               </div>
             )}
-            <p className="mt-4 text-sm leading-relaxed text-zinc-300">
+            <p className="mt-4 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
               {detail.item.description ?? "—"}
             </p>
             <div className="mt-4">
@@ -603,15 +603,15 @@ export default function TableMenuPage({
                 {detail.item.ingredients.split(",").map((ing) => (
                   <span
                     key={ing}
-                    className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-zinc-300"
+                    className="rounded-full border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/[0.04] px-3 py-1 text-xs text-zinc-600 dark:text-zinc-300"
                   >
                     {ing.trim()}
                   </span>
                 ))}
               </div>
             </div>
-            <div className="mt-6 flex items-center justify-between border-t border-white/[0.08] pt-5">
-              <p className="font-display text-2xl font-semibold text-gold-light">
+            <div className="mt-6 flex items-center justify-between border-t border-zinc-200 dark:border-white/[0.08] pt-5">
+              <p className="font-display text-2xl font-semibold text-gold-dark dark:text-gold-light">
                 {formatCurrency(detail.item.price)}
               </p>
               <div className="flex items-center gap-3">
@@ -619,16 +619,16 @@ export default function TableMenuPage({
                   onClick={() =>
                     setDetail((d) => (d ? { ...d, qty: Math.max(1, d.qty - 1) } : d))
                   }
-                  className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-zinc-200 transition-colors hover:border-gold/40"
+                  className="flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/[0.04] text-zinc-800 dark:text-zinc-200 transition-colors hover:border-gold/40"
                 >
                   <Minus className="h-4 w-4" />
                 </button>
-                <span className="w-6 text-center font-display text-lg font-semibold text-zinc-50">
+                <span className="w-6 text-center font-display text-lg font-semibold text-zinc-900 dark:text-zinc-50">
                   {detail.qty}
                 </span>
                 <button
                   onClick={() => setDetail((d) => (d ? { ...d, qty: d.qty + 1 } : d))}
-                  className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-zinc-200 transition-colors hover:border-gold/40"
+                  className="flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/[0.04] text-zinc-800 dark:text-zinc-200 transition-colors hover:border-gold/40"
                 >
                   <Plus className="h-4 w-4" />
                 </button>
@@ -658,8 +658,8 @@ export default function TableMenuPage({
             className={cn(
               "flex items-center justify-center gap-2 rounded-xl border px-3 py-2.5 text-sm font-medium transition-all",
               orderType === "DINE_IN"
-                ? "border-gold/60 bg-gold/10 text-gold-light"
-                : "border-white/10 bg-white/[0.03] text-zinc-400"
+                ? "border-gold/60 bg-gold/10 text-gold-dark dark:text-gold-light"
+                : "border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/[0.03] text-zinc-500 dark:text-zinc-400"
             )}
           >
             <UtensilsCrossed className="h-4 w-4" /> Dine in
@@ -669,8 +669,8 @@ export default function TableMenuPage({
             className={cn(
               "flex items-center justify-center gap-2 rounded-xl border px-3 py-2.5 text-sm font-medium transition-all",
               orderType === "TAKEAWAY"
-                ? "border-gold/60 bg-gold/10 text-gold-light"
-                : "border-white/10 bg-white/[0.03] text-zinc-400"
+                ? "border-gold/60 bg-gold/10 text-gold-dark dark:text-gold-light"
+                : "border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/[0.03] text-zinc-500 dark:text-zinc-400"
             )}
           >
             <Package className="h-4 w-4" /> Takeaway
@@ -693,28 +693,28 @@ export default function TableMenuPage({
           {cart.map((c) => (
             <div
               key={c.menuItemId}
-              className="flex items-center gap-3 rounded-xl border border-white/[0.06] bg-white/[0.03] px-3 py-2.5"
+              className="flex items-center gap-3 rounded-xl border border-zinc-200 dark:border-white/[0.06] bg-zinc-100 dark:bg-white/[0.03] px-3 py-2.5"
             >
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium text-zinc-100">{c.name}</p>
+                <p className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-100">{c.name}</p>
                 <p className="text-xs text-zinc-500">{formatCurrency(c.price)} each</p>
               </div>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => changeQty(c.menuItemId, -1)}
-                  className="flex h-7 w-7 items-center justify-center rounded-lg border border-white/10 bg-white/[0.04] text-zinc-300 hover:border-gold/40"
+                  className="flex h-7 w-7 items-center justify-center rounded-lg border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/[0.04] text-zinc-600 dark:text-zinc-300 hover:border-gold/40"
                 >
                   <Minus className="h-3.5 w-3.5" />
                 </button>
-                <span className="w-5 text-center text-sm font-semibold text-zinc-100">{c.qty}</span>
+                <span className="w-5 text-center text-sm font-semibold text-zinc-900 dark:text-zinc-100">{c.qty}</span>
                 <button
                   onClick={() => changeQty(c.menuItemId, 1)}
-                  className="flex h-7 w-7 items-center justify-center rounded-lg border border-white/10 bg-white/[0.04] text-zinc-300 hover:border-gold/40"
+                  className="flex h-7 w-7 items-center justify-center rounded-lg border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/[0.04] text-zinc-600 dark:text-zinc-300 hover:border-gold/40"
                 >
                   <Plus className="h-3.5 w-3.5" />
                 </button>
               </div>
-              <p className="w-16 text-right text-sm font-semibold text-gold-light">
+              <p className="w-16 text-right text-sm font-semibold text-gold-dark dark:text-gold-light">
                 {formatCurrency(c.price * c.qty)}
               </p>
             </div>
@@ -738,10 +738,10 @@ export default function TableMenuPage({
                 rows={2}
               />
             </div>
-            <div className="mt-4 flex items-center justify-between border-t border-white/[0.08] pt-4">
+            <div className="mt-4 flex items-center justify-between border-t border-zinc-200 dark:border-white/[0.08] pt-4">
               <div>
                 <p className="text-xs text-zinc-500">Total</p>
-                <p className="font-display text-2xl font-semibold text-gold-light">
+                <p className="font-display text-2xl font-semibold text-gold-dark dark:text-gold-light">
                   {formatCurrency(cartTotal)}
                 </p>
               </div>
@@ -801,16 +801,16 @@ function OrderTimeline({
         "rounded-2xl border p-4",
         highlight
           ? "border-gold/40 bg-gold/[0.06] ring-2 ring-gold/20"
-          : "border-white/[0.07] bg-white/[0.02]"
+          : "border-zinc-200 dark:border-white/[0.07] bg-zinc-100 dark:bg-white/[0.02]"
       )}
     >
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold/10 font-display text-sm font-bold text-gold-light ring-1 ring-gold/25">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold/10 font-display text-sm font-bold text-gold-dark dark:text-gold-light ring-1 ring-gold/25">
             #{order.orderNumber}
           </span>
           <div>
-            <p className="text-sm font-medium text-zinc-100">
+            <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
               {order.tableLabel || (order.type === "TAKEAWAY" ? "Takeaway" : "Your table")}
             </p>
             <p className="text-xs text-zinc-500">{formatTime(order.createdAt)}</p>
@@ -834,7 +834,7 @@ function OrderTimeline({
                   <div
                     className={cn(
                       "mx-1 h-0.5 flex-1 rounded-full transition-colors",
-                      i <= current ? "bg-gold/60" : "bg-white/10"
+                      i <= current ? "bg-gold/60" : "bg-zinc-200 dark:bg-white/10"
                     )}
                   />
                 )}
@@ -843,8 +843,8 @@ function OrderTimeline({
                     className={cn(
                       "flex h-9 w-9 items-center justify-center rounded-full border transition-all",
                       reached
-                        ? "border-gold/60 bg-gold/15 text-gold-light"
-                        : "border-white/10 bg-white/[0.03] text-zinc-600",
+                        ? "border-gold/60 bg-gold/15 text-gold-dark dark:text-gold-light"
+                        : "border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/[0.03] text-zinc-400 dark:text-zinc-600",
                       isCurrent && "ring-4 ring-gold/20"
                     )}
                   >
@@ -857,7 +857,7 @@ function OrderTimeline({
                   <span
                     className={cn(
                       "mt-1.5 hidden w-16 text-center text-[10px] leading-tight sm:block",
-                      reached ? "text-gold-light" : "text-zinc-600"
+                      reached ? "text-gold-dark dark:text-gold-light" : "text-zinc-400 dark:text-zinc-600"
                     )}
                   >
                     {meta.label}
@@ -878,27 +878,27 @@ function OrderTimeline({
       <div className="mt-4 space-y-1">
         {order.items.map((i) => (
           <div key={i.id} className="flex items-center justify-between text-sm">
-            <span className="text-zinc-300">
-              <span className="mr-2 text-gold-light">{i.quantity}×</span>
+            <span className="text-zinc-600 dark:text-zinc-300">
+              <span className="mr-2 text-gold-dark dark:text-gold-light">{i.quantity}×</span>
               {i.name}
             </span>
-            <span className="text-zinc-400">{formatCurrency(i.price * i.quantity)}</span>
+            <span className="text-zinc-500 dark:text-zinc-400">{formatCurrency(i.price * i.quantity)}</span>
           </div>
         ))}
       </div>
 
       {order.receipt && (
-        <div className="mt-4 rounded-xl border border-dashed border-gold/30 bg-white p-4 text-zinc-900">
-          <div className="mb-2 flex items-center justify-between border-b-2 border-dashed border-zinc-300 pb-2">
+        <div className="mt-4 rounded-xl border border-dashed border-gold/30 bg-white p-4 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100">
+          <div className="mb-2 flex items-center justify-between border-b-2 border-dashed border-zinc-300 pb-2 dark:border-zinc-700">
             <p className="font-serif text-sm font-bold">YOUR RECEIPT</p>
             <p className="text-xs text-zinc-500">#{order.orderNumber}</p>
           </div>
           <div className="space-y-1 text-sm">
-            <div className="flex justify-between text-zinc-600">
+            <div className="flex justify-between text-zinc-600 dark:text-zinc-400">
               <span>Subtotal</span>
               <span>{formatCurrency(order.receipt.subtotal)}</span>
             </div>
-            <div className="flex justify-between text-zinc-600">
+            <div className="flex justify-between text-zinc-600 dark:text-zinc-400">
               <span>Tax</span>
               <span>{formatCurrency(order.receipt.tax)}</span>
             </div>
@@ -915,22 +915,22 @@ function OrderTimeline({
 
 function CustomerSkeleton() {
   return (
-    <div className="relative min-h-screen bg-[#0a0a0b] pb-32">
-      <header className="border-b border-white/[0.06] px-4 py-4 sm:px-6">
+    <div className="relative min-h-screen bg-background pb-32">
+      <header className="border-b border-zinc-200 dark:border-white/[0.06] px-4 py-4 sm:px-6">
         <div className="mx-auto flex max-w-5xl items-center gap-3">
-          <div className="h-10 w-10 animate-pulse rounded-2xl bg-white/[0.06]" />
+          <div className="h-10 w-10 animate-pulse rounded-2xl bg-zinc-200 dark:bg-white/[0.06]" />
           <div className="space-y-2">
-            <div className="h-4 w-40 animate-pulse rounded bg-white/[0.06]" />
-            <div className="h-3 w-24 animate-pulse rounded bg-white/[0.06]" />
+            <div className="h-4 w-40 animate-pulse rounded bg-zinc-200 dark:bg-white/[0.06]" />
+            <div className="h-3 w-24 animate-pulse rounded bg-zinc-200 dark:bg-white/[0.06]" />
           </div>
         </div>
       </header>
       <main className="mx-auto max-w-5xl px-4 pt-12 sm:px-6">
-        <div className="mx-auto h-6 w-64 animate-pulse rounded bg-white/[0.06]" />
-        <div className="mx-auto mt-4 h-3 w-80 max-w-full animate-pulse rounded bg-white/[0.06]" />
+        <div className="mx-auto h-6 w-64 animate-pulse rounded bg-zinc-200 dark:bg-white/[0.06]" />
+        <div className="mx-auto mt-4 h-3 w-80 max-w-full animate-pulse rounded bg-zinc-200 dark:bg-white/[0.06]" />
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="h-72 animate-pulse rounded-3xl bg-white/[0.04]" />
+            <div key={i} className="h-72 animate-pulse rounded-3xl bg-zinc-200 dark:bg-white/[0.04]" />
           ))}
         </div>
       </main>

@@ -114,7 +114,7 @@ export default function WaiterEarnings() {
 
       <div className="space-y-6">
         <section>
-          <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-gold-light">
+          <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-gold-dark dark:text-gold-light">
             <CircleDollarSign className="h-4 w-4" /> Today
           </h2>
           {t ? (
@@ -124,28 +124,28 @@ export default function WaiterEarnings() {
                 value={String(t.served)}
                 sub={t.served === 1 ? "order" : "orders"}
                 icon={Receipt}
-                tone="text-sky-300 bg-sky-500/10"
+                tone="text-sky-700 dark:text-sky-300 bg-sky-500/10"
               />
               <Stat
                 label="Sales"
                 value={formatCurrency(t.sales)}
                 sub="actual bill amount"
                 icon={TrendingUp}
-                tone="text-emerald-300 bg-emerald-500/10"
+                tone="text-emerald-700 dark:text-emerald-300 bg-emerald-500/10"
               />
               <Stat
                 label="Cash collected"
                 value={formatCurrency(t.collected)}
                 sub="from customers"
                 icon={Wallet}
-                tone="text-amber-300 bg-amber-500/10"
+                tone="text-amber-700 dark:text-amber-300 bg-amber-500/10"
               />
               <Stat
                 label="Tips today"
                 value={formatCurrency(t.tips)}
                 sub="yours to keep"
                 icon={Coins}
-                tone="text-gold-light bg-gold/10"
+                tone="text-gold-dark dark:text-gold-light bg-gold/10"
               />
             </div>
           ) : (
@@ -158,8 +158,8 @@ export default function WaiterEarnings() {
         </section>
 
         <section>
-          <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-zinc-400">
-            <CalendarDays className="h-4 w-4 text-gold-light" /> This week
+          <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+            <CalendarDays className="h-4 w-4 text-gold-dark dark:text-gold-light" /> This week
           </h2>
           <Card className="p-4">
             {w ? (
@@ -181,7 +181,7 @@ export default function WaiterEarnings() {
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-sm">
                     <thead>
-                      <tr className="border-b border-white/[0.06] text-xs uppercase tracking-wider text-zinc-500">
+                      <tr className="border-b border-zinc-200 dark:border-white/[0.06] text-xs uppercase tracking-wider text-zinc-500">
                         <th className="pb-2 pr-3 font-medium">Day</th>
                         <th className="pb-2 pr-3 font-medium">Served</th>
                         <th className="pb-2 pr-3 font-medium">Sales</th>
@@ -194,7 +194,7 @@ export default function WaiterEarnings() {
                         <tr
                           key={d.date}
                           className={cn(
-                            "border-b border-white/[0.04]",
+                            "border-b border-zinc-200 dark:border-white/[0.04]",
                             d.isToday && "bg-gold/[0.05]"
                           )}
                         >
@@ -204,10 +204,10 @@ export default function WaiterEarnings() {
                               {d.isToday && <Badge tone="gold">Today</Badge>}
                             </span>
                           </td>
-                          <td className="py-2.5 pr-3 text-zinc-300">{d.served}</td>
-                          <td className="py-2.5 pr-3 text-zinc-300">{formatCurrency(d.sales)}</td>
-                          <td className="py-2.5 pr-3 text-zinc-300">{formatCurrency(d.collected)}</td>
-                          <td className="py-2.5 font-semibold text-gold-light">
+                          <td className="py-2.5 pr-3 text-zinc-600 dark:text-zinc-300">{d.served}</td>
+                          <td className="py-2.5 pr-3 text-zinc-600 dark:text-zinc-300">{formatCurrency(d.sales)}</td>
+                          <td className="py-2.5 pr-3 text-zinc-600 dark:text-zinc-300">{formatCurrency(d.collected)}</td>
+                          <td className="py-2.5 font-semibold text-gold-dark dark:text-gold-light">
                             {formatCurrency(d.tips)}
                           </td>
                         </tr>
@@ -236,8 +236,8 @@ export default function WaiterEarnings() {
 
         <section>
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-zinc-400">
-              <Banknote className="h-4 w-4 text-gold-light" /> This week&apos;s orders
+            <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+              <Banknote className="h-4 w-4 text-gold-dark dark:text-gold-light" /> This week&apos;s orders
             </h2>
             <span className="text-xs text-zinc-500">
               {data ? `${data.orders.length} shown` : "…"}
@@ -252,9 +252,9 @@ export default function WaiterEarnings() {
             </div>
           ) : data.orders.length === 0 ? (
             <Card className="flex flex-col items-center justify-center py-14 text-center">
-              <Coins className="mb-3 h-8 w-8 text-zinc-600" />
-              <p className="text-sm text-zinc-400">No completed orders this week yet.</p>
-              <p className="mt-1 text-xs text-zinc-600">
+              <Coins className="mb-3 h-8 w-8 text-zinc-600 dark:text-zinc-400" />
+              <p className="text-sm text-zinc-500 dark:text-zinc-400">No completed orders this week yet.</p>
+              <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400">
                 When you complete an order and enter the cash you collected, the tip shows up here.
               </p>
             </Card>
@@ -266,15 +266,15 @@ export default function WaiterEarnings() {
                   layout
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="rounded-2xl border border-white/[0.06] bg-white/[0.02] px-4 py-3"
+                  className="rounded-2xl border border-zinc-200 dark:border-white/[0.06] bg-zinc-100 dark:bg-white/[0.02] px-4 py-3"
                 >
                   <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
                     <div className="flex min-w-0 flex-1 items-center gap-3">
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gold/10 font-display text-sm font-bold text-gold-light ring-1 ring-gold/25">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gold/10 font-display text-sm font-bold text-gold-dark dark:text-gold-light ring-1 ring-gold/25">
                         #{o.orderNumber}
                       </span>
                       <div className="min-w-0">
-                        <p className="truncate text-sm font-medium text-zinc-100">
+                        <p className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-100">
                           {o.tableLabel ?? "Takeaway"}
                         </p>
                         <p className="text-xs text-zinc-500">
@@ -291,15 +291,15 @@ export default function WaiterEarnings() {
                     <div className="flex items-center gap-4 text-sm">
                       <div className="text-right">
                         <p className="text-xs text-zinc-500">Bill</p>
-                        <p className="text-zinc-300">{formatCurrency(o.payable)}</p>
+                        <p className="text-zinc-600 dark:text-zinc-300">{formatCurrency(o.payable)}</p>
                       </div>
                       <div className="text-right">
                         <p className="text-xs text-zinc-500">Collected</p>
-                        <p className="text-zinc-300">{dash(o.collectedAmount)}</p>
+                        <p className="text-zinc-600 dark:text-zinc-300">{dash(o.collectedAmount)}</p>
                       </div>
                       <div className="text-right">
                         <p className="text-xs text-zinc-500">Tip</p>
-                        <p className="font-semibold text-gold-light">{formatCurrency(o.tip)}</p>
+                        <p className="font-semibold text-gold-dark dark:text-gold-light">{formatCurrency(o.tip)}</p>
                       </div>
                       <Badge tone={o.status === "COMPLETED" ? "zinc" : "teal"}>
                         {o.status}
@@ -333,7 +333,7 @@ function Stat({
     <Card className="flex items-center justify-between p-4">
       <div>
         <p className="text-xs uppercase tracking-wider text-zinc-500">{label}</p>
-        <p className="mt-1 font-display text-2xl font-semibold text-zinc-50">{value}</p>
+        <p className="mt-1 font-display text-2xl font-semibold text-zinc-900 dark:text-zinc-50">{value}</p>
         <p className="mt-0.5 text-[11px] text-zinc-500">{sub}</p>
       </div>
       <div className={cn("flex h-10 w-10 items-center justify-center rounded-2xl", tone)}>
@@ -345,9 +345,9 @@ function Stat({
 
 function MiniStat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl bg-white/[0.03] px-4 py-3 ring-1 ring-white/[0.06]">
+    <div className="rounded-xl bg-zinc-100 dark:bg-white/[0.03] px-4 py-3 ring-1 ring-zinc-200 dark:ring-white/[0.06]">
       <p className="text-xs uppercase tracking-wider text-zinc-500">{label}</p>
-      <p className="mt-1 font-display text-xl font-semibold text-zinc-100">{value}</p>
+      <p className="mt-1 font-display text-xl font-semibold text-zinc-900 dark:text-zinc-100">{value}</p>
     </div>
   );
 }

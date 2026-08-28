@@ -7,14 +7,14 @@ const badgeVariants = cva(
   {
     variants: {
       tone: {
-        amber: "border-amber-400/30 bg-amber-400/10 text-amber-300",
-        gold: "border-gold/40 bg-gold/10 text-gold-light",
-        sky: "border-sky-400/30 bg-sky-400/10 text-sky-300",
-        violet: "border-violet-400/30 bg-violet-400/10 text-violet-300",
-        emerald: "border-emerald-400/30 bg-emerald-400/10 text-emerald-300",
-        teal: "border-teal-400/30 bg-teal-400/10 text-teal-300",
-        rose: "border-rose-400/30 bg-rose-400/10 text-rose-300",
-        zinc: "border-zinc-500/40 bg-zinc-500/10 text-zinc-400",
+        amber: "border-amber-500/40 bg-amber-400/15 text-amber-700 dark:border-amber-400/30 dark:bg-amber-400/10 dark:text-amber-300",
+        gold: "border-gold/50 bg-gold/15 text-gold-dark dark:border-gold/40 dark:bg-gold/10 dark:text-gold-light",
+        sky: "border-sky-500/40 bg-sky-400/15 text-sky-700 dark:border-sky-400/30 dark:bg-sky-400/10 dark:text-sky-300",
+        violet: "border-violet-500/40 bg-violet-400/15 text-violet-700 dark:border-violet-400/30 dark:bg-violet-400/10 dark:text-violet-300",
+        emerald: "border-emerald-500/40 bg-emerald-400/15 text-emerald-700 dark:border-emerald-400/30 dark:bg-emerald-400/10 dark:text-emerald-300",
+        teal: "border-teal-500/40 bg-teal-400/15 text-teal-700 dark:border-teal-400/30 dark:bg-teal-400/10 dark:text-teal-300",
+        rose: "border-rose-500/40 bg-rose-400/15 text-rose-700 dark:border-rose-400/30 dark:bg-rose-400/10 dark:text-rose-300",
+        zinc: "border-zinc-400/50 bg-zinc-400/15 text-zinc-600 dark:border-zinc-500/40 dark:bg-zinc-500/10 dark:text-zinc-400",
       },
     },
     defaultVariants: {

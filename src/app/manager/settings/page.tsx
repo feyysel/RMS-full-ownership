@@ -101,10 +101,10 @@ export default function ManagerSettings() {
                 <img
                   src={logoUrl}
                   alt={`${restaurant?.name ?? "Restaurant"} logo`}
-                  className="h-24 w-24 rounded-2xl border border-white/10 object-cover shadow-soft"
+                  className="h-24 w-24 rounded-2xl border border-zinc-200 object-cover shadow-soft dark:border-white/10"
                 />
               ) : (
-                <div className="flex h-24 w-24 items-center justify-center rounded-2xl border border-dashed border-white/15 bg-white/[0.02]">
+                <div className="flex h-24 w-24 items-center justify-center rounded-2xl border border-dashed border-zinc-200 bg-zinc-100 dark:border-white/15 dark:bg-white/[0.02]">
                   <Store className="h-9 w-9 text-zinc-500" />
                 </div>
               )}
@@ -112,7 +112,7 @@ export default function ManagerSettings() {
                 type="button"
                 onClick={() => inputRef.current?.click()}
                 disabled={uploading}
-                className="absolute -bottom-2 -right-2 flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-[#141416] text-zinc-300 shadow-soft transition-colors hover:border-gold/40 hover:text-gold-light"
+                className="absolute -bottom-2 -right-2 flex h-9 w-9 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-600 shadow-soft transition-colors hover:border-gold/40 hover:text-gold-dark dark:border-white/10 dark:bg-[#141416] dark:text-zinc-300 dark:hover:text-gold-light"
                 title={logoUrl ? "Replace logo" : "Upload logo"}
               >
                 {uploading ? (
@@ -124,7 +124,7 @@ export default function ManagerSettings() {
             </div>
 
             <div className="min-w-0 flex-1">
-              <h2 className="font-display text-xl font-semibold text-zinc-100">
+              <h2 className="font-display text-xl font-semibold text-zinc-900 dark:text-zinc-100">
                 {restaurant?.name ?? "Loading…"}
               </h2>
               <p className="mt-1 text-sm text-zinc-500">
@@ -149,7 +149,7 @@ export default function ManagerSettings() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="text-rose-300 hover:bg-rose-500/10"
+                    className="text-rose-700 hover:bg-rose-500/10 dark:text-rose-300"
                     onClick={() => setLogoUrl(null)}
                     disabled={saving}
                   >

@@ -143,7 +143,7 @@ export default function ManagerEmployees() {
         {isOwner && (
           <StaffGroup
             title="Managers"
-            icon={<Users className="h-4 w-4 text-gold-light" />}
+            icon={<Users className="h-4 w-4 text-gold-dark dark:text-gold-light" />}
             loading={loading}
             users={managers}
             tone="gold"
@@ -154,7 +154,7 @@ export default function ManagerEmployees() {
         )}
         <StaffGroup
           title="Waiters"
-          icon={<UtensilsCrossed className="h-4 w-4 text-gold-light" />}
+          icon={<UtensilsCrossed className="h-4 w-4 text-gold-dark dark:text-gold-light" />}
           loading={loading}
           users={waiters}
           tone="emerald"
@@ -164,7 +164,7 @@ export default function ManagerEmployees() {
         />
         <StaffGroup
           title="Cashiers"
-          icon={<Banknote className="h-4 w-4 text-gold-light" />}
+          icon={<Banknote className="h-4 w-4 text-gold-dark dark:text-gold-light" />}
           loading={loading}
           users={cashiers}
           tone="gold"
@@ -174,7 +174,7 @@ export default function ManagerEmployees() {
         />
         <StaffGroup
           title="Kitchen"
-          icon={<ChefHat className="h-4 w-4 text-violet-300" />}
+          icon={<ChefHat className="h-4 w-4 text-violet-700 dark:text-violet-300" />}
           loading={loading}
           users={kitchen}
           tone="violet"
@@ -288,7 +288,7 @@ function StaffGroup({
     <Card>
       <div className="mb-4 flex items-center gap-2">
         {icon}
-        <h3 className="font-display text-lg font-semibold text-zinc-50">{title}</h3>
+        <h3 className="font-display text-lg font-semibold text-zinc-900 dark:text-zinc-50">{title}</h3>
         <Badge tone={tone} className="ml-auto">
           {users.length}
         </Badge>
@@ -304,17 +304,17 @@ function StaffGroup({
           {users.map((u) => (
             <div
               key={u.id}
-              className="flex items-center gap-3 rounded-xl border border-white/[0.05] bg-white/[0.02] px-3.5 py-3"
+              className="flex items-center gap-3 rounded-xl border border-zinc-200 bg-zinc-100 px-3.5 py-3 dark:border-white/[0.05] dark:bg-white/[0.02]"
             >
               <Avatar name={u.name} className="h-9 w-9 text-xs" />
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium text-zinc-100">{u.name}</p>
+                <p className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-100">{u.name}</p>
                 <p className="truncate text-xs text-zinc-500">{u.phone}</p>
               </div>
               {!u.isActive && <Badge tone="rose">Inactive</Badge>}
               <button
                 onClick={() => onResetPassword(u)}
-                className="rounded-lg p-2 text-zinc-400 transition-colors hover:bg-white/10 hover:text-gold-light"
+                className="rounded-lg p-2 text-zinc-500 transition-colors hover:bg-zinc-200 hover:text-gold-dark dark:text-zinc-400 dark:hover:bg-white/10 dark:hover:text-gold-light"
                 title="Reset password"
               >
                 <KeyRound className="h-4 w-4" />
@@ -322,7 +322,7 @@ function StaffGroup({
               <Switch checked={u.isActive} onCheckedChange={() => onToggle(u)} />
               <button
                 onClick={() => onDelete(u)}
-                className="rounded-lg p-2 text-zinc-400 transition-colors hover:bg-white/10 hover:text-rose-300"
+                className="rounded-lg p-2 text-zinc-500 transition-colors hover:bg-zinc-200 hover:text-rose-700 dark:text-zinc-400 dark:hover:bg-white/10 dark:hover:text-rose-300"
                 title="Remove"
               >
                 <Trash2 className="h-4 w-4" />

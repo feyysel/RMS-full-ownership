@@ -8,7 +8,7 @@ const Input = React.forwardRef<
   <input
     type={type}
     className={cn(
-      "flex h-11 w-full rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2 text-sm text-zinc-100 placeholder:text-zinc-500 transition-colors focus:border-gold/60 focus:outline-none focus:ring-2 focus:ring-gold/20 disabled:cursor-not-allowed disabled:opacity-50",
+      "flex h-11 w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 transition-colors focus:border-gold/60 focus:outline-none focus:ring-2 focus:ring-gold/20 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.04] dark:text-zinc-100 dark:placeholder:text-zinc-500",
       className
     )}
     ref={ref}
@@ -23,7 +23,7 @@ const Textarea = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <textarea
     className={cn(
-      "flex min-h-[80px] w-full rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-500 transition-colors focus:border-gold/60 focus:outline-none focus:ring-2 focus:ring-gold/20 disabled:cursor-not-allowed disabled:opacity-50",
+      "flex min-h-[80px] w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 transition-colors focus:border-gold/60 focus:outline-none focus:ring-2 focus:ring-gold/20 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.04] dark:text-zinc-100 dark:placeholder:text-zinc-500",
       className
     )}
     ref={ref}
@@ -38,7 +38,7 @@ const Select = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <select
     className={cn(
-      "flex h-11 w-full appearance-none rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2 text-sm text-zinc-100 transition-colors focus:border-gold/60 focus:outline-none focus:ring-2 focus:ring-gold/20 [&>option]:bg-zinc-900 disabled:cursor-not-allowed disabled:opacity-50",
+      "flex h-11 w-full appearance-none rounded-xl border border-zinc-300 bg-white px-3.5 py-2 text-sm text-zinc-900 transition-colors focus:border-gold/60 focus:outline-none focus:ring-2 focus:ring-gold/20 [&>option]:bg-white [&>option]:text-zinc-900 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.04] dark:text-zinc-100 dark:[&>option]:bg-zinc-900 dark:[&>option]:text-zinc-100",
       className
     )}
     ref={ref}
@@ -56,7 +56,7 @@ function Label({
   return (
     <label
       className={cn(
-        "mb-1.5 block text-xs font-medium uppercase tracking-wider text-zinc-400",
+        "mb-1.5 block text-xs font-medium uppercase tracking-wider text-zinc-500 dark:text-zinc-400",
         className
       )}
       {...props}

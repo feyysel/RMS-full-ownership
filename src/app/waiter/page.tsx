@@ -200,10 +200,10 @@ export default function WaiterDashboard() {
       />
 
       <div className="mb-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <Stat label="My tables" value={myTables.length} icon={Grid3X3} tone="text-sky-300 bg-sky-500/10" pulse={false} loading={loading} />
-        <Stat label="Tables occupied" value={occupied} icon={UtensilsCrossed} tone="text-amber-300 bg-amber-500/10" pulse={false} loading={loading} />
-        <Stat label="In progress" value={inProgress.length} icon={ChefHat} tone="text-violet-300 bg-violet-500/10" pulse={inProgress.length > 0} loading={loading} />
-        <Stat label="Ready to serve" value={ready.length} icon={Package} tone="text-emerald-300 bg-emerald-500/10" pulse={ready.length > 0} loading={loading} />
+        <Stat label="My tables" value={myTables.length} icon={Grid3X3} tone="text-sky-700 dark:text-sky-300 bg-sky-500/10" pulse={false} loading={loading} />
+        <Stat label="Tables occupied" value={occupied} icon={UtensilsCrossed} tone="text-amber-700 dark:text-amber-300 bg-amber-500/10" pulse={false} loading={loading} />
+        <Stat label="In progress" value={inProgress.length} icon={ChefHat} tone="text-violet-700 dark:text-violet-300 bg-violet-500/10" pulse={inProgress.length > 0} loading={loading} />
+        <Stat label="Ready to serve" value={ready.length} icon={Package} tone="text-emerald-700 dark:text-emerald-300 bg-emerald-500/10" pulse={ready.length > 0} loading={loading} />
       </div>
 
       {bells.length > 0 && (
@@ -212,7 +212,7 @@ export default function WaiterDashboard() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-6 rounded-2xl border border-rose-400/30 bg-rose-500/[0.06] p-4"
         >
-          <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-rose-300">
+          <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-rose-700 dark:text-rose-300">
             <BellRing className="h-4 w-4 animate-pulse-soft" />
             {bells.length} bell{bells.length === 1 ? "" : "s"} ringing right now
           </div>
@@ -221,12 +221,12 @@ export default function WaiterDashboard() {
               <button
                 key={b.id}
                 onClick={() => answerBell(b.id)}
-                className="group flex items-center gap-2 rounded-full border border-rose-400/40 bg-rose-500/10 px-4 py-2 text-sm text-rose-200 transition-all hover:bg-rose-500/20"
+                className="group flex items-center gap-2 rounded-full border border-rose-400/40 bg-rose-500/10 px-4 py-2 text-sm text-rose-700 dark:text-rose-200 transition-all hover:bg-rose-500/20"
               >
                 <Bell className="h-4 w-4" />
                 Table {b.table.number}
-                <span className="text-xs text-rose-400">{timeAgo(b.createdAt)}</span>
-                <span className="ml-1 rounded-full bg-rose-400/20 px-2 py-0.5 text-xs text-rose-100 transition-colors group-hover:bg-emerald-400/30 group-hover:text-emerald-100">
+                <span className="text-xs text-rose-500 dark:text-rose-400">{timeAgo(b.createdAt)}</span>
+                <span className="ml-1 rounded-full bg-rose-400/20 px-2 py-0.5 text-xs text-rose-700 dark:text-rose-100 transition-colors group-hover:bg-emerald-400/30 group-hover:text-emerald-700 dark:group-hover:text-emerald-100">
                   Answer
                 </span>
               </button>
@@ -238,8 +238,8 @@ export default function WaiterDashboard() {
       <div className="grid gap-6 lg:grid-cols-2">
         <section>
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-zinc-400">
-              <Grid3X3 className="h-4 w-4 text-gold-light" /> My tables
+            <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+              <Grid3X3 className="h-4 w-4 text-gold-dark dark:text-gold-light" /> My tables
             </h2>
             <span className="text-xs text-zinc-500">{myTables.length} total</span>
           </div>
@@ -271,11 +271,11 @@ export default function WaiterDashboard() {
                     />
                     <div className="flex items-start justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/[0.05] font-display text-lg font-semibold text-zinc-100 ring-1 ring-white/10">
+                        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-zinc-100 dark:bg-white/[0.05] font-display text-lg font-semibold text-zinc-900 dark:text-zinc-100 ring-1 ring-zinc-200 dark:ring-white/10">
                           {t.number}
                         </div>
                         <div>
-                          <p className="text-sm font-medium text-zinc-100">Table {t.number}</p>
+                          <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Table {t.number}</p>
                           <Badge
                             tone={bell ? "rose" : t.status === "occupied" ? "amber" : "emerald"}
                             className="mt-1 capitalize"
@@ -289,16 +289,16 @@ export default function WaiterDashboard() {
                       </Button>
                     </div>
                     {active && (
-                      <div className="mt-3 rounded-xl bg-white/[0.04] px-3 py-2">
+                      <div className="mt-3 rounded-xl bg-zinc-100 dark:bg-white/[0.04] px-3 py-2">
                         <div className="flex items-center justify-between">
-                          <p className="text-xs text-zinc-400">
-                            Order <span className="font-semibold text-gold-light">#{active.orderNumber}</span>
+                          <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                            Order <span className="font-semibold text-gold-dark dark:text-gold-light">#{active.orderNumber}</span>
                           </p>
                           <Badge tone={statusTone[active.status] ?? "amber"}>{active.status}</Badge>
                         </div>
                         <p className="mt-1 text-xs text-zinc-500">
                           {active.items.length} item(s) ·{" "}
-                          <span className="font-semibold text-zinc-300">
+                          <span className="font-semibold text-zinc-600 dark:text-zinc-300">
                             {formatCurrency(active.total)}
                           </span>
                         </p>
@@ -309,9 +309,9 @@ export default function WaiterDashboard() {
               })}
               {myTables.length === 0 && (
                 <Card className="flex flex-col items-center justify-center py-12 text-center sm:col-span-2">
-                  <Grid3X3 className="mb-3 h-8 w-8 text-zinc-600" />
-                  <p className="text-sm text-zinc-400">No tables assigned to you yet.</p>
-                  <p className="mt-1 text-xs text-zinc-600">
+                  <Grid3X3 className="mb-3 h-8 w-8 text-zinc-600 dark:text-zinc-400" />
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">No tables assigned to you yet.</p>
+                  <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400">
                     Ask the manager to assign your tables.
                   </p>
                 </Card>
@@ -322,8 +322,8 @@ export default function WaiterDashboard() {
 
         <section>
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-zinc-400">
-              <Radio className="h-4 w-4 text-gold-light" /> Live orders
+            <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+              <Radio className="h-4 w-4 text-gold-dark dark:text-gold-light" /> Live orders
             </h2>
             <span className="text-xs text-zinc-500">{myOrders.length} active</span>
           </div>
@@ -342,9 +342,9 @@ export default function WaiterDashboard() {
               </AnimatePresence>
               {myOrders.length === 0 && (
                 <Card className="flex flex-col items-center justify-center py-14 text-center">
-                  <CheckCircle2 className="mb-3 h-8 w-8 text-emerald-400/70" />
-                  <p className="text-sm text-zinc-400">No active orders.</p>
-                  <p className="mt-1 text-xs text-zinc-600">
+                  <CheckCircle2 className="mb-3 h-8 w-8 text-emerald-600 dark:text-emerald-400/70" />
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">No active orders.</p>
+                  <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400">
                     New orders from your tables appear here instantly.
                   </p>
                 </Card>
@@ -398,7 +398,7 @@ function Stat({
         {loading ? (
           <Skeleton className="mt-2 h-8 w-10" />
         ) : (
-          <p className="mt-1 font-display text-3xl font-semibold text-zinc-50">{value}</p>
+          <p className="mt-1 font-display text-3xl font-semibold text-zinc-900 dark:text-zinc-50">{value}</p>
         )}
       </div>
       <div className={cn("flex h-10 w-10 items-center justify-center rounded-2xl", tone)}>
@@ -424,19 +424,19 @@ function OrderRow({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.96 }}
       className={cn(
-        "rounded-2xl border bg-gradient-to-br from-white/[0.06] to-white/[0.01] p-4 shadow-soft backdrop-blur-sm",
+        "rounded-2xl border bg-gradient-to-br from-zinc-100 to-zinc-100 dark:from-white/[0.06] dark:to-white/[0.01] p-4 shadow-soft backdrop-blur-sm",
         order.status === "READY"
           ? "border-emerald-400/30 ring-1 ring-emerald-400/20"
-          : "border-white/10"
+          : "border-zinc-200 dark:border-white/10"
       )}
     >
       <div className="mb-2.5 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold/10 font-display text-sm font-bold text-gold-light ring-1 ring-gold/25">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold/10 font-display text-sm font-bold text-gold-dark dark:text-gold-light ring-1 ring-gold/25">
             #{order.orderNumber}
           </span>
           <div>
-            <p className="text-sm font-medium text-zinc-100">{order.tableLabel}</p>
+            <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{order.tableLabel}</p>
             <p className="text-xs text-zinc-500">{formatTime(order.createdAt)}</p>
           </div>
         </div>
@@ -446,14 +446,14 @@ function OrderRow({
         {order.items.map((i) => (
           <span
             key={i.id}
-            className="rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-1 text-xs text-zinc-300"
+            className="rounded-full border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/[0.03] px-2.5 py-1 text-xs text-zinc-600 dark:text-zinc-300"
           >
             {i.quantity}× {i.name}
           </span>
         ))}
       </div>
-      <div className="mt-3 flex items-center justify-between border-t border-white/[0.06] pt-3">
-        <p className="text-sm font-semibold text-gold-light">{formatCurrency(order.total)}</p>
+      <div className="mt-3 flex items-center justify-between border-t border-zinc-200 dark:border-white/[0.06] pt-3">
+        <p className="text-sm font-semibold text-gold-dark dark:text-gold-light">{formatCurrency(order.total)}</p>
         <div className="flex gap-2">
           {order.status === "PENDING" && (
             <Button
@@ -478,7 +478,7 @@ function OrderRow({
             <Button
               size="sm"
               variant="ghost"
-              className="text-rose-300 hover:bg-rose-500/10"
+              className="text-rose-700 dark:text-rose-300 hover:bg-rose-500/10"
               onClick={() => onAction(order.id, "cancel", `Order #${order.orderNumber} cancelled`)}
             >
               Cancel
@@ -617,8 +617,8 @@ function PlaceOrderModal({
           className={cn(
             "flex flex-1 items-center justify-center gap-2 rounded-xl border px-3 py-2.5 text-sm font-medium transition-all",
             type === "DINE_IN"
-              ? "border-gold/60 bg-gold/10 text-gold-light"
-              : "border-white/10 bg-white/[0.03] text-zinc-400"
+              ? "border-gold/60 bg-gold/10 text-gold-dark dark:text-gold-light"
+              : "border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/[0.03] text-zinc-500 dark:text-zinc-400"
           )}
         >
           <UtensilsCrossed className="h-4 w-4" /> Dine in
@@ -628,8 +628,8 @@ function PlaceOrderModal({
           className={cn(
             "flex flex-1 items-center justify-center gap-2 rounded-xl border px-3 py-2.5 text-sm font-medium transition-all",
             type === "TAKEAWAY"
-              ? "border-gold/60 bg-gold/10 text-gold-light"
-              : "border-white/10 bg-white/[0.03] text-zinc-400"
+              ? "border-gold/60 bg-gold/10 text-gold-dark dark:text-gold-light"
+              : "border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/[0.03] text-zinc-500 dark:text-zinc-400"
           )}
         >
           <Package className="h-4 w-4" /> Takeaway
@@ -650,8 +650,8 @@ function PlaceOrderModal({
               className={cn(
                 "shrink-0 rounded-full border px-3.5 py-1.5 text-xs font-medium transition-all",
                 cat === "all"
-                  ? "border-gold/60 bg-gold/10 text-gold-light"
-                  : "border-white/10 text-zinc-400 hover:text-zinc-200"
+                  ? "border-gold/60 bg-gold/10 text-gold-dark dark:text-gold-light"
+                  : "border-zinc-200 dark:border-white/10 text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200"
               )}
             >
               All
@@ -663,8 +663,8 @@ function PlaceOrderModal({
                 className={cn(
                   "shrink-0 rounded-full border px-3.5 py-1.5 text-xs font-medium transition-all",
                   cat === c
-                    ? "border-gold/60 bg-gold/10 text-gold-light"
-                    : "border-white/10 text-zinc-400 hover:text-zinc-200"
+                    ? "border-gold/60 bg-gold/10 text-gold-dark dark:text-gold-light"
+                    : "border-zinc-200 dark:border-white/10 text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200"
                 )}
               >
                 {c}
@@ -678,26 +678,26 @@ function PlaceOrderModal({
               return (
                 <div
                   key={item.id}
-                  className="flex items-center gap-3 rounded-xl border border-white/[0.06] bg-white/[0.02] px-3 py-2.5"
+                  className="flex items-center gap-3 rounded-xl border border-zinc-200 dark:border-white/[0.06] bg-zinc-100 dark:bg-white/[0.02] px-3 py-2.5"
                 >
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium text-zinc-100">{item.name}</p>
-                    <p className="text-xs text-gold-light">{formatCurrency(item.price)}</p>
+                    <p className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-100">{item.name}</p>
+                    <p className="text-xs text-gold-dark dark:text-gold-light">{formatCurrency(item.price)}</p>
                   </div>
                   {line ? (
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => changeQty(item.id, -1)}
-                        className="flex h-7 w-7 items-center justify-center rounded-lg border border-white/10 text-zinc-300 hover:border-rose-400/40 hover:text-rose-300"
+                        className="flex h-7 w-7 items-center justify-center rounded-lg border border-zinc-200 dark:border-white/10 text-zinc-600 dark:text-zinc-300 hover:border-rose-400/40 hover:text-rose-700 dark:hover:text-rose-300"
                       >
                         <Minus className="h-3.5 w-3.5" />
                       </button>
-                      <span className="w-5 text-center text-sm font-semibold text-zinc-100">
+                      <span className="w-5 text-center text-sm font-semibold text-zinc-900 dark:text-zinc-100">
                         {line.qty}
                       </span>
                       <button
                         onClick={() => add(item)}
-                        className="flex h-7 w-7 items-center justify-center rounded-lg border border-white/10 text-zinc-300 hover:border-gold/40 hover:text-gold-light"
+                        className="flex h-7 w-7 items-center justify-center rounded-lg border border-zinc-200 dark:border-white/10 text-zinc-600 dark:text-zinc-300 hover:border-gold/40 hover:text-gold-dark dark:hover:text-gold-light"
                       >
                         <Plus className="h-3.5 w-3.5" />
                       </button>
@@ -726,12 +726,12 @@ function PlaceOrderModal({
               rows={2}
             />
           </div>
-          <div className="mt-4 flex items-center justify-between border-t border-white/[0.08] pt-4">
+          <div className="mt-4 flex items-center justify-between border-t border-zinc-200 dark:border-white/[0.08] pt-4">
             <div>
               <p className="text-xs text-zinc-500">
                 {cartCount} item{cartCount === 1 ? "" : "s"}
               </p>
-              <p className="font-display text-2xl font-semibold text-gold-light">
+              <p className="font-display text-2xl font-semibold text-gold-dark dark:text-gold-light">
                 {formatCurrency(cartTotal)}
               </p>
             </div>
@@ -801,10 +801,10 @@ function CollectPaymentModal({
     >
       {order && (
         <>
-          <div className="mb-5 rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
+          <div className="mb-5 rounded-2xl border border-zinc-200 dark:border-white/[0.06] bg-zinc-100 dark:bg-white/[0.03] p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-zinc-100">
+                <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
                   {order.tableLabel}
                 </p>
                 <p className="text-xs text-zinc-500">
@@ -814,9 +814,9 @@ function CollectPaymentModal({
               </div>
               <Badge tone="teal">SERVED</Badge>
             </div>
-            <div className="mt-3 flex items-end justify-between border-t border-white/[0.06] pt-3">
-              <p className="text-xs text-zinc-400">Customer pays (incl. tax)</p>
-              <p className="font-display text-2xl font-semibold text-zinc-50">
+            <div className="mt-3 flex items-end justify-between border-t border-zinc-200 dark:border-white/[0.06] pt-3">
+              <p className="text-xs text-zinc-500 dark:text-zinc-400">Customer pays (incl. tax)</p>
+              <p className="font-display text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
                 {formatCurrency(payable)}
               </p>
             </div>
@@ -838,8 +838,8 @@ function CollectPaymentModal({
           </div>
 
           <div className="mt-4 flex items-center justify-between rounded-xl bg-gold/[0.07] px-4 py-3 ring-1 ring-gold/20">
-            <p className="text-sm text-zinc-300">Your tip</p>
-            <p className="font-display text-xl font-semibold text-gold-light">
+            <p className="text-sm text-zinc-600 dark:text-zinc-300">Your tip</p>
+            <p className="font-display text-xl font-semibold text-gold-dark dark:text-gold-light">
               {formatCurrency(tip)}
             </p>
           </div>

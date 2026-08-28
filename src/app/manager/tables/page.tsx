@@ -156,11 +156,11 @@ export default function ManagerTables() {
                 />
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/[0.05] font-display text-xl font-semibold text-zinc-100 ring-1 ring-white/10">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-zinc-100 font-display text-xl font-semibold text-zinc-900 ring-1 ring-zinc-200 dark:bg-white/[0.05] dark:text-zinc-100 dark:ring-white/10">
                       {t.number}
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-zinc-100">
+                      <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
                         Table {t.number}
                       </p>
                       <Badge
@@ -174,14 +174,14 @@ export default function ManagerTables() {
                   <div className="flex gap-1">
                     <button
                       onClick={() => setQrFor(t)}
-                      className="rounded-lg p-2 text-zinc-400 transition-colors hover:bg-white/10 hover:text-gold-light"
+                      className="rounded-lg p-2 text-zinc-500 transition-colors hover:bg-zinc-200 hover:text-gold-dark dark:text-zinc-400 dark:hover:bg-white/10 dark:hover:text-gold-light"
                       title="QR menu"
                     >
                       <QrIcon className="h-4 w-4" />
                     </button>
                     <button
                       onClick={() => setDeleting(t)}
-                      className="rounded-lg p-2 text-zinc-400 transition-colors hover:bg-white/10 hover:text-rose-300"
+                      className="rounded-lg p-2 text-zinc-500 transition-colors hover:bg-zinc-200 hover:text-rose-700 dark:text-zinc-400 dark:hover:bg-white/10 dark:hover:text-rose-300"
                       title="Remove"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -190,13 +190,13 @@ export default function ManagerTables() {
                 </div>
 
                 {activeOrder && (
-                  <div className="mt-3 rounded-xl bg-white/[0.04] px-3 py-2.5">
-                    <p className="text-xs text-zinc-400">
-                      Order <span className="font-semibold text-gold-light">#{activeOrder.orderNumber}</span>
+                  <div className="mt-3 rounded-xl bg-zinc-100 px-3 py-2.5 dark:bg-white/[0.04]">
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                      Order <span className="font-semibold text-gold-dark dark:text-gold-light">#{activeOrder.orderNumber}</span>
                     </p>
                     <div className="mt-1 flex items-center justify-between">
                       <Badge tone={orderTone(activeOrder.status)}>{activeOrder.status}</Badge>
-                      <p className="text-sm font-semibold text-zinc-100">
+                      <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
                         {formatCurrency(activeOrder.total)}
                       </p>
                     </div>
@@ -223,7 +223,7 @@ export default function ManagerTables() {
           {(tables.data?.tables ?? []).length === 0 && (
             <Card className="flex flex-col items-center justify-center py-16 text-center sm:col-span-2 lg:col-span-4">
               <Grid3X3 className="mb-3 h-8 w-8 text-zinc-600" />
-              <p className="text-sm text-zinc-400">No tables yet</p>
+              <p className="text-sm text-zinc-500 dark:text-zinc-400">No tables yet</p>
               <Button className="mt-4" size="sm" onClick={() => setModal(true)}>
                 <Plus className="h-4 w-4" /> Add your first table
               </Button>
@@ -281,18 +281,18 @@ export default function ManagerTables() {
       >
         {qrFor && (
           <div className="flex flex-col items-center">
-            <div className="rounded-3xl border border-white/10 bg-white p-5">
+            <div className="rounded-3xl border border-zinc-200 bg-white p-5 dark:border-white/10 dark:bg-zinc-900">
               <QrCode url={tableUrl(qrFor.code)} size={220} />
             </div>
             <div className="mt-4 flex w-full items-center gap-2">
-              <code className="flex-1 truncate rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-xs text-zinc-400">
+              <code className="flex-1 truncate rounded-xl border border-zinc-200 bg-zinc-100 px-3 py-2 text-xs text-zinc-500 dark:border-white/10 dark:bg-white/[0.04] dark:text-zinc-400">
                 {tableUrl(qrFor.code)}
               </code>
               <a
                 href={tableUrl(qrFor.code)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-xl p-2.5 text-zinc-400 transition-colors hover:bg-white/10 hover:text-gold-light"
+                className="rounded-xl p-2.5 text-zinc-500 transition-colors hover:bg-zinc-200 hover:text-gold-dark dark:text-zinc-400 dark:hover:bg-white/10 dark:hover:text-gold-light"
               >
                 <ExternalLink className="h-4 w-4" />
               </a>
@@ -305,7 +305,7 @@ export default function ManagerTables() {
                     toast.error("Could not copy");
                   }
                 }}
-                className="rounded-xl p-2.5 text-zinc-400 transition-colors hover:bg-white/10 hover:text-gold-light"
+                className="rounded-xl p-2.5 text-zinc-500 transition-colors hover:bg-zinc-200 hover:text-gold-dark dark:text-zinc-400 dark:hover:bg-white/10 dark:hover:text-gold-light"
                 title="Copy link"
               >
                 <Copy className="h-4 w-4" />

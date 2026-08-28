@@ -219,7 +219,7 @@ export default function ManagerMenu() {
                   />
                 ) : (
                   <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-gold/15 to-transparent">
-                    <UtensilsCrossed className="h-10 w-10 text-gold-light/40" />
+                    <UtensilsCrossed className="h-10 w-10 text-gold-dark/40 dark:text-gold-light/40" />
                   </div>
                 )}
                 {!item.available && (
@@ -238,10 +238,10 @@ export default function ManagerMenu() {
 
               <div className="p-4">
                 <div className="flex items-start justify-between gap-2">
-                  <h3 className="font-display text-lg font-semibold text-zinc-50">
+                  <h3 className="font-display text-lg font-semibold text-zinc-900 dark:text-zinc-50">
                     {item.name}
                   </h3>
-                  <p className="shrink-0 font-display text-lg font-semibold text-gold-light">
+                  <p className="shrink-0 font-display text-lg font-semibold text-gold-dark dark:text-gold-light">
                     {formatCurrency(item.price)}
                   </p>
                 </div>
@@ -250,14 +250,14 @@ export default function ManagerMenu() {
                     {item.category.name}
                   </p>
                 )}
-                <p className="mt-2 line-clamp-2 text-sm text-zinc-400">
+                <p className="mt-2 line-clamp-2 text-sm text-zinc-500 dark:text-zinc-400">
                   {item.description ?? "—"}
                 </p>
                 <p className="mt-2 line-clamp-1 text-xs text-zinc-500">
-                  <span className="text-zinc-600">Ingredients:</span> {item.ingredients}
+                  <span className="text-zinc-600 dark:text-zinc-400">Ingredients:</span> {item.ingredients}
                 </p>
 
-                <div className="mt-4 flex items-center justify-between border-t border-white/[0.06] pt-3">
+                <div className="mt-4 flex items-center justify-between border-t border-zinc-200 pt-3 dark:border-white/[0.06]">
                   <div className="flex items-center gap-2">
                     <span className="text-xs text-zinc-500">Available</span>
                     <Switch
@@ -278,14 +278,14 @@ export default function ManagerMenu() {
                   <div className="flex gap-1">
                     <button
                       onClick={() => openEdit(item)}
-                      className="rounded-lg p-2 text-zinc-400 transition-colors hover:bg-white/10 hover:text-gold-light"
+                      className="rounded-lg p-2 text-zinc-500 transition-colors hover:bg-zinc-200 hover:text-gold-dark dark:text-zinc-400 dark:hover:bg-white/10 dark:hover:text-gold-light"
                       title="Edit"
                     >
                       <Pencil className="h-4 w-4" />
                     </button>
                     <button
                       onClick={() => setDeleting(item)}
-                      className="rounded-lg p-2 text-zinc-400 transition-colors hover:bg-white/10 hover:text-rose-300"
+                      className="rounded-lg p-2 text-zinc-500 transition-colors hover:bg-zinc-200 hover:text-rose-700 dark:text-zinc-400 dark:hover:bg-white/10 dark:hover:text-rose-300"
                       title="Remove"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -298,7 +298,7 @@ export default function ManagerMenu() {
           {items.length === 0 && (
             <Card className="flex flex-col items-center justify-center py-16 text-center sm:col-span-2 lg:col-span-4">
               <UtensilsCrossed className="mb-3 h-8 w-8 text-zinc-600" />
-              <p className="text-sm text-zinc-400">
+              <p className="text-sm text-zinc-500 dark:text-zinc-400">
                 {data?.items.length === 0 ? "Your menu is empty" : "No matching dishes"}
               </p>
               {data?.items.length === 0 && (
@@ -356,11 +356,11 @@ export default function ManagerMenu() {
             <Textarea id="m-desc" value={form.description} onChange={(e) => set("description", e.target.value)} placeholder="A short, tempting description…" />
           </div>
           <div className="flex gap-6">
-            <label className="flex cursor-pointer items-center gap-2.5 text-sm text-zinc-300">
+            <label className="flex cursor-pointer items-center gap-2.5 text-sm text-zinc-600 dark:text-zinc-300">
               <Switch checked={form.available} onCheckedChange={(v) => set("available", v)} />
               Available
             </label>
-            <label className="flex cursor-pointer items-center gap-2.5 text-sm text-zinc-300">
+            <label className="flex cursor-pointer items-center gap-2.5 text-sm text-zinc-600 dark:text-zinc-300">
               <Switch checked={form.isPopular} onCheckedChange={(v) => set("isPopular", v)} />
               Mark as popular
             </label>

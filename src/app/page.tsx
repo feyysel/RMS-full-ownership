@@ -43,7 +43,7 @@ const ROLES = [
 
 export default function Home() {
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#0a0a0b]">
+    <div className="relative min-h-screen overflow-hidden bg-background">
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute -top-40 left-1/2 h-[600px] w-[900px] -translate-x-1/2 rounded-full bg-gold/[0.12] blur-[140px]" />
         <div className="absolute bottom-0 left-0 h-[400px] w-[500px] rounded-full bg-amber-600/10 blur-[120px]" />
@@ -62,7 +62,7 @@ export default function Home() {
         <div className="flex items-center gap-3">
           <Link
             href="/login"
-            className="rounded-full border border-white/10 px-5 py-2 text-sm font-medium text-zinc-300 transition-colors hover:border-gold/50 hover:text-gold-light"
+            className="rounded-full border border-zinc-200 dark:border-white/10 px-5 py-2 text-sm font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:border-gold/50 hover:text-gold-dark dark:hover:text-gold-light"
           >
             Sign in
           </Link>
@@ -75,7 +75,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="mb-6 inline-flex items-center gap-2 rounded-full border border-gold/25 bg-gold/[0.07] px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-gold-light"
+            className="mb-6 inline-flex items-center gap-2 rounded-full border border-gold/25 bg-gold/[0.07] px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-gold-dark dark:text-gold-light"
           >
             <Sparkles className="h-3.5 w-3.5" />
             The all-in-one restaurant OS
@@ -85,7 +85,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }}
-            className="max-w-4xl font-display text-5xl font-semibold leading-[1.05] tracking-tight text-zinc-50 sm:text-7xl"
+            className="max-w-4xl font-display text-5xl font-semibold leading-[1.05] tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-7xl"
           >
             One table.
             <br />
@@ -96,7 +96,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="mt-6 max-w-2xl text-base leading-relaxed text-zinc-400 sm:text-lg"
+            className="mt-6 max-w-2xl text-base leading-relaxed text-zinc-500 dark:text-zinc-400 sm:text-lg"
           >
             Admins govern. Managers curate. The kitchen cooks in real time. Waiters
             serve on command. Customers order at the table — all synchronized
@@ -118,7 +118,7 @@ export default function Home() {
             </Link>
             <Link
               href="#roles"
-              className="inline-flex h-12 items-center rounded-full border border-white/10 px-8 text-base font-medium text-zinc-300 transition-colors hover:border-gold/50 hover:text-gold-light"
+              className="inline-flex h-12 items-center rounded-full border border-zinc-200 dark:border-white/10 px-8 text-base font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:border-gold/50 hover:text-gold-dark dark:hover:text-gold-light"
             >
               Explore the roles
             </Link>
@@ -138,9 +138,9 @@ export default function Home() {
             ].map(([v, l]) => (
               <div
                 key={l}
-                className="rounded-2xl border border-white/[0.07] bg-white/[0.03] p-4 backdrop-blur-sm"
+                className="rounded-2xl border border-zinc-200 dark:border-white/[0.07] bg-zinc-100 dark:bg-white/[0.03] p-4 backdrop-blur-sm"
               >
-                <p className="font-display text-2xl font-semibold text-gold-light">{v}</p>
+                <p className="font-display text-2xl font-semibold text-gold-dark dark:text-gold-light">{v}</p>
                 <p className="mt-1 text-xs text-zinc-500">{l}</p>
               </div>
             ))}
@@ -155,10 +155,10 @@ export default function Home() {
             transition={{ duration: 0.6 }}
             className="mb-10 text-center"
           >
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-gold-light">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-gold-dark dark:text-gold-light">
               The ecosystem
             </p>
-            <h2 className="font-display text-3xl font-semibold text-zinc-50 sm:text-5xl">
+            <h2 className="font-display text-3xl font-semibold text-zinc-900 dark:text-zinc-50 sm:text-5xl">
               Every seat has a superpower
             </h2>
           </motion.div>
@@ -171,23 +171,23 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.5, delay: i * 0.08 }}
-                className="group relative overflow-hidden rounded-3xl border border-white/[0.07] bg-gradient-to-br from-white/[0.06] to-white/[0.01] p-6 backdrop-blur-sm transition-all hover:-translate-y-1 hover:border-gold/30"
+                className="group relative overflow-hidden rounded-3xl border border-zinc-200 dark:border-white/[0.07] bg-gradient-to-br from-zinc-50 dark:from-white/[0.06] to-transparent dark:to-white/[0.01] p-6 backdrop-blur-sm transition-all hover:-translate-y-1 hover:border-gold/30"
               >
                 <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-gold/10 blur-2xl transition-opacity opacity-0 group-hover:opacity-100" />
-                <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-2xl bg-gold/10 text-gold-light ring-1 ring-gold/25">
+                <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-2xl bg-gold/10 text-gold-dark dark:text-gold-light ring-1 ring-gold/25">
                   <role.icon className="h-5 w-5" />
                 </div>
-                <h3 className="font-display text-lg font-semibold text-zinc-50">
+                <h3 className="font-display text-lg font-semibold text-zinc-900 dark:text-zinc-50">
                   {role.title}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-zinc-400">{role.desc}</p>
+                <p className="mt-2 text-sm leading-relaxed text-zinc-500 dark:text-zinc-400">{role.desc}</p>
               </motion.div>
             ))}
           </div>
         </section>
       </main>
 
-      <footer className="relative z-10 border-t border-white/[0.06] py-8 text-center text-xs text-zinc-600">
+      <footer className="relative z-10 border-t border-zinc-200 dark:border-white/[0.06] py-8 text-center text-xs text-zinc-600 dark:text-zinc-400">
         Plateform · Restaurant Management Suite — crafted for the modern table.
       </footer>
     </div>

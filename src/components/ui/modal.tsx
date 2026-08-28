@@ -48,24 +48,24 @@ export function Modal({
             exit={{ opacity: 0, y: 40, scale: 0.98 }}
             transition={{ type: "spring", damping: 28, stiffness: 340 }}
             className={cn(
-              "relative z-10 max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-t-3xl border border-white/10 bg-zinc-950/95 p-6 shadow-soft backdrop-blur-xl sm:rounded-3xl",
+              "relative z-10 max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-t-3xl border border-zinc-200 bg-white p-6 shadow-xl backdrop-blur-xl sm:rounded-3xl dark:border-white/10 dark:bg-zinc-950/95 dark:shadow-soft",
               className
             )}
           >
             <div className="mb-5 flex items-start justify-between gap-4">
               <div>
                 {title && (
-                  <h3 className="font-display text-xl font-semibold text-zinc-50">
+                  <h3 className="font-display text-xl font-semibold text-zinc-900 dark:text-zinc-50">
                     {title}
                   </h3>
                 )}
                 {description && (
-                  <p className="mt-1 text-sm text-zinc-400">{description}</p>
+                  <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{description}</p>
                 )}
               </div>
               <button
                 onClick={onClose}
-                className="rounded-full p-2 text-zinc-400 transition-colors hover:bg-white/10 hover:text-white"
+                className="rounded-full p-2 text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-white/10 dark:hover:text-white"
                 aria-label="Close"
               >
                 <X className="h-5 w-5" />

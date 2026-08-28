@@ -103,9 +103,9 @@ export default function WaiterBells() {
       ) : ringing.length === 0 ? (
         <Card className="flex flex-col items-center justify-center py-20 text-center">
           <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500/10 ring-1 ring-emerald-500/25">
-            <CheckCircle2 className="h-7 w-7 text-emerald-300" />
+            <CheckCircle2 className="h-7 w-7 text-emerald-700 dark:text-emerald-300" />
           </div>
-          <p className="font-display text-xl font-semibold text-zinc-200">
+          <p className="font-display text-xl font-semibold text-zinc-800 dark:text-zinc-200">
             All tables are being served
           </p>
           <p className="mt-1 text-sm text-zinc-500">
@@ -116,7 +116,7 @@ export default function WaiterBells() {
         <div className="space-y-6">
           {mine.length > 0 && (
             <section>
-              <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-rose-300">
+              <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-rose-700 dark:text-rose-300">
                 <BellRing className="h-4 w-4" /> Your tables
               </h2>
               <div className="grid gap-3 lg:grid-cols-2">
@@ -178,11 +178,11 @@ function RingingCard({
       <Card className="relative overflow-hidden border-rose-400/30 ring-1 ring-rose-400/20">
         <span className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-rose-500 to-amber-400" />
         <div className="flex items-center gap-4">
-          <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-rose-500/15 text-rose-300 ring-1 ring-rose-400/30">
+          <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-rose-500/15 text-rose-700 dark:text-rose-300 ring-1 ring-rose-400/30">
             <BellRing className="h-6 w-6 animate-pulse-soft" />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="font-display text-lg font-semibold text-zinc-50">
+            <p className="font-display text-lg font-semibold text-zinc-900 dark:text-zinc-50">
               Table {tableNumber}
             </p>
             <p className="mt-0.5 flex items-center gap-2 text-xs text-zinc-500">

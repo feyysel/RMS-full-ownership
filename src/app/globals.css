@@ -1,8 +1,45 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
+  --background: #f6f5f2;
+  --foreground: #1c1917;
+  --espresso-solid: #17130d;
+
+  --surface: #ffffff;
+  --surface-subtle: #fbfaf8;
+  --surface-strong: #ffffff;
+  --card-border: rgba(28, 25, 23, 0.12);
+  --border-soft: rgba(28, 25, 23, 0.08);
+  --muted: #78716c;
+  --subtle: #a8a29e;
+  --hover: rgba(28, 25, 23, 0.05);
+  --hover-strong: rgba(28, 25, 23, 0.08);
+  --glass-line: rgba(28, 25, 23, 0.1);
+  --ghost-line: rgba(28, 25, 23, 0.14);
+  --elevated: #ffffff;
+  --shadow-soft: 0 20px 60px -24px rgba(28, 25, 23, 0.35);
+}
+
+.dark {
   --background: #0a0a0b;
   --foreground: #fafafa;
+  --espresso-solid: #17130d;
+
+  --surface: #16161a;
+  --surface-subtle: #101014;
+  --surface-strong: #1c1c21;
+  --card-border: rgba(255, 255, 255, 0.1);
+  --border-soft: rgba(255, 255, 255, 0.06);
+  --muted: #a1a1aa;
+  --subtle: #636363;
+  --hover: rgba(255, 255, 255, 0.06);
+  --hover-strong: rgba(255, 255, 255, 0.12);
+  --glass-line: rgba(255, 255, 255, 0.1);
+  --ghost-line: rgba(255, 255, 255, 0.14);
+  --elevated: #101014;
+  --shadow-soft: 0 20px 60px -20px rgba(0, 0, 0, 0.6);
 }
 
 @theme inline {
@@ -11,7 +48,12 @@
   --color-gold: #d4a34b;
   --color-gold-light: #eec87e;
   --color-gold-dark: #9a6d1f;
-  --color-espresso: #17130d;
+  --color-espresso: var(--espresso-solid);
+  --color-surface: var(--surface);
+  --color-surface-subtle: var(--surface-subtle);
+  --color-surface-strong: var(--surface-strong);
+  --color-muted: var(--muted);
+  --color-subtle: var(--subtle);
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-playfair), Georgia, serif;
   --animate-fade-up: fade-up 0.5s ease-out both;
@@ -71,7 +113,7 @@ body {
 
 ::selection {
   background: rgba(212, 163, 75, 0.35);
-  color: #fff;
+  color: var(--foreground);
 }
 
 * {
@@ -96,21 +138,21 @@ body {
 @utility glass {
   background: linear-gradient(
     160deg,
-    rgba(255, 255, 255, 0.07),
-    rgba(255, 255, 255, 0.02)
+    var(--surface-subtle),
+    color-mix(in srgb, var(--foreground) 2%, transparent)
   );
   backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--glass-line);
 }
 
 @utility glass-strong {
   background: linear-gradient(
     160deg,
-    rgba(24, 24, 27, 0.9),
-    rgba(10, 10, 11, 0.92)
+    color-mix(in srgb, var(--surface-strong) 92%, var(--background)),
+    var(--surface-strong)
   );
   backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--glass-line);
 }
 
 @utility gold-gradient-text {
@@ -130,7 +172,7 @@ body {
 }
 
 @utility shadow-soft {
-  box-shadow: 0 20px 60px -20px rgba(0, 0, 0, 0.6);
+  box-shadow: var(--shadow-soft);
 }
 
 @utility text-balance {
