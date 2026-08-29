@@ -11,6 +11,7 @@ import {
   Users,
   UtensilsCrossed,
   Sparkles,
+  Coins,
 } from "lucide-react";
 
 const ROLES = [
@@ -28,6 +29,11 @@ const ROLES = [
     icon: ChefHat,
     title: "Kitchen",
     desc: "Accept orders first-come-first-served, cook, and send detailed receipts to waiters.",
+  },
+  {
+    icon: Coins,
+    title: "Cashier",
+    desc: "Settle orders, take payments, and issue crisp receipts to every customer.",
   },
   {
     icon: BellRing,
@@ -98,9 +104,10 @@ export default function Home() {
             transition={{ duration: 0.7, delay: 0.2 }}
             className="mt-6 max-w-2xl text-base leading-relaxed text-zinc-500 dark:text-zinc-400 sm:text-lg"
           >
-            Admins govern. Managers curate. The kitchen cooks in real time. Waiters
-            serve on command. Customers order at the table — all synchronized
-            instantly through a premium, immersive interface.
+            Admins govern. Managers curate. The kitchen cooks in real time.
+            Cashiers settle every order at the register. Waiters serve on
+            command. Customers order at the table — all synchronized instantly
+            through a premium, immersive interface.
           </motion.p>
 
           <motion.div
@@ -132,7 +139,7 @@ export default function Home() {
           >
             {[
               ["<1s", "real-time sync"],
-              ["5", "dedicated roles"],
+              ["6", "dedicated roles"],
               ["100%", "table-to-kitchen"],
               ["24/7", "live service"],
             ].map(([v, l]) => (
@@ -163,7 +170,7 @@ export default function Home() {
             </h2>
           </motion.div>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {ROLES.map((role, i) => (
               <motion.div
                 key={role.title}
