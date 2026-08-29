@@ -12,6 +12,8 @@ import {
   LayoutDashboard,
   LogOut,
   Menu,
+  RotateCcw,
+  ScrollText,
   Settings,
   UtensilsCrossed,
   Wifi,
@@ -38,6 +40,8 @@ export const NAV_ICONS = {
   Grid3X3: LayoutDashboard,
   Wallet: LayoutDashboard,
   Coins: LayoutDashboard,
+  RotateCcw,
+  ScrollText,
   Settings,
 } as const;
 

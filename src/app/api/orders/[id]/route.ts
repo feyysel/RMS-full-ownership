@@ -49,6 +49,16 @@ const ACTIONS: Record<
     to: "CANCELLED",
     roles: ["CASHIER", "MANAGER", "OWNER"],
   },
+  "refund-approve": {
+    from: ["PAID", "SERVED", "COMPLETED"],
+    to: "CANCELLED",
+    roles: ["MANAGER", "OWNER"],
+  },
+  "refund-decline": {
+    from: ["PAID", "SERVED", "COMPLETED"],
+    to: "CANCELLED",
+    roles: ["MANAGER", "OWNER"],
+  },
 };
 
 const PAYMENT_METHODS: PaymentMethod[] = ["CASH", "CARD", "CARD_ONLINE", "OTHER"];
@@ -90,7 +100,7 @@ export async function PATCH(req: Request, ctx: Ctx) {
 
     const order = await prisma.order.findUnique({
       where: { id },
-      select: { id: true, restaurantId: true, orderNumber: true, status: true, tableId: true, tableLabel: true, waiterId: true, total: true },
+      select: { id: true, restaurantId: true, orderNumber: true, status: true, tableId: true, tableLabel: true, waiterId: true, total: true, refunded: true, refundStatus: true },
     });
     if (!order || order.restaurantId !== session.restaurantId)
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
@@ -100,6 +110,19 @@ export async function PATCH(req: Request, ctx: Ctx) {
         { error: `Cannot "${action}" an order that is ${order.status}` },
         { status: 409 }
       );
+    }
+
+    if (action === "refund" && (order.refunded || order.refundStatus === "REQUESTED")) {
+      return NextResponse.json(
+        { error: order.refunded ? "Order already refunded" : "Refund already requested — waiting for manager approval" },
+        { status: 409 }
+      );
+    }
+    if ((action === "refund-approve" || action === "refund-decline") && order.refundStatus !== "REQUESTED") {
+      return NextResponse.json({ error: "No pending refund request for this order" }, { status: 409 });
+    }
+    if (action === "refund-decline" && order.refunded) {
+      return NextResponse.json({ error: "Order already refunded" }, { status: 409 });
     }
 
     const collected =
@@ -118,7 +141,7 @@ export async function PATCH(req: Request, ctx: Ctx) {
     }
 
     const actionReason =
-      (action === "void" || action === "refund") &&
+      (action === "void" || action === "refund" || action === "refund-decline") &&
       reason &&
       typeof reason === "string"
         ? reason.trim()
@@ -194,25 +217,44 @@ export async function PATCH(req: Request, ctx: Ctx) {
         };
       }
 
-      const voidFields =
-        action === "void"
-          ? { voided: true, voidReason: actionReason, voidedAt: new Date(), voidedBy: session.id }
-          : action === "refund"
-            ? {
-                refunded: true,
-                refundReason: actionReason,
-                refundedAt: new Date(),
-                refundedBy: session.id,
-              }
-            : {};
+      const statusChange =
+        action !== "takeout" &&
+        action !== "complete" &&
+        action !== "refund" &&
+        action !== "refund-decline"
+          ? { status: def.to }
+          : {};
+
+      const actionFields: Record<string, unknown> = {};
+      if (action === "void") {
+        actionFields.voided = true;
+        actionFields.voidReason = actionReason;
+        actionFields.voidedAt = new Date();
+        actionFields.voidedBy = session.id;
+      } else if (action === "refund") {
+        actionFields.refundReason = actionReason;
+        actionFields.refundRequestedAt = new Date();
+        actionFields.refundRequestedBy = session.id;
+        actionFields.refundStatus = "REQUESTED";
+      } else if (action === "refund-approve") {
+        actionFields.refunded = true;
+        actionFields.refundReason = full.refundReason ?? actionReason;
+        actionFields.refundedAt = new Date();
+        actionFields.refundedBy = session.id;
+        actionFields.refundStatus = "APPROVED";
+      } else if (action === "refund-decline") {
+        actionFields.refundDeniedAt = new Date();
+        actionFields.refundDeniedBy = session.id;
+        actionFields.refundStatus = "DENIED";
+      }
 
       const updatedOrder = await tx.order.update({
         where: { id },
         data: {
           ...takeoutData,
           ...completeData,
-          ...(action !== "takeout" && action !== "complete" ? { status: def.to } : {}),
-          ...voidFields,
+          ...statusChange,
+          ...actionFields,
         },
         include: { items: true, table: true, receipt: true },
       });
@@ -235,7 +277,7 @@ export async function PATCH(req: Request, ctx: Ctx) {
       }
 
       if (
-        ["complete", "cancel", "void", "refund"].includes(action) &&
+        ["complete", "cancel", "void", "refund-approve"].includes(action) &&
         full.tableId
       ) {
         const otherActive = await tx.order.count({
@@ -260,7 +302,7 @@ export async function PATCH(req: Request, ctx: Ctx) {
     invalidateCache(`^notifs:.*:${escapeRegExp(restaurantId)}$`);
     invalidateCache(`^stats:${escapeRegExp(restaurantId)}$`);
 
-    if (["complete", "cancel", "void", "refund"].includes(action)) {
+    if (["complete", "cancel", "void", "refund-approve"].includes(action)) {
       invalidateCache(`^tables:${escapeRegExp(restaurantId)}`);
     }
 
@@ -318,7 +360,7 @@ export async function PATCH(req: Request, ctx: Ctx) {
         } else if (action === "refund") {
           await persistEvent(
             { scope: "restaurant", restaurantId },
-            "ORDER_REFUNDED",
+            "ORDER_REFUND_REQUESTED",
             {
               orderId: id,
               orderNumber: updated.orderNumber,
@@ -327,7 +369,38 @@ export async function PATCH(req: Request, ctx: Ctx) {
               reason: updated.refundReason ?? null,
               amount: updated.receipt?.total ?? updated.total,
               paymentMethod: updated.paymentMethod,
-              refundedAt: updated.refundedAt?.toISOString(),
+              requestedAt: updated.refundRequestedAt?.toISOString(),
+              tableLabel: updated.tableLabel,
+            }
+          );
+        } else if (action === "refund-approve") {
+          await persistEvent(
+            { scope: "restaurant", restaurantId },
+            "ORDER_REFUND_APPROVED",
+            {
+              orderId: id,
+              orderNumber: updated.orderNumber,
+              by: session.name,
+              byId: session.id,
+              reason: updated.refundReason ?? null,
+              amount: updated.receipt?.total ?? updated.total,
+              paymentMethod: updated.paymentMethod,
+              approvedAt: updated.refundedAt?.toISOString(),
+              tableLabel: updated.tableLabel,
+            }
+          );
+        } else if (action === "refund-decline") {
+          await persistEvent(
+            { scope: "restaurant", restaurantId },
+            "ORDER_REFUND_DENIED",
+            {
+              orderId: id,
+              orderNumber: updated.orderNumber,
+              by: session.name,
+              byId: session.id,
+              reason: updated.refundDeniedAt ? actionReason ?? null : null,
+              amount: updated.receipt?.total ?? updated.total,
+              deniedAt: updated.refundDeniedAt?.toISOString(),
               tableLabel: updated.tableLabel,
             }
           );

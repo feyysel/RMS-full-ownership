@@ -39,6 +39,8 @@ type Order = {
   paidAt: string | null;
   voided: boolean;
   refunded: boolean;
+  refundStatus: string | null;
+  refundRequestedBy: string | null;
   createdAt: string;
   items: { id: string; name: string; quantity: number; price: number }[];
   table: { number: number; code: string } | null;
@@ -186,7 +188,7 @@ export default function CashierDashboard() {
     setRefunding(null);
     setReason("");
     if (updated) {
-      toast.success(`Order #${updated.orderNumber} refunded`);
+      toast.success(`Refund requested for Order #${updated.orderNumber} — awaiting manager approval`);
       refreshList();
     }
   }
@@ -295,11 +297,11 @@ export default function CashierDashboard() {
                       <Button variant="outline" onClick={() => setReceiptFor(o)} className="flex-1">
                         <ReceiptText className="h-4 w-4" /> View receipt
                       </Button>
-                      {["PAID", "SERVED", "COMPLETED"].includes(o.status) && (
+                      {["PAID", "SERVED", "COMPLETED"].includes(o.status) && !o.refunded && o.refundStatus !== "REQUESTED" && (
                         <Button
                           variant="outline"
                           onClick={() => { setRefunding(o); setReason(""); }}
-                          title="Refund"
+                          title="Request refund"
                         >
                           <RotateCcw className="h-4 w-4" />
                         </Button>
@@ -404,8 +406,8 @@ export default function CashierDashboard() {
       <Modal
         open={refunding !== null}
         onClose={() => setRefunding(null)}
-        title={`Refund? · #${refunding?.orderNumber}`}
-        description={`Refund ${formatCurrency(refunding?.receipt?.total ?? refunding?.total ?? 0)} to the customer.`}
+        title={`Request refund? · #${refunding?.orderNumber}`}
+        description={`Request to refund ${formatCurrency(refunding?.receipt?.total ?? refunding?.total ?? 0)} to the customer. A manager must approve it.`}
       >
         <form onSubmit={confirmRefund} className="space-y-4">
           <div>
@@ -423,7 +425,7 @@ export default function CashierDashboard() {
               Cancel
             </Button>
             <Button type="submit" variant="danger" disabled={saving}>
-              <RotateCcw className="h-4 w-4" /> {saving ? "Refunding…" : "Refund payment"}
+              <RotateCcw className="h-4 w-4" /> {saving ? "Requesting…" : "Request refund"}
             </Button>
           </div>
         </form>
@@ -466,8 +468,15 @@ function OrderCard({
         </div>
         <div className="flex items-center gap-1.5">
           {order.paymentMethod && <Badge tone="teal">{PAYMENT_LABEL[order.paymentMethod] ?? order.paymentMethod}</Badge>}
-          {order.refunded && <Badge tone="rose">Refunded</Badge>}
-          {!order.refunded && order.voided && <Badge tone="rose">Voided</Badge>}
+          {order.refunded ? (
+            <Badge tone="rose">Refunded</Badge>
+          ) : order.refundStatus === "REQUESTED" ? (
+            <Badge tone="amber">Refund pending</Badge>
+          ) : order.refundStatus === "DENIED" ? (
+            <Badge tone="zinc">Refund denied</Badge>
+          ) : order.voided ? (
+            <Badge tone="rose">Voided</Badge>
+          ) : null}
           <Badge tone={statusTone[order.status] ?? "amber"}>{order.status}</Badge>
         </div>
       </div>

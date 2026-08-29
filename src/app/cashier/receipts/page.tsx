@@ -1,12 +1,13 @@
 "use client";
 
 import * as React from "react";
+import { toast } from "sonner";
 import { motion, AnimatePresence } from "motion/react";
-import { Printer, ReceiptText, Search } from "lucide-react";
+import { Printer, ReceiptText, RotateCcw, Search } from "lucide-react";
 import { PageHeader } from "@/components/ui/stat-card";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
+import { Input, Label } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -24,6 +25,10 @@ type Receipt = {
   subtotal: number;
   tax: number;
   total: number;
+  orderStatus: string;
+  refunded: boolean;
+  refundStatus: string | null;
+  refundReason: string | null;
   kitchenName: string;
   waiterName: string;
   cashierName: string;
@@ -35,6 +40,35 @@ export default function CashierReceipts() {
   const [restaurantId, setRestaurantId] = React.useState<string | null>(null);
   const [query, setQuery] = React.useState("");
   const [selected, setSelected] = React.useState<Receipt | null>(null);
+  const [refundFor, setRefundFor] = React.useState<Receipt | null>(null);
+  const [refundReason, setRefundReason] = React.useState("");
+  const [submitting, setSubmitting] = React.useState(false);
+
+  async function requestRefund(e: React.FormEvent) {
+    e.preventDefault();
+    if (!refundFor) return;
+    setSubmitting(true);
+    try {
+      const res = await fetch(`/api/orders/${refundFor.orderId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "refund", reason: refundReason.trim() || null }),
+      });
+      const d = await res.json();
+      if (!res.ok) {
+        toast.error(d.error ?? "Could not request refund");
+        return;
+      }
+      toast.success(`Refund requested for Order #${refundFor.orderNumber} — awaiting manager approval`);
+      setRefundFor(null);
+      setRefundReason("");
+      refresh();
+    } catch {
+      toast.error("Network error");
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   async function refreshNow() {
     const res = await fetch("/api/cashier/receipts");
@@ -104,26 +138,38 @@ export default function CashierReceipts() {
         <div className="space-y-2.5">
           <AnimatePresence>
             {filtered.map((r) => (
-              <motion.button
+              <motion.div
                 key={r.id}
                 layout
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.98 }}
                 onClick={() => setSelected(r)}
-                className="flex w-full items-center gap-4 rounded-2xl border border-zinc-200 bg-gradient-to-br from-zinc-100 to-zinc-100 p-4 text-left shadow-soft backdrop-blur-sm transition-all hover:border-gold/30 dark:border-white/[0.08] dark:from-white/[0.06] dark:to-white/[0.01]"
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => { if (e.key === "Enter") setSelected(r); }}
+                className="flex w-full cursor-pointer items-center gap-4 rounded-2xl border border-zinc-200 bg-gradient-to-br from-zinc-100 to-zinc-100 p-4 text-left shadow-soft backdrop-blur-sm transition-all hover:border-gold/30 dark:border-white/[0.08] dark:from-white/[0.06] dark:to-white/[0.01]"
               >
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gold/10 ring-1 ring-gold/25">
                   <ReceiptText className="h-5 w-5 text-gold-dark dark:text-gold-light" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <p className="font-display text-base font-semibold text-zinc-900 dark:text-zinc-50">
                       Order #{r.orderNumber}
                     </p>
                     <Badge tone={r.type === "TAKEAWAY" ? "sky" : "amber"}>
                       {r.type === "TAKEAWAY" ? "Takeaway" : "Dine-in"}
                     </Badge>
+                    {r.refunded ? (
+                      <Badge tone="rose">Refunded</Badge>
+                    ) : r.refundStatus === "REQUESTED" ? (
+                      <Badge tone="amber">Refund pending</Badge>
+                    ) : r.refundStatus === "DENIED" ? (
+                      <Badge tone="zinc">Refund denied</Badge>
+                    ) : r.orderStatus === "COMPLETED" ? (
+                      <Badge tone="zinc">Completed</Badge>
+                    ) : null}
                   </div>
                   <p className="mt-0.5 text-xs text-zinc-500">
                     {r.tableLabel} · {formatDate(r.generatedAt)} · {formatTime(r.generatedAt)} · by {r.cashierName}
@@ -134,8 +180,20 @@ export default function CashierReceipts() {
                     {formatCurrency(r.total)}
                   </p>
                   <p className="text-xs text-zinc-500">{r.items.length} item(s)</p>
+                  {!r.refunded &&
+                    r.refundStatus !== "REQUESTED" &&
+                    (!["CANCELLED", "PENDING", "TAKEN"].includes(r.orderStatus)) && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="mt-2"
+                      onClick={(e) => { e.stopPropagation(); setRefundFor(r); setRefundReason(""); }}
+                    >
+                      <RotateCcw className="h-3.5 w-3.5" /> Request refund
+                    </Button>
+                  )}
                 </div>
-              </motion.button>
+              </motion.div>
             ))}
           </AnimatePresence>
         </div>
@@ -200,6 +258,34 @@ export default function CashierReceipts() {
             </div>
           </div>
         )}
+      </Modal>
+
+      <Modal
+        open={refundFor !== null}
+        onClose={() => setRefundFor(null)}
+        title={`Request refund? · #${refundFor?.orderNumber}`}
+        description={`Request to refund ${formatCurrency(refundFor?.total ?? 0)} to the customer. A manager must approve it.`}
+      >
+        <form onSubmit={requestRefund} className="space-y-4">
+          <div>
+            <Label htmlFor="r-reason">Reason for refund (required)</Label>
+            <Input
+              id="r-reason"
+              required
+              value={refundReason}
+              onChange={(e) => setRefundReason(e.target.value)}
+              placeholder="e.g. customer complaint, double charge"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button type="button" variant="ghost" onClick={() => setRefundFor(null)}>
+              Cancel
+            </Button>
+            <Button type="submit" variant="danger" disabled={submitting}>
+              <RotateCcw className="h-4 w-4" /> {submitting ? "Requesting…" : "Request refund"}
+            </Button>
+          </div>
+        </form>
       </Modal>
     </div>
   );

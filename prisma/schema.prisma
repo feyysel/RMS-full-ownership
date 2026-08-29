@@ -8,36 +8,36 @@ datasource db {
 }
 
 model User {
-  id                  String             @id @default(cuid())
-  name                String
-  phone               String             @unique
-  passwordHash        String
-  role                Role
-  isActive            Boolean            @default(true)
-  createdAt           DateTime           @default(now())
-  restaurantId        String?
-  notifications       Notification[]
-  orders              Order[]            @relation("OrderWaiter")
-  cashierOrders       Order[]            @relation("OrderCashier")
-  receipts            Receipt[]          @relation("ReceiptKitchen")
-  tables              Table[]            @relation("TableWaiter")
-  pushSubscriptions   PushSubscription[]
-  restaurant          Restaurant?        @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  id                String             @id @default(cuid())
+  name              String
+  phone             String             @unique
+  passwordHash      String
+  role              Role
+  isActive          Boolean            @default(true)
+  createdAt         DateTime           @default(now())
+  restaurantId      String?
+  notifications     Notification[]
+  orders            Order[]            @relation("OrderWaiter")
+  cashierOrders     Order[]            @relation("OrderCashier")
+  receipts          Receipt[]          @relation("ReceiptKitchen")
+  tables            Table[]            @relation("TableWaiter")
+  pushSubscriptions PushSubscription[]
+  restaurant        Restaurant?        @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
 
   @@index([restaurantId, role])
 }
 
 model Restaurant {
-  id            String           @id @default(cuid())
+  id            String         @id @default(cuid())
   name          String
   address       String?
   phone         String?
   theme         String?
   logoUrl       String?
   parentId      String?
-  parent        Restaurant?      @relation("RestaurantBranches", fields: [parentId], references: [id], onDelete: SetNull)
-  branches      Restaurant[]     @relation("RestaurantBranches")
-  createdAt     DateTime         @default(now())
+  parent        Restaurant?    @relation("RestaurantBranches", fields: [parentId], references: [id], onDelete: SetNull)
+  branches      Restaurant[]   @relation("RestaurantBranches")
+  createdAt     DateTime       @default(now())
   categories    Category[]
   menuItems     MenuItem[]
   notifications Notification[]
@@ -99,40 +99,45 @@ model MenuItem {
 }
 
 model Order {
-  id               String         @id @default(cuid())
-  orderNumber      Int
-  type             OrderType      @default(DINE_IN)
-  status           OrderStatus    @default(PENDING)
-  note             String?
-  total            Float          @default(0)
-  discount         Float          @default(0)
-  discountReason   String?
-  paymentMethod    PaymentMethod?
-  paidAt           DateTime?
-  collectedAmount  Float?
-  tip              Float?
-  voided           Boolean        @default(false)
-  voidReason       String?
-  voidedAt         DateTime?
-  voidedBy         String?
-  refunded         Boolean        @default(false)
-  refundReason     String?
-  refundedAt       DateTime?
-  refundedBy       String?
-  tableId          String?
-  tableLabel       String?
-  sourceTableCode  String?
-  waiterId         String?
-  cashierId        String?
-  restaurantId     String
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
-  restaurant       Restaurant     @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
-  table            Table?         @relation(fields: [tableId], references: [id])
-  waiter           User?          @relation("OrderWaiter", fields: [waiterId], references: [id])
-  cashier          User?          @relation("OrderCashier", fields: [cashierId], references: [id])
-  items            OrderItem[]
-  receipt          Receipt?
+  id                String         @id @default(cuid())
+  orderNumber       Int
+  type              OrderType      @default(DINE_IN)
+  status            OrderStatus    @default(PENDING)
+  note              String?
+  total             Float          @default(0)
+  discount          Float          @default(0)
+  discountReason    String?
+  paymentMethod     PaymentMethod?
+  paidAt            DateTime?
+  collectedAmount   Float?
+  tip               Float?
+  voided            Boolean        @default(false)
+  voidReason        String?
+  voidedAt          DateTime?
+  voidedBy          String?
+  refunded          Boolean        @default(false)
+  refundReason      String?
+  refundStatus      String?
+  refundedAt        DateTime?
+  refundedBy        String?
+  refundRequestedAt DateTime?
+  refundRequestedBy String?
+  refundDeniedAt    DateTime?
+  refundDeniedBy    String?
+  tableId           String?
+  tableLabel        String?
+  sourceTableCode   String?
+  waiterId          String?
+  cashierId         String?
+  restaurantId      String
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  restaurant        Restaurant     @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  table             Table?         @relation(fields: [tableId], references: [id])
+  waiter            User?          @relation("OrderWaiter", fields: [waiterId], references: [id])
+  cashier           User?          @relation("OrderCashier", fields: [cashierId], references: [id])
+  items             OrderItem[]
+  receipt           Receipt?
 
   @@unique([restaurantId, orderNumber])
   @@index([restaurantId, status, createdAt])
@@ -194,19 +199,19 @@ model BellCall {
 }
 
 model Notification {
-  id           String       @id @default(cuid())
+  id           String      @id @default(cuid())
   userId       String?
   role         Role?
   restaurantId String?
   type         String
   title        String
   body         String
-  read         Boolean      @default(false)
+  read         Boolean     @default(false)
   orderId      String?
   tableId      String?
-  createdAt    DateTime     @default(now())
-  restaurant   Restaurant?  @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
-  user         User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt    DateTime    @default(now())
+  restaurant   Restaurant? @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  user         User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([restaurantId, createdAt])
   @@index([userId, createdAt])
@@ -274,15 +279,15 @@ enum BellStatus {
 }
 
 model PushSubscription {
-  id            String   @id @default(cuid())
-  endpoint      String
-  p256dh        String
-  auth          String
-  userId        String
-  restaurantId  String?
-  userAgent     String?
-  createdAt     DateTime @default(now())
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id           String   @id @default(cuid())
+  endpoint     String
+  p256dh       String
+  auth         String
+  userId       String
+  restaurantId String?
+  userAgent    String?
+  createdAt    DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([restaurantId])

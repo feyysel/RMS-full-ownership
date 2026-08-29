@@ -61,8 +61,13 @@ export type OrderMinAggregateOutputType = {
   voidedBy: string | null
   refunded: boolean | null
   refundReason: string | null
+  refundStatus: string | null
   refundedAt: Date | null
   refundedBy: string | null
+  refundRequestedAt: Date | null
+  refundRequestedBy: string | null
+  refundDeniedAt: Date | null
+  refundDeniedBy: string | null
   tableId: string | null
   tableLabel: string | null
   sourceTableCode: string | null
@@ -92,8 +97,13 @@ export type OrderMaxAggregateOutputType = {
   voidedBy: string | null
   refunded: boolean | null
   refundReason: string | null
+  refundStatus: string | null
   refundedAt: Date | null
   refundedBy: string | null
+  refundRequestedAt: Date | null
+  refundRequestedBy: string | null
+  refundDeniedAt: Date | null
+  refundDeniedBy: string | null
   tableId: string | null
   tableLabel: string | null
   sourceTableCode: string | null
@@ -123,8 +133,13 @@ export type OrderCountAggregateOutputType = {
   voidedBy: number
   refunded: number
   refundReason: number
+  refundStatus: number
   refundedAt: number
   refundedBy: number
+  refundRequestedAt: number
+  refundRequestedBy: number
+  refundDeniedAt: number
+  refundDeniedBy: number
   tableId: number
   tableLabel: number
   sourceTableCode: number
@@ -172,8 +187,13 @@ export type OrderMinAggregateInputType = {
   voidedBy?: true
   refunded?: true
   refundReason?: true
+  refundStatus?: true
   refundedAt?: true
   refundedBy?: true
+  refundRequestedAt?: true
+  refundRequestedBy?: true
+  refundDeniedAt?: true
+  refundDeniedBy?: true
   tableId?: true
   tableLabel?: true
   sourceTableCode?: true
@@ -203,8 +223,13 @@ export type OrderMaxAggregateInputType = {
   voidedBy?: true
   refunded?: true
   refundReason?: true
+  refundStatus?: true
   refundedAt?: true
   refundedBy?: true
+  refundRequestedAt?: true
+  refundRequestedBy?: true
+  refundDeniedAt?: true
+  refundDeniedBy?: true
   tableId?: true
   tableLabel?: true
   sourceTableCode?: true
@@ -234,8 +259,13 @@ export type OrderCountAggregateInputType = {
   voidedBy?: true
   refunded?: true
   refundReason?: true
+  refundStatus?: true
   refundedAt?: true
   refundedBy?: true
+  refundRequestedAt?: true
+  refundRequestedBy?: true
+  refundDeniedAt?: true
+  refundDeniedBy?: true
   tableId?: true
   tableLabel?: true
   sourceTableCode?: true
@@ -352,8 +382,13 @@ export type OrderGroupByOutputType = {
   voidedBy: string | null
   refunded: boolean
   refundReason: string | null
+  refundStatus: string | null
   refundedAt: Date | null
   refundedBy: string | null
+  refundRequestedAt: Date | null
+  refundRequestedBy: string | null
+  refundDeniedAt: Date | null
+  refundDeniedBy: string | null
   tableId: string | null
   tableLabel: string | null
   sourceTableCode: string | null
@@ -406,8 +441,13 @@ export type OrderWhereInput = {
   voidedBy?: Prisma.StringNullableFilter<"Order"> | string | null
   refunded?: Prisma.BoolFilter<"Order"> | boolean
   refundReason?: Prisma.StringNullableFilter<"Order"> | string | null
+  refundStatus?: Prisma.StringNullableFilter<"Order"> | string | null
   refundedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   refundedBy?: Prisma.StringNullableFilter<"Order"> | string | null
+  refundRequestedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
+  refundRequestedBy?: Prisma.StringNullableFilter<"Order"> | string | null
+  refundDeniedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
+  refundDeniedBy?: Prisma.StringNullableFilter<"Order"> | string | null
   tableId?: Prisma.StringNullableFilter<"Order"> | string | null
   tableLabel?: Prisma.StringNullableFilter<"Order"> | string | null
   sourceTableCode?: Prisma.StringNullableFilter<"Order"> | string | null
@@ -443,8 +483,13 @@ export type OrderOrderByWithRelationInput = {
   voidedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   refunded?: Prisma.SortOrder
   refundReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  refundStatus?: Prisma.SortOrderInput | Prisma.SortOrder
   refundedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   refundedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  refundRequestedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  refundRequestedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  refundDeniedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  refundDeniedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   tableId?: Prisma.SortOrderInput | Prisma.SortOrder
   tableLabel?: Prisma.SortOrderInput | Prisma.SortOrder
   sourceTableCode?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -484,8 +529,13 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   voidedBy?: Prisma.StringNullableFilter<"Order"> | string | null
   refunded?: Prisma.BoolFilter<"Order"> | boolean
   refundReason?: Prisma.StringNullableFilter<"Order"> | string | null
+  refundStatus?: Prisma.StringNullableFilter<"Order"> | string | null
   refundedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   refundedBy?: Prisma.StringNullableFilter<"Order"> | string | null
+  refundRequestedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
+  refundRequestedBy?: Prisma.StringNullableFilter<"Order"> | string | null
+  refundDeniedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
+  refundDeniedBy?: Prisma.StringNullableFilter<"Order"> | string | null
   tableId?: Prisma.StringNullableFilter<"Order"> | string | null
   tableLabel?: Prisma.StringNullableFilter<"Order"> | string | null
   sourceTableCode?: Prisma.StringNullableFilter<"Order"> | string | null
@@ -521,8 +571,13 @@ export type OrderOrderByWithAggregationInput = {
   voidedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   refunded?: Prisma.SortOrder
   refundReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  refundStatus?: Prisma.SortOrderInput | Prisma.SortOrder
   refundedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   refundedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  refundRequestedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  refundRequestedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  refundDeniedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  refundDeniedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   tableId?: Prisma.SortOrderInput | Prisma.SortOrder
   tableLabel?: Prisma.SortOrderInput | Prisma.SortOrder
   sourceTableCode?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -560,8 +615,13 @@ export type OrderScalarWhereWithAggregatesInput = {
   voidedBy?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   refunded?: Prisma.BoolWithAggregatesFilter<"Order"> | boolean
   refundReason?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  refundStatus?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   refundedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
   refundedBy?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  refundRequestedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
+  refundRequestedBy?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  refundDeniedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
+  refundDeniedBy?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   tableId?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   tableLabel?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   sourceTableCode?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
@@ -591,8 +651,13 @@ export type OrderCreateInput = {
   voidedBy?: string | null
   refunded?: boolean
   refundReason?: string | null
+  refundStatus?: string | null
   refundedAt?: Date | string | null
   refundedBy?: string | null
+  refundRequestedAt?: Date | string | null
+  refundRequestedBy?: string | null
+  refundDeniedAt?: Date | string | null
+  refundDeniedBy?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
   createdAt?: Date | string
@@ -624,8 +689,13 @@ export type OrderUncheckedCreateInput = {
   voidedBy?: string | null
   refunded?: boolean
   refundReason?: string | null
+  refundStatus?: string | null
   refundedAt?: Date | string | null
   refundedBy?: string | null
+  refundRequestedAt?: Date | string | null
+  refundRequestedBy?: string | null
+  refundDeniedAt?: Date | string | null
+  refundDeniedBy?: string | null
   tableId?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
@@ -657,8 +727,13 @@ export type OrderUpdateInput = {
   voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundRequestedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundDeniedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundDeniedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -690,8 +765,13 @@ export type OrderUncheckedUpdateInput = {
   voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundRequestedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundDeniedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundDeniedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -723,8 +803,13 @@ export type OrderCreateManyInput = {
   voidedBy?: string | null
   refunded?: boolean
   refundReason?: string | null
+  refundStatus?: string | null
   refundedAt?: Date | string | null
   refundedBy?: string | null
+  refundRequestedAt?: Date | string | null
+  refundRequestedBy?: string | null
+  refundDeniedAt?: Date | string | null
+  refundDeniedBy?: string | null
   tableId?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
@@ -754,8 +839,13 @@ export type OrderUpdateManyMutationInput = {
   voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundRequestedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundDeniedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundDeniedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -781,8 +871,13 @@ export type OrderUncheckedUpdateManyInput = {
   voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundRequestedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundDeniedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundDeniedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -827,8 +922,13 @@ export type OrderCountOrderByAggregateInput = {
   voidedBy?: Prisma.SortOrder
   refunded?: Prisma.SortOrder
   refundReason?: Prisma.SortOrder
+  refundStatus?: Prisma.SortOrder
   refundedAt?: Prisma.SortOrder
   refundedBy?: Prisma.SortOrder
+  refundRequestedAt?: Prisma.SortOrder
+  refundRequestedBy?: Prisma.SortOrder
+  refundDeniedAt?: Prisma.SortOrder
+  refundDeniedBy?: Prisma.SortOrder
   tableId?: Prisma.SortOrder
   tableLabel?: Prisma.SortOrder
   sourceTableCode?: Prisma.SortOrder
@@ -866,8 +966,13 @@ export type OrderMaxOrderByAggregateInput = {
   voidedBy?: Prisma.SortOrder
   refunded?: Prisma.SortOrder
   refundReason?: Prisma.SortOrder
+  refundStatus?: Prisma.SortOrder
   refundedAt?: Prisma.SortOrder
   refundedBy?: Prisma.SortOrder
+  refundRequestedAt?: Prisma.SortOrder
+  refundRequestedBy?: Prisma.SortOrder
+  refundDeniedAt?: Prisma.SortOrder
+  refundDeniedBy?: Prisma.SortOrder
   tableId?: Prisma.SortOrder
   tableLabel?: Prisma.SortOrder
   sourceTableCode?: Prisma.SortOrder
@@ -897,8 +1002,13 @@ export type OrderMinOrderByAggregateInput = {
   voidedBy?: Prisma.SortOrder
   refunded?: Prisma.SortOrder
   refundReason?: Prisma.SortOrder
+  refundStatus?: Prisma.SortOrder
   refundedAt?: Prisma.SortOrder
   refundedBy?: Prisma.SortOrder
+  refundRequestedAt?: Prisma.SortOrder
+  refundRequestedBy?: Prisma.SortOrder
+  refundDeniedAt?: Prisma.SortOrder
+  refundDeniedBy?: Prisma.SortOrder
   tableId?: Prisma.SortOrder
   tableLabel?: Prisma.SortOrder
   sourceTableCode?: Prisma.SortOrder
@@ -1161,8 +1271,13 @@ export type OrderCreateWithoutWaiterInput = {
   voidedBy?: string | null
   refunded?: boolean
   refundReason?: string | null
+  refundStatus?: string | null
   refundedAt?: Date | string | null
   refundedBy?: string | null
+  refundRequestedAt?: Date | string | null
+  refundRequestedBy?: string | null
+  refundDeniedAt?: Date | string | null
+  refundDeniedBy?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
   createdAt?: Date | string
@@ -1193,8 +1308,13 @@ export type OrderUncheckedCreateWithoutWaiterInput = {
   voidedBy?: string | null
   refunded?: boolean
   refundReason?: string | null
+  refundStatus?: string | null
   refundedAt?: Date | string | null
   refundedBy?: string | null
+  refundRequestedAt?: Date | string | null
+  refundRequestedBy?: string | null
+  refundDeniedAt?: Date | string | null
+  refundDeniedBy?: string | null
   tableId?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
@@ -1235,8 +1355,13 @@ export type OrderCreateWithoutCashierInput = {
   voidedBy?: string | null
   refunded?: boolean
   refundReason?: string | null
+  refundStatus?: string | null
   refundedAt?: Date | string | null
   refundedBy?: string | null
+  refundRequestedAt?: Date | string | null
+  refundRequestedBy?: string | null
+  refundDeniedAt?: Date | string | null
+  refundDeniedBy?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
   createdAt?: Date | string
@@ -1267,8 +1392,13 @@ export type OrderUncheckedCreateWithoutCashierInput = {
   voidedBy?: string | null
   refunded?: boolean
   refundReason?: string | null
+  refundStatus?: string | null
   refundedAt?: Date | string | null
   refundedBy?: string | null
+  refundRequestedAt?: Date | string | null
+  refundRequestedBy?: string | null
+  refundDeniedAt?: Date | string | null
+  refundDeniedBy?: string | null
   tableId?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
@@ -1328,8 +1458,13 @@ export type OrderScalarWhereInput = {
   voidedBy?: Prisma.StringNullableFilter<"Order"> | string | null
   refunded?: Prisma.BoolFilter<"Order"> | boolean
   refundReason?: Prisma.StringNullableFilter<"Order"> | string | null
+  refundStatus?: Prisma.StringNullableFilter<"Order"> | string | null
   refundedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   refundedBy?: Prisma.StringNullableFilter<"Order"> | string | null
+  refundRequestedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
+  refundRequestedBy?: Prisma.StringNullableFilter<"Order"> | string | null
+  refundDeniedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
+  refundDeniedBy?: Prisma.StringNullableFilter<"Order"> | string | null
   tableId?: Prisma.StringNullableFilter<"Order"> | string | null
   tableLabel?: Prisma.StringNullableFilter<"Order"> | string | null
   sourceTableCode?: Prisma.StringNullableFilter<"Order"> | string | null
@@ -1375,8 +1510,13 @@ export type OrderCreateWithoutRestaurantInput = {
   voidedBy?: string | null
   refunded?: boolean
   refundReason?: string | null
+  refundStatus?: string | null
   refundedAt?: Date | string | null
   refundedBy?: string | null
+  refundRequestedAt?: Date | string | null
+  refundRequestedBy?: string | null
+  refundDeniedAt?: Date | string | null
+  refundDeniedBy?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
   createdAt?: Date | string
@@ -1407,8 +1547,13 @@ export type OrderUncheckedCreateWithoutRestaurantInput = {
   voidedBy?: string | null
   refunded?: boolean
   refundReason?: string | null
+  refundStatus?: string | null
   refundedAt?: Date | string | null
   refundedBy?: string | null
+  refundRequestedAt?: Date | string | null
+  refundRequestedBy?: string | null
+  refundDeniedAt?: Date | string | null
+  refundDeniedBy?: string | null
   tableId?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
@@ -1465,8 +1610,13 @@ export type OrderCreateWithoutTableInput = {
   voidedBy?: string | null
   refunded?: boolean
   refundReason?: string | null
+  refundStatus?: string | null
   refundedAt?: Date | string | null
   refundedBy?: string | null
+  refundRequestedAt?: Date | string | null
+  refundRequestedBy?: string | null
+  refundDeniedAt?: Date | string | null
+  refundDeniedBy?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
   createdAt?: Date | string
@@ -1497,8 +1647,13 @@ export type OrderUncheckedCreateWithoutTableInput = {
   voidedBy?: string | null
   refunded?: boolean
   refundReason?: string | null
+  refundStatus?: string | null
   refundedAt?: Date | string | null
   refundedBy?: string | null
+  refundRequestedAt?: Date | string | null
+  refundRequestedBy?: string | null
+  refundDeniedAt?: Date | string | null
+  refundDeniedBy?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
   waiterId?: string | null
@@ -1555,8 +1710,13 @@ export type OrderCreateWithoutItemsInput = {
   voidedBy?: string | null
   refunded?: boolean
   refundReason?: string | null
+  refundStatus?: string | null
   refundedAt?: Date | string | null
   refundedBy?: string | null
+  refundRequestedAt?: Date | string | null
+  refundRequestedBy?: string | null
+  refundDeniedAt?: Date | string | null
+  refundDeniedBy?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
   createdAt?: Date | string
@@ -1587,8 +1747,13 @@ export type OrderUncheckedCreateWithoutItemsInput = {
   voidedBy?: string | null
   refunded?: boolean
   refundReason?: string | null
+  refundStatus?: string | null
   refundedAt?: Date | string | null
   refundedBy?: string | null
+  refundRequestedAt?: Date | string | null
+  refundRequestedBy?: string | null
+  refundDeniedAt?: Date | string | null
+  refundDeniedBy?: string | null
   tableId?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
@@ -1635,8 +1800,13 @@ export type OrderUpdateWithoutItemsInput = {
   voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundRequestedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundDeniedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundDeniedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1667,8 +1837,13 @@ export type OrderUncheckedUpdateWithoutItemsInput = {
   voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundRequestedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundDeniedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundDeniedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1699,8 +1874,13 @@ export type OrderCreateWithoutReceiptInput = {
   voidedBy?: string | null
   refunded?: boolean
   refundReason?: string | null
+  refundStatus?: string | null
   refundedAt?: Date | string | null
   refundedBy?: string | null
+  refundRequestedAt?: Date | string | null
+  refundRequestedBy?: string | null
+  refundDeniedAt?: Date | string | null
+  refundDeniedBy?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
   createdAt?: Date | string
@@ -1731,8 +1911,13 @@ export type OrderUncheckedCreateWithoutReceiptInput = {
   voidedBy?: string | null
   refunded?: boolean
   refundReason?: string | null
+  refundStatus?: string | null
   refundedAt?: Date | string | null
   refundedBy?: string | null
+  refundRequestedAt?: Date | string | null
+  refundRequestedBy?: string | null
+  refundDeniedAt?: Date | string | null
+  refundDeniedBy?: string | null
   tableId?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
@@ -1779,8 +1964,13 @@ export type OrderUpdateWithoutReceiptInput = {
   voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundRequestedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundDeniedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundDeniedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1811,8 +2001,13 @@ export type OrderUncheckedUpdateWithoutReceiptInput = {
   voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundRequestedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundDeniedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundDeniedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1843,8 +2038,13 @@ export type OrderCreateManyWaiterInput = {
   voidedBy?: string | null
   refunded?: boolean
   refundReason?: string | null
+  refundStatus?: string | null
   refundedAt?: Date | string | null
   refundedBy?: string | null
+  refundRequestedAt?: Date | string | null
+  refundRequestedBy?: string | null
+  refundDeniedAt?: Date | string | null
+  refundDeniedBy?: string | null
   tableId?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
@@ -1873,8 +2073,13 @@ export type OrderCreateManyCashierInput = {
   voidedBy?: string | null
   refunded?: boolean
   refundReason?: string | null
+  refundStatus?: string | null
   refundedAt?: Date | string | null
   refundedBy?: string | null
+  refundRequestedAt?: Date | string | null
+  refundRequestedBy?: string | null
+  refundDeniedAt?: Date | string | null
+  refundDeniedBy?: string | null
   tableId?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
@@ -1903,8 +2108,13 @@ export type OrderUpdateWithoutWaiterInput = {
   voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundRequestedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundDeniedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundDeniedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1935,8 +2145,13 @@ export type OrderUncheckedUpdateWithoutWaiterInput = {
   voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundRequestedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundDeniedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundDeniedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1967,8 +2182,13 @@ export type OrderUncheckedUpdateManyWithoutWaiterInput = {
   voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundRequestedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundDeniedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundDeniedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1997,8 +2217,13 @@ export type OrderUpdateWithoutCashierInput = {
   voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundRequestedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundDeniedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundDeniedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2029,8 +2254,13 @@ export type OrderUncheckedUpdateWithoutCashierInput = {
   voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundRequestedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundDeniedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundDeniedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2061,8 +2291,13 @@ export type OrderUncheckedUpdateManyWithoutCashierInput = {
   voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundRequestedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundDeniedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundDeniedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2091,8 +2326,13 @@ export type OrderCreateManyRestaurantInput = {
   voidedBy?: string | null
   refunded?: boolean
   refundReason?: string | null
+  refundStatus?: string | null
   refundedAt?: Date | string | null
   refundedBy?: string | null
+  refundRequestedAt?: Date | string | null
+  refundRequestedBy?: string | null
+  refundDeniedAt?: Date | string | null
+  refundDeniedBy?: string | null
   tableId?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
@@ -2121,8 +2361,13 @@ export type OrderUpdateWithoutRestaurantInput = {
   voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundRequestedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundDeniedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundDeniedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2153,8 +2398,13 @@ export type OrderUncheckedUpdateWithoutRestaurantInput = {
   voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundRequestedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundDeniedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundDeniedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2185,8 +2435,13 @@ export type OrderUncheckedUpdateManyWithoutRestaurantInput = {
   voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundRequestedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundDeniedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundDeniedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2215,8 +2470,13 @@ export type OrderCreateManyTableInput = {
   voidedBy?: string | null
   refunded?: boolean
   refundReason?: string | null
+  refundStatus?: string | null
   refundedAt?: Date | string | null
   refundedBy?: string | null
+  refundRequestedAt?: Date | string | null
+  refundRequestedBy?: string | null
+  refundDeniedAt?: Date | string | null
+  refundDeniedBy?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
   waiterId?: string | null
@@ -2245,8 +2505,13 @@ export type OrderUpdateWithoutTableInput = {
   voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundRequestedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundDeniedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundDeniedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2277,8 +2542,13 @@ export type OrderUncheckedUpdateWithoutTableInput = {
   voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundRequestedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundDeniedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundDeniedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waiterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2309,8 +2579,13 @@ export type OrderUncheckedUpdateManyWithoutTableInput = {
   voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundRequestedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundDeniedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundDeniedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waiterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2370,8 +2645,13 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   voidedBy?: boolean
   refunded?: boolean
   refundReason?: boolean
+  refundStatus?: boolean
   refundedAt?: boolean
   refundedBy?: boolean
+  refundRequestedAt?: boolean
+  refundRequestedBy?: boolean
+  refundDeniedAt?: boolean
+  refundDeniedBy?: boolean
   tableId?: boolean
   tableLabel?: boolean
   sourceTableCode?: boolean
@@ -2408,8 +2688,13 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   voidedBy?: boolean
   refunded?: boolean
   refundReason?: boolean
+  refundStatus?: boolean
   refundedAt?: boolean
   refundedBy?: boolean
+  refundRequestedAt?: boolean
+  refundRequestedBy?: boolean
+  refundDeniedAt?: boolean
+  refundDeniedBy?: boolean
   tableId?: boolean
   tableLabel?: boolean
   sourceTableCode?: boolean
@@ -2443,8 +2728,13 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   voidedBy?: boolean
   refunded?: boolean
   refundReason?: boolean
+  refundStatus?: boolean
   refundedAt?: boolean
   refundedBy?: boolean
+  refundRequestedAt?: boolean
+  refundRequestedBy?: boolean
+  refundDeniedAt?: boolean
+  refundDeniedBy?: boolean
   tableId?: boolean
   tableLabel?: boolean
   sourceTableCode?: boolean
@@ -2478,8 +2768,13 @@ export type OrderSelectScalar = {
   voidedBy?: boolean
   refunded?: boolean
   refundReason?: boolean
+  refundStatus?: boolean
   refundedAt?: boolean
   refundedBy?: boolean
+  refundRequestedAt?: boolean
+  refundRequestedBy?: boolean
+  refundDeniedAt?: boolean
+  refundDeniedBy?: boolean
   tableId?: boolean
   tableLabel?: boolean
   sourceTableCode?: boolean
@@ -2490,7 +2785,7 @@ export type OrderSelectScalar = {
   updatedAt?: boolean
 }
 
-export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderNumber" | "type" | "status" | "note" | "total" | "discount" | "discountReason" | "paymentMethod" | "paidAt" | "collectedAmount" | "tip" | "voided" | "voidReason" | "voidedAt" | "voidedBy" | "refunded" | "refundReason" | "refundedAt" | "refundedBy" | "tableId" | "tableLabel" | "sourceTableCode" | "waiterId" | "cashierId" | "restaurantId" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderNumber" | "type" | "status" | "note" | "total" | "discount" | "discountReason" | "paymentMethod" | "paidAt" | "collectedAmount" | "tip" | "voided" | "voidReason" | "voidedAt" | "voidedBy" | "refunded" | "refundReason" | "refundStatus" | "refundedAt" | "refundedBy" | "refundRequestedAt" | "refundRequestedBy" | "refundDeniedAt" | "refundDeniedBy" | "tableId" | "tableLabel" | "sourceTableCode" | "waiterId" | "cashierId" | "restaurantId" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
 export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   restaurant?: boolean | Prisma.RestaurantDefaultArgs<ExtArgs>
   table?: boolean | Prisma.Order$tableArgs<ExtArgs>
@@ -2542,8 +2837,13 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     voidedBy: string | null
     refunded: boolean
     refundReason: string | null
+    refundStatus: string | null
     refundedAt: Date | null
     refundedBy: string | null
+    refundRequestedAt: Date | null
+    refundRequestedBy: string | null
+    refundDeniedAt: Date | null
+    refundDeniedBy: string | null
     tableId: string | null
     tableLabel: string | null
     sourceTableCode: string | null
@@ -2999,8 +3299,13 @@ export interface OrderFieldRefs {
   readonly voidedBy: Prisma.FieldRef<"Order", 'String'>
   readonly refunded: Prisma.FieldRef<"Order", 'Boolean'>
   readonly refundReason: Prisma.FieldRef<"Order", 'String'>
+  readonly refundStatus: Prisma.FieldRef<"Order", 'String'>
   readonly refundedAt: Prisma.FieldRef<"Order", 'DateTime'>
   readonly refundedBy: Prisma.FieldRef<"Order", 'String'>
+  readonly refundRequestedAt: Prisma.FieldRef<"Order", 'DateTime'>
+  readonly refundRequestedBy: Prisma.FieldRef<"Order", 'String'>
+  readonly refundDeniedAt: Prisma.FieldRef<"Order", 'DateTime'>
+  readonly refundDeniedBy: Prisma.FieldRef<"Order", 'String'>
   readonly tableId: Prisma.FieldRef<"Order", 'String'>
   readonly tableLabel: Prisma.FieldRef<"Order", 'String'>
   readonly sourceTableCode: Prisma.FieldRef<"Order", 'String'>

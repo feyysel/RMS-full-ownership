@@ -31,6 +31,8 @@ export default async function ManagerLayout({ children }: LayoutProps<"/manager"
     { label: "Employees", href: "/manager/employees", icon: "Users" },
     { label: "Menu", href: "/manager/menu", icon: "UtensilsCrossed" },
     { label: "Tables", href: "/manager/tables", icon: "Grid3X3" },
+    { label: "Refunds", href: "/manager/refunds", icon: "RotateCcw" },
+    { label: "Audit", href: "/manager/audit", icon: "ScrollText" },
     ...(session.role === "OWNER"
       ? [{ label: "Insights", href: "/manager/insights", icon: "BarChart3" } satisfies NavItem]
       : []),
