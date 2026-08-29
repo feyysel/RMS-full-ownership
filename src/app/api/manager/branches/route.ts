@@ -18,19 +18,27 @@ export async function GET(req: Request) {
     );
   }
 
-  const restaurants = await prisma.restaurant.findMany({
-    where: { id: { in: await treeRestaurantIds(session.restaurantId) } },
-    include: {
-      _count: { select: { tables: true, menuItems: true, users: true } },
-    },
-    orderBy: { createdAt: "asc" },
-  });
+  try {
+    const scopeIds = session.role === "OWNER" ? await treeRestaurantIds(session.restaurantId) : [session.restaurantId];
 
-  return NextResponse.json({
-    restaurants,
-    activeRestaurantId: session.restaurantId,
-    canCreateBranches: session.role === "OWNER",
-  });
+    const restaurants = await prisma.restaurant.findMany({
+      where: { id: { in: scopeIds } },
+      include: {
+        _count: { select: { tables: true, menuItems: true, users: true } },
+      },
+      orderBy: { createdAt: "asc" },
+    });
+
+    return NextResponse.json({
+      restaurants,
+      activeRestaurantId: session.restaurantId,
+      canCreateBranches: session.role === "OWNER",
+      canSwitch: session.role === "OWNER",
+    });
+  } catch (err) {
+    console.error("get branches error", err);
+    return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
+  }
 }
 
 export async function POST(req: Request) {

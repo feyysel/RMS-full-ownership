@@ -6,7 +6,7 @@ import { createSession } from "@/lib/session";
 export const runtime = "nodejs";
 
 export async function POST(req: Request) {
-  const guard = await requireRoles(req, ["OWNER", "MANAGER"]);
+  const guard = await requireRoles(req, ["OWNER"]);
   if ("response" in guard) return guard.response;
   const session = guard.session;
 

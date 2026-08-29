@@ -30,6 +30,7 @@ type BranchesData = {
   restaurants: BranchRestaurant[];
   activeRestaurantId: string;
   canCreateBranches: boolean;
+  canSwitch: boolean;
 };
 
 export default function ManagerBranches() {
@@ -158,7 +159,7 @@ export default function ManagerBranches() {
                     <Button size="sm" variant="outline" disabled>
                       <RefreshCw className="h-3.5 w-3.5" /> Managing
                     </Button>
-                  ) : (
+                  ) : data?.canSwitch ? (
                     <Button size="sm" onClick={() => switchTo(r.id)} disabled={switching === r.id}>
                       {switching === r.id ? (
                         <RefreshCw className="h-3.5 w-3.5 animate-spin" />
@@ -167,6 +168,8 @@ export default function ManagerBranches() {
                       )}
                       Manage
                     </Button>
+                  ) : (
+                    <Badge tone="zinc">Not assigned</Badge>
                   )}
                 </div>
               </Card>

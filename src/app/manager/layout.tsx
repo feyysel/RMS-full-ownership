@@ -25,7 +25,9 @@ export default async function ManagerLayout({ children }: LayoutProps<"/manager"
 
   const nav: NavItem[] = [
     { label: "Overview", href: "/manager", icon: "LayoutDashboard" },
-    { label: "My Restaurants", href: "/manager/branches", icon: "Store" },
+    ...(session.role === "OWNER"
+      ? [{ label: "My Restaurants", href: "/manager/branches", icon: "Store" } satisfies NavItem]
+      : []),
     { label: "Employees", href: "/manager/employees", icon: "Users" },
     { label: "Menu", href: "/manager/menu", icon: "UtensilsCrossed" },
     { label: "Tables", href: "/manager/tables", icon: "Grid3X3" },

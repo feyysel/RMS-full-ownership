@@ -22,10 +22,19 @@ type Employee = {
   role: string;
   isActive: boolean;
   createdAt: string;
+  restaurantId: string | null;
+  restaurantName: string | null;
+};
+
+type Branch = {
+  id: string;
+  name: string;
+  parentId: string | null;
 };
 
 export default function ManagerEmployees() {
   const { data, loading, refresh } = useFetch<{ users: Employee[] }>("/api/users");
+  const branches = useFetch<{ restaurants: Branch[]; activeRestaurantId: string }>("/api/manager/branches");
   const [isOwner, setIsOwner] = React.useState(false);
   const [restaurantId, setRestaurantId] = React.useState<string | null>(null);
   const refreshDebounced = useDebouncedCallback(refresh, 500);
@@ -48,6 +57,7 @@ export default function ManagerEmployees() {
   const [phone, setPhone] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [role, setRole] = React.useState("WAITER");
+  const [selectedBranch, setSelectedBranch] = React.useState<string | "">("");
   const [passwordModal, setPasswordModal] = React.useState<Employee | null>(null);
   const [newPassword, setNewPassword] = React.useState("");
   const [deleting, setDeleting] = React.useState<Employee | null>(null);
@@ -59,7 +69,13 @@ export default function ManagerEmployees() {
       const res = await fetch("/api/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, phone, password, role }),
+        body: JSON.stringify({
+          name,
+          phone,
+          password,
+          role,
+          ...(isOwner && selectedBranch ? { restaurantId: selectedBranch } : {}),
+        }),
       });
       const d = await res.json();
       if (!res.ok) throw new Error(d.error ?? "Failed");
@@ -68,6 +84,7 @@ export default function ManagerEmployees() {
       setName("");
       setPhone("");
       setPassword("");
+      setSelectedBranch("");
       refresh();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Failed");
@@ -214,6 +231,27 @@ export default function ManagerEmployees() {
               <option value="KITCHEN">Kitchen</option>
             </Select>
           </div>
+          {isOwner && (
+            <div>
+              <Label htmlFor="e-branch">Branch</Label>
+              <Select
+                id="e-branch"
+                value={selectedBranch}
+                onChange={(e) => setSelectedBranch(e.target.value)}
+              >
+                <option value="">{restaurantId ? "Current branch" : "Select a branch"}</option>
+                {branches.data?.restaurants.map((b) => (
+                  <option key={b.id} value={b.id}>
+                    {b.name}
+                    {b.id === restaurantId ? " (current)" : ""}
+                  </option>
+                ))}
+              </Select>
+              <p className="mt-1 text-xs text-zinc-500">
+                Choose the branch this employee belongs to.
+              </p>
+            </div>
+          )}
           <div className="flex justify-end gap-2 pt-2">
             <Button type="button" variant="ghost" onClick={() => setModal(false)}>
               Cancel
@@ -309,7 +347,10 @@ function StaffGroup({
               <Avatar name={u.name} className="h-9 w-9 text-xs" />
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-100">{u.name}</p>
-                <p className="truncate text-xs text-zinc-500">{u.phone}</p>
+                <p className="truncate text-xs text-zinc-500">
+                  {u.phone}
+                  {u.restaurantName ? ` · ${u.restaurantName}` : ""}
+                </p>
               </div>
               {!u.isActive && <Badge tone="rose">Inactive</Badge>}
               <button
