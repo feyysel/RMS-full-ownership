@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireRoles } from "@/lib/guard";
+import { getCached, setCached, invalidateCache } from "@/lib/cache";
+
+const TABLES_TTL = 4000;
 
 export const runtime = "nodejs";
 
@@ -18,6 +21,11 @@ export async function GET(req: Request) {
         ? { waiterId: session.id }
         : { waiterId: assignedTo === session.id ? session.id : "__none__" }
       : {};
+
+  const scopeKey = session.role === "WAITER" ? `w:${session.id}` : "all";
+  const cacheKey = `tables:${session.restaurantId}:${scopeKey}`;
+  const cached = getCached<unknown>(cacheKey);
+  if (cached) return NextResponse.json(cached);
 
   const tables = await prisma.table.findMany({
     where: { restaurantId: session.restaurantId, ...waiterFilter },
@@ -50,7 +58,9 @@ export async function GET(req: Request) {
     orderBy: { number: "asc" },
   });
 
-  return NextResponse.json({ tables });
+  const result = { tables };
+  setCached(cacheKey, result, TABLES_TTL);
+  return NextResponse.json(result);
 }
 
 export async function POST(req: Request) {
@@ -81,6 +91,7 @@ export async function POST(req: Request) {
       },
     });
 
+    invalidateCache(`^tables:${session.restaurantId}`);
     return NextResponse.json({ table });
   } catch (err) {
     console.error("create table error", err);

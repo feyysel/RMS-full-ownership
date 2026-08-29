@@ -141,6 +141,8 @@ model Order {
 
   @@unique([restaurantId, orderNumber])
   @@index([restaurantId, status, createdAt])
+  @@index([restaurantId, status])
+  @@index([restaurantId, refundStatus])
   @@index([waiterId, status, createdAt])
   @@index([cashierId, status, createdAt])
   @@index([tableId, status])
@@ -228,6 +230,7 @@ model EventLog {
   createdAt DateTime @default(now())
 
   @@index([scope, scopeId, createdAt])
+  @@index([scope, scopeId, type, createdAt])
   @@index([createdAt])
   @@index([scope, createdAt])
 }

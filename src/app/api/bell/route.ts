@@ -2,6 +2,7 @@ import { NextResponse, after } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { notify, emitToTable } from "@/lib/notify";
 import { persistEvent } from "@/lib/realtime";
+import { invalidateCache } from "@/lib/cache";
 
 export const runtime = "nodejs";
 
@@ -56,6 +57,7 @@ export async function POST(req: Request) {
 
     after(async () => {
       try {
+        invalidateCache(`^tables:${table.restaurantId}`);
         if (table.waiterId) {
           await notify({
             userId: table.waiterId,

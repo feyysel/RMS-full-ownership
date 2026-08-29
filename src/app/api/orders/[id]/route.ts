@@ -299,6 +299,7 @@ export async function PATCH(req: Request, ctx: Ctx) {
 
     invalidateCache(`^kitchen-queue:${escapeRegExp(restaurantId)}$`);
     invalidateCache(`^cashier-orders:${escapeRegExp(restaurantId)}$`);
+    invalidateCache(`^waiter-orders:${escapeRegExp(restaurantId)}$`);
     invalidateCache(`^notifs:.*:${escapeRegExp(restaurantId)}$`);
     invalidateCache(`^stats:${escapeRegExp(restaurantId)}$`);
 

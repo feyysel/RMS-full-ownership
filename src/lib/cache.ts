@@ -23,6 +23,28 @@ export function setCached<T>(key: string, value: T, ttlMs: number): void {
 }
 
 export function invalidateCache(pattern: string): void {
+  if (pattern.length > 2 && pattern[0] === "^" && pattern[pattern.length - 1] === "$") {
+    const key = pattern.slice(1, -1);
+    if (!/[*+?^${}()|[\]\\]/.test(key)) {
+      store.delete(key);
+      return;
+    }
+    const prefix = key.slice(0, key.indexOf("*"));
+    if (prefix.length > 0 && key.slice(prefix.length + 1) === ".+") {
+      for (const k of store.keys()) {
+        if (k.startsWith(prefix)) store.delete(k);
+      }
+      return;
+    }
+  } else if (pattern.length > 1 && pattern[0] === "^") {
+    const prefix = pattern.slice(1);
+    if (!/[*+?^${}()|[\]\\]/.test(prefix)) {
+      for (const k of store.keys()) {
+        if (k.startsWith(prefix)) store.delete(k);
+      }
+      return;
+    }
+  }
   const regex = new RegExp(pattern);
   for (const key of store.keys()) {
     if (regex.test(key)) store.delete(key);

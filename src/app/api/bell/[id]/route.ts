@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { requireRoles } from "@/lib/guard";
 import { emitToTable } from "@/lib/notify";
 import { persistEvent } from "@/lib/realtime";
+import { invalidateCache } from "@/lib/cache";
 
 export const runtime = "nodejs";
 
@@ -39,6 +40,8 @@ export async function PATCH(req: Request, ctx: Ctx) {
       "BELL_RESOLVED",
       { id: updated.id, tableId: bell.table.id }
     );
+
+    invalidateCache(`^tables:${bell.table.restaurantId}`);
 
     return NextResponse.json({ bellCall: updated });
   } catch (err) {
