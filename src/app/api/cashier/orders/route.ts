@@ -25,7 +25,7 @@ export async function GET(req: Request) {
     },
     include: {
       items: { select: { id: true, name: true, quantity: true, price: true } },
-      receipt: { select: { subtotal: true, tax: true, total: true } },
+      receipt: { select: { subtotal: true, discount: true, tax: true, total: true, paymentMethod: true, paidAt: true } },
       table: { select: { number: true, code: true } },
       waiter: { select: { id: true, name: true } },
       cashier: { select: { id: true, name: true } },

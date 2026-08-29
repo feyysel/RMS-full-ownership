@@ -5,7 +5,7 @@ import { notify, emitToTable } from "@/lib/notify";
 import { persistEvent } from "@/lib/realtime";
 import { invalidateCache, escapeRegExp } from "@/lib/cache";
 import { TAX_RATE } from "@/lib/constants";
-import type { OrderStatus, OrderItemStatus } from "@/generated/prisma/client";
+import type { OrderStatus, OrderItemStatus, PaymentMethod } from "@/generated/prisma/client";
 
 export const runtime = "nodejs";
 
@@ -39,7 +39,19 @@ const ACTIONS: Record<
     to: "CANCELLED",
     roles: ["WAITER", "CASHIER", "KITCHEN", "MANAGER"],
   },
+  void: {
+    from: ["PENDING", "TAKEN", "PAID"],
+    to: "CANCELLED",
+    roles: ["CASHIER", "MANAGER", "OWNER"],
+  },
+  refund: {
+    from: ["PAID", "SERVED", "COMPLETED"],
+    to: "CANCELLED",
+    roles: ["CASHIER", "MANAGER", "OWNER"],
+  },
 };
+
+const PAYMENT_METHODS: PaymentMethod[] = ["CASH", "CARD", "CARD_ONLINE", "OTHER"];
 
 export async function GET(req: Request, ctx: Ctx) {
   const guard = await requireRoles(req, ["KITCHEN", "WAITER", "CASHIER", "MANAGER", "OWNER"]);
@@ -70,7 +82,7 @@ export async function PATCH(req: Request, ctx: Ctx) {
   const { id } = await ctx.params;
 
   try {
-    const { action, collectedAmount } = await req.json();
+    const { action, collectedAmount, discount, discountReason, paymentMethod, reason } = await req.json();
     const def = ACTIONS[action];
     if (!def) return NextResponse.json({ error: "Unknown action" }, { status: 400 });
     if (!def.roles.includes(session.role))
@@ -98,24 +110,109 @@ export async function PATCH(req: Request, ctx: Ctx) {
     if (collected != null && !Number.isFinite(collected))
       return NextResponse.json({ error: "Invalid amount collected" }, { status: 400 });
 
+    let paymentMethodValue: PaymentMethod | null = null;
+    if (action === "complete") {
+      if (paymentMethod != null && !PAYMENT_METHODS.includes(paymentMethod))
+        return NextResponse.json({ error: "Invalid payment method" }, { status: 400 });
+      paymentMethodValue = (paymentMethod as PaymentMethod) ?? null;
+    }
+
+    const actionReason =
+      (action === "void" || action === "refund") &&
+      reason &&
+      typeof reason === "string"
+        ? reason.trim()
+        : null;
+
+    const discountValue =
+      action === "complete" && discount != null
+        ? Math.max(0, Math.round(Number(discount) * 100) / 100)
+        : 0;
+    const discountReasonValue =
+      action === "complete" && discountReason && typeof discountReason === "string"
+        ? discountReason.trim()
+        : null;
+
     const updated = await prisma.$transaction(async (tx) => {
       const full = await tx.order.findUniqueOrThrow({
         where: { id },
         include: { items: true, table: true, receipt: true },
       });
 
-      const payable = full.receipt?.total ?? full.total;
-      const tip =
-        collected != null
-          ? Math.max(0, Math.round((collected - payable) * 100) / 100)
-          : null;
+      let takeoutData: Record<string, unknown> = {};
+      if (action === "takeout") {
+        const subtotal = full.items.reduce((s, i) => s + i.price * i.quantity, 0);
+        const tax = Math.round(subtotal * TAX_RATE * 100) / 100;
+        const total = Math.round((subtotal + tax) * 100) / 100;
+        const items = JSON.stringify(
+          full.items.map((i) => ({ name: i.name, price: i.price, quantity: i.quantity }))
+        );
+        await tx.receipt.upsert({
+          where: { orderId: id },
+          update: { items, subtotal, discount: 0, tax, total, kitchenId: session.role === "KITCHEN" ? session.id : null },
+          create: {
+            orderId: id,
+            items,
+            subtotal,
+            discount: 0,
+            tax,
+            total,
+            kitchenId: session.role === "KITCHEN" ? session.id : null,
+            restaurantId: full.restaurantId,
+          },
+        });
+        takeoutData = { status: def.to, cashierId: session.id };
+      }
+
+      let completeData: Record<string, unknown> = {};
+      if (action === "complete") {
+        const subtotal = full.items.reduce((s, i) => s + i.price * i.quantity, 0);
+        const discount = Math.min(discountValue, subtotal);
+        const taxable = Math.max(0, subtotal - discount);
+        const tax = Math.round(taxable * TAX_RATE * 100) / 100;
+        const net = Math.round((taxable + tax) * 100) / 100;
+        const now = new Date();
+
+        await tx.receipt.updateMany({
+          where: { orderId: id },
+          data: { discount, total: net, paymentMethod: paymentMethodValue, paidAt: now },
+        });
+
+        completeData = {
+          status: def.to,
+          total: net,
+          discount,
+          discountReason: discountReasonValue,
+          paymentMethod: paymentMethodValue,
+          paidAt: now,
+          ...(collected != null
+            ? {
+                collectedAmount: collected,
+                tip: Math.max(0, Math.round((collected - net) * 100) / 100),
+              }
+            : {}),
+        };
+      }
+
+      const voidFields =
+        action === "void"
+          ? { voided: true, voidReason: actionReason, voidedAt: new Date(), voidedBy: session.id }
+          : action === "refund"
+            ? {
+                refunded: true,
+                refundReason: actionReason,
+                refundedAt: new Date(),
+                refundedBy: session.id,
+              }
+            : {};
 
       const updatedOrder = await tx.order.update({
         where: { id },
         data: {
-          status: def.to,
-          ...(action === "takeout" ? { cashierId: session.id } : {}),
-          ...(collected != null ? { collectedAmount: collected, tip } : {}),
+          ...takeoutData,
+          ...completeData,
+          ...(action !== "takeout" && action !== "complete" ? { status: def.to } : {}),
+          ...voidFields,
         },
         include: { items: true, table: true, receipt: true },
       });
@@ -124,35 +221,6 @@ export async function PATCH(req: Request, ctx: Ctx) {
         await tx.orderItem.updateMany({
           where: { orderId: id },
           data: { status: def.to as OrderItemStatus },
-        });
-      }
-
-      if (action === "takeout") {
-        const subtotal = full.items.reduce((s, i) => s + i.price * i.quantity, 0);
-        const tax = Math.round(subtotal * TAX_RATE * 100) / 100;
-        const total = Math.round((subtotal + tax) * 100) / 100;
-        await tx.receipt.upsert({
-          where: { orderId: id },
-          update: {
-            items: JSON.stringify(
-              full.items.map((i) => ({ name: i.name, price: i.price, quantity: i.quantity }))
-            ),
-            subtotal,
-            tax,
-            total,
-            kitchenId: session.role === "KITCHEN" ? session.id : null,
-          },
-          create: {
-            orderId: id,
-            items: JSON.stringify(
-              full.items.map((i) => ({ name: i.name, price: i.price, quantity: i.quantity }))
-            ),
-            subtotal,
-            tax,
-            total,
-            kitchenId: session.role === "KITCHEN" ? session.id : null,
-            restaurantId: full.restaurantId,
-          },
         });
       }
 
@@ -166,7 +234,10 @@ export async function PATCH(req: Request, ctx: Ctx) {
         });
       }
 
-      if ((action === "complete" || action === "cancel") && full.tableId) {
+      if (
+        ["complete", "cancel", "void", "refund"].includes(action) &&
+        full.tableId
+      ) {
         const otherActive = await tx.order.count({
           where: {
             tableId: full.tableId,
@@ -189,7 +260,7 @@ export async function PATCH(req: Request, ctx: Ctx) {
     invalidateCache(`^notifs:.*:${escapeRegExp(restaurantId)}$`);
     invalidateCache(`^stats:${escapeRegExp(restaurantId)}$`);
 
-    if (action === "complete" || action === "cancel") {
+    if (["complete", "cancel", "void", "refund"].includes(action)) {
       invalidateCache(`^tables:${escapeRegExp(restaurantId)}`);
     }
 
@@ -209,13 +280,66 @@ export async function PATCH(req: Request, ctx: Ctx) {
           }
         );
 
+        if (action === "complete") {
+          await persistEvent(
+            { scope: "restaurant", restaurantId },
+            "ORDER_PAYMENT",
+            {
+              orderId: id,
+              orderNumber: updated.orderNumber,
+              by: session.name,
+              byId: session.id,
+              tableLabel: updated.tableLabel,
+              subtotal: updated.receipt?.subtotal,
+              discount: updated.discount,
+              discountReason: updated.discountReason,
+              paymentMethod: updated.paymentMethod,
+              paidAt: updated.paidAt?.toISOString(),
+              total: updated.total,
+              collected: updated.collectedAmount ?? null,
+              tip: updated.tip ?? null,
+            }
+          );
+        } else if (action === "void") {
+          await persistEvent(
+            { scope: "restaurant", restaurantId },
+            "ORDER_VOIDED",
+            {
+              orderId: id,
+              orderNumber: updated.orderNumber,
+              by: session.name,
+              byId: session.id,
+              reason: updated.voidReason ?? null,
+              amount: updated.receipt?.total ?? updated.total,
+              voidedAt: updated.voidedAt?.toISOString(),
+              tableLabel: updated.tableLabel,
+            }
+          );
+        } else if (action === "refund") {
+          await persistEvent(
+            { scope: "restaurant", restaurantId },
+            "ORDER_REFUNDED",
+            {
+              orderId: id,
+              orderNumber: updated.orderNumber,
+              by: session.name,
+              byId: session.id,
+              reason: updated.refundReason ?? null,
+              amount: updated.receipt?.total ?? updated.total,
+              paymentMethod: updated.paymentMethod,
+              refundedAt: updated.refundedAt?.toISOString(),
+              tableLabel: updated.tableLabel,
+            }
+          );
+        }
+
         if (action === "takeout") {
           const receipt = await prisma.receipt.findUnique({ where: { orderId: id } });
           await notify({
             role: "KITCHEN",
             restaurantId,
             type: "ORDER_NEW",
-            title: `${summary} paid — ready to cook`,
+            title: `${summary} checkout — ready to cook`,
             body: `${updated.tableLabel} — total ${receipt?.total.toFixed(2) ?? updated.total.toFixed(2)} ETB`,
             orderId: id,
             tableId: updated.tableId ?? undefined,

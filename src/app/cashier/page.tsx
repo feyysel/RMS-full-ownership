@@ -10,6 +10,8 @@ import {
   Package,
   Printer,
   ReceiptText,
+  RotateCcw,
+  Trash2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { PageHeader } from "@/components/ui/stat-card";
@@ -17,6 +19,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
+import { Input, Label } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatCurrency, formatTime } from "@/lib/utils";
 import { useRealtime } from "@/components/realtime/use-realtime";
@@ -30,11 +33,32 @@ type Order = {
   tableLabel: string;
   note: string | null;
   total: number;
+  discount: number;
+  discountReason: string | null;
+  paymentMethod: string | null;
+  paidAt: string | null;
+  voided: boolean;
+  refunded: boolean;
   createdAt: string;
   items: { id: string; name: string; quantity: number; price: number }[];
   table: { number: number; code: string } | null;
   waiter: { id: string; name: string } | null;
-  receipt: { subtotal: number; tax: number; total: number } | null;
+  cashier: { id: string; name: string } | null;
+  receipt: {
+    subtotal: number;
+    discount: number;
+    tax: number;
+    total: number;
+    paymentMethod: string | null;
+    paidAt: string | null;
+  } | null;
+};
+
+const PAYMENT_LABEL: Record<string, string> = {
+  CASH: "Cash",
+  CARD: "Card (POS)",
+  CARD_ONLINE: "Online card",
+  OTHER: "Other",
 };
 
 const statusTone: Record<string, "amber" | "sky" | "gold" | "violet" | "teal" | "emerald" | "rose"> = {
@@ -52,6 +76,12 @@ export default function CashierDashboard() {
   const [restaurantId, setRestaurantId] = React.useState<string | null>(null);
   const [receiptFor, setReceiptFor] = React.useState<Order | null>(null);
   const [newOrderId, setNewOrderId] = React.useState<string | null>(null);
+  const [settleFor, setSettleFor] = React.useState<Order | null>(null);
+  const [voiding, setVoiding] = React.useState<Order | null>(null);
+  const [refunding, setRefunding] = React.useState<Order | null>(null);
+
+  const [saving, setSaving] = React.useState(false);
+  const [reason, setReason] = React.useState("");
 
   const refreshNow = React.useCallback(async () => {
     const res = await fetch("/api/cashier/orders");
@@ -90,39 +120,76 @@ export default function CashierDashboard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const act = React.useCallback(
-    async (orderId: string, action: "takeout", label: string) => {
-      setData((prev) => {
-        if (!prev) return prev;
-        return {
-          ...prev,
-          orders: prev.orders.map((o) =>
-            o.id === orderId ? { ...o, status: "PAID" } : o
-          ),
-        };
-      });
+  const refreshList = React.useCallback(() => {
+    refreshNow();
+  }, [refreshNow]);
 
-      try {
-        const res = await fetch(`/api/orders/${orderId}`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action }),
-        });
-        const d = await res.json();
-        if (!res.ok) {
-          toast.error(d.error ?? "Action failed");
-          refresh();
-          return;
-        }
-        toast.success(label);
-        setReceiptFor({ ...d.order, items: d.order.items ?? [], receipt: d.order.receipt ?? null });
-      } catch {
-        toast.error("Network error");
-        refresh();
+  async function runAction(order: Order, action: string, body: Record<string, unknown>) {
+    try {
+      const res = await fetch(`/api/orders/${order.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action, ...body }),
+      });
+      const d = await res.json();
+      if (!res.ok) {
+        toast.error(d.error ?? "Action failed");
+        refreshList();
+        return null;
       }
-    },
-    [refresh]
-  );
+      return d.order as Order;
+    } catch {
+      toast.error("Network error");
+      refreshList();
+      return null;
+    }
+  }
+
+  function openSettle(o: Order) {
+    setSettleFor(o);
+  }
+
+  async function confirmSettle(e: React.FormEvent) {
+    e.preventDefault();
+    if (!settleFor) return;
+    setSaving(true);
+    const updated = await runAction(settleFor, "takeout", {});
+    setSaving(false);
+    setSettleFor(null);
+    if (updated) {
+      toast.success(`Order #${updated.orderNumber} checkout`);
+      setReceiptFor({ ...updated, items: updated.items ?? settleFor.items, receipt: updated.receipt ?? null });
+      refreshList();
+    }
+  }
+
+  async function confirmVoid(e: React.FormEvent) {
+    e.preventDefault();
+    if (!voiding) return;
+    setSaving(true);
+    const updated = await runAction(voiding, "void", { reason: reason.trim() || null });
+    setSaving(false);
+    setVoiding(null);
+    setReason("");
+    if (updated) {
+      toast.success(`Order #${updated.orderNumber} voided`);
+      refreshList();
+    }
+  }
+
+  async function confirmRefund(e: React.FormEvent) {
+    e.preventDefault();
+    if (!refunding) return;
+    setSaving(true);
+    const updated = await runAction(refunding, "refund", { reason: reason.trim() || null });
+    setSaving(false);
+    setRefunding(null);
+    setReason("");
+    if (updated) {
+      toast.success(`Order #${updated.orderNumber} refunded`);
+      refreshList();
+    }
+  }
 
   const orders = data?.orders ?? [];
   const taken = orders.filter((o) => o.status === "TAKEN" || o.status === "PENDING");
@@ -201,19 +268,14 @@ export default function CashierDashboard() {
                   {taken.map((o) => (
                     <OrderCard key={o.id} order={o} highlight={o.id === newOrderId}>
                       <div className="flex gap-2">
-                        <Button
-                          onClick={() =>
-                            act(o.id, "takeout", `Order #${o.orderNumber} taken out — sent to kitchen`)
-                          }
-                          className="flex-1"
-                        >
-                          <Printer className="h-4 w-4" /> Take out &amp; print
+                        <Button onClick={() => openSettle(o)} className="flex-1">
+                          <Printer className="h-4 w-4" /> Send to kitchen
                         </Button>
-                        <Button
-                          variant="outline"
-                          onClick={() => setReceiptFor(o)}
-                        >
+                        <Button variant="outline" onClick={() => setReceiptFor(o)}>
                           <ReceiptText className="h-4 w-4" />
+                        </Button>
+                        <Button variant="outline" onClick={() => { setVoiding(o); setReason(""); }} title="Void order">
+                          <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
                     </OrderCard>
@@ -233,6 +295,24 @@ export default function CashierDashboard() {
                       <Button variant="outline" onClick={() => setReceiptFor(o)} className="flex-1">
                         <ReceiptText className="h-4 w-4" /> View receipt
                       </Button>
+                      {["PAID", "SERVED", "COMPLETED"].includes(o.status) && (
+                        <Button
+                          variant="outline"
+                          onClick={() => { setRefunding(o); setReason(""); }}
+                          title="Refund"
+                        >
+                          <RotateCcw className="h-4 w-4" />
+                        </Button>
+                      )}
+                      {["PAID"].includes(o.status) && (
+                        <Button
+                          variant="outline"
+                          onClick={() => { setVoiding(o); setReason(""); }}
+                          title="Void order"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      )}
                     </OrderCard>
                   ))}
                 </div>
@@ -258,6 +338,95 @@ export default function CashierDashboard() {
             </div>
           </div>
         )}
+      </Modal>
+
+      <Modal
+        open={settleFor !== null}
+        onClose={() => setSettleFor(null)}
+        title={`Checkout · Order #${settleFor?.orderNumber}`}
+        description={`${settleFor?.tableLabel} — generate the receipt and send to the kitchen.`}
+      >
+        <form onSubmit={confirmSettle} className="space-y-4">
+          <div className="space-y-1.5">
+            {settleFor?.items.map((i) => (
+              <div key={i.id} className="flex items-center justify-between gap-2 rounded-lg bg-zinc-100 px-3 py-2 text-sm dark:bg-white/[0.03]">
+                <span className="text-zinc-700 dark:text-zinc-200">
+                  {i.name} <span className="text-zinc-400">× {i.quantity}</span>
+                </span>
+                <span className="text-zinc-500">{formatCurrency(i.price * i.quantity)}</span>
+              </div>
+            ))}
+          </div>
+
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            Payment (discount, method &amp; cash) is collected by the waiter after the customer is served and finishes eating.
+          </p>
+
+          <div className="flex justify-end gap-2 pt-1">
+            <Button type="button" variant="ghost" onClick={() => setSettleFor(null)}>
+              Cancel
+            </Button>
+            <Button type="submit" disabled={saving}>
+              {saving ? "Processing…" : "Send to kitchen"}
+            </Button>
+          </div>
+        </form>
+      </Modal>
+
+      <Modal
+        open={voiding !== null}
+        onClose={() => setVoiding(null)}
+        title={`Void order? · #${voiding?.orderNumber}`}
+        description="Cancels the order before payment. The full amount is written off."
+      >
+        <form onSubmit={confirmVoid} className="space-y-4">
+          <div>
+            <Label htmlFor="v-reason">Reason for voiding (required)</Label>
+            <Input
+              id="v-reason"
+              required
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              placeholder="e.g. wrong order, customer left"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button type="button" variant="ghost" onClick={() => setVoiding(null)}>
+              Cancel
+            </Button>
+            <Button type="submit" variant="danger" disabled={saving}>
+              <Trash2 className="h-4 w-4" /> {saving ? "Voiding…" : "Void order"}
+            </Button>
+          </div>
+        </form>
+      </Modal>
+
+      <Modal
+        open={refunding !== null}
+        onClose={() => setRefunding(null)}
+        title={`Refund? · #${refunding?.orderNumber}`}
+        description={`Refund ${formatCurrency(refunding?.receipt?.total ?? refunding?.total ?? 0)} to the customer.`}
+      >
+        <form onSubmit={confirmRefund} className="space-y-4">
+          <div>
+            <Label htmlFor="r-reason">Reason for refund (required)</Label>
+            <Input
+              id="r-reason"
+              required
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              placeholder="e.g. customer complaint, double charge"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button type="button" variant="ghost" onClick={() => setRefunding(null)}>
+              Cancel
+            </Button>
+            <Button type="submit" variant="danger" disabled={saving}>
+              <RotateCcw className="h-4 w-4" /> {saving ? "Refunding…" : "Refund payment"}
+            </Button>
+          </div>
+        </form>
       </Modal>
     </div>
   );
@@ -295,7 +464,12 @@ function OrderCard({
             </p>
           </div>
         </div>
-        <Badge tone={statusTone[order.status] ?? "amber"}>{order.status}</Badge>
+        <div className="flex items-center gap-1.5">
+          {order.paymentMethod && <Badge tone="teal">{PAYMENT_LABEL[order.paymentMethod] ?? order.paymentMethod}</Badge>}
+          {order.refunded && <Badge tone="rose">Refunded</Badge>}
+          {!order.refunded && order.voided && <Badge tone="rose">Voided</Badge>}
+          <Badge tone={statusTone[order.status] ?? "amber"}>{order.status}</Badge>
+        </div>
       </div>
 
       <div className="mb-4 space-y-1.5">
@@ -319,10 +493,15 @@ function OrderCard({
       )}
 
       <div className="flex items-center justify-between border-t border-zinc-200 pt-3 dark:border-white/[0.06]">
-        <p className="flex items-center gap-1 text-sm font-semibold text-gold-dark dark:text-gold-light">
-          <Check className="h-4 w-4" />
-          {formatCurrency(order.total)}
-        </p>
+        <div className="text-sm">
+          {order.discount > 0 && (
+            <p className="text-xs text-zinc-500">Discount −{formatCurrency(order.discount)}</p>
+          )}
+          <p className="flex items-center gap-1 font-semibold text-gold-dark dark:text-gold-light">
+            <Check className="h-4 w-4" />
+            {formatCurrency(order.total)}
+          </p>
+        </div>
         <div className="flex gap-2">{children}</div>
       </div>
     </motion.div>
@@ -357,6 +536,12 @@ function ReceiptContent({ order }: { order: Order }) {
           <span>Subtotal</span>
           <span>{formatCurrency(subtotal)}</span>
         </div>
+        {order.discount > 0 && (
+          <div className="flex justify-between text-rose-600">
+            <span>Discount{order.discountReason ? ` (${order.discountReason})` : ""}</span>
+            <span>−{formatCurrency(order.discount)}</span>
+          </div>
+        )}
         <div className="flex justify-between text-zinc-600">
           <span>Tax (8%)</span>
           <span>{formatCurrency(tax)}</span>
@@ -365,6 +550,12 @@ function ReceiptContent({ order }: { order: Order }) {
           <span>Total</span>
           <span>{formatCurrency(total)}</span>
         </div>
+        {order.paymentMethod && (
+          <div className="flex justify-between pt-1 text-xs text-zinc-500">
+            <span>Paid via</span>
+            <span>{PAYMENT_LABEL[order.paymentMethod] ?? order.paymentMethod}</span>
+          </div>
+        )}
       </div>
       <p className="mt-4 text-center text-xs text-zinc-400">Thank you — enjoy your meal!</p>
     </div>
@@ -373,8 +564,11 @@ function ReceiptContent({ order }: { order: Order }) {
 
 function printReceipt(o: Order) {
   const subtotal = o.receipt?.subtotal ?? o.items.reduce((s, i) => s + i.price * i.quantity, 0);
-  const tax = o.receipt?.tax ?? Math.round(subtotal * 0.08 * 100) / 100;
-  const total = o.receipt?.total ?? subtotal + tax;
+  const discount = o.receipt?.discount ?? o.discount ?? 0;
+  const tax = o.receipt?.tax ?? Math.round((subtotal - discount) * 0.08 * 100) / 100;
+  const total = o.receipt?.total ?? subtotal - discount + tax;
+  const paymentMethod = o.receipt?.paymentMethod ?? o.paymentMethod ?? null;
+  const paidAt = o.receipt?.paidAt ?? o.paidAt;
 
   const itemsHtml = o.items
     .map(
@@ -385,6 +579,11 @@ function printReceipt(o: Order) {
       </tr>`
     )
     .join("");
+
+  const discountRow =
+    discount > 0
+      ? `<tr><td>Discount${o.discountReason ? ` (${escapeHtml(o.discountReason)})` : ""}</td><td class="r">-${formatCurrency(discount)}</td></tr>`
+      : "";
 
   const html = `<!doctype html>
 <html>
@@ -408,7 +607,7 @@ function printReceipt(o: Order) {
   <div class="center">
     <h1>THE GOLDEN FORK</h1>
     <p class="dim">Receipt #${o.orderNumber}</p>
-    <p class="dim">${escapeHtml(o.tableLabel)} · ${new Date(o.createdAt).toLocaleString()}</p>
+    <p class="dim">${escapeHtml(o.tableLabel)} · ${new Date(paidAt ?? o.createdAt).toLocaleString()}</p>
   </div>
   <table>
     ${itemsHtml}
@@ -416,8 +615,10 @@ function printReceipt(o: Order) {
   <div class="dash"></div>
   <table>
     <tr><td>Subtotal</td><td class="r">${formatCurrency(subtotal)}</td></tr>
+    ${discountRow}
     <tr><td>Tax (8%)</td><td class="r">${formatCurrency(tax)}</td></tr>
     <tr class="total-row"><td>Total</td><td class="r">${formatCurrency(total)}</td></tr>
+    ${paymentMethod ? `<tr><td>Paid via</td><td class="r">${escapeHtml(PAYMENT_LABEL[paymentMethod] ?? paymentMethod)}</td></tr>` : ""}
   </table>
   <p class="thanks">Thank you — enjoy your meal!</p>
 </body>

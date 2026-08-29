@@ -385,10 +385,6 @@ export type EnumBellStatusFieldUpdateOperationsInput = {
   set?: $Enums.BellStatus
 }
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
-}
-
 export type BellCallCreateWithoutTableInput = {
   id?: string
   status?: $Enums.BellStatus

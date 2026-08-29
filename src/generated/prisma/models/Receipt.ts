@@ -28,12 +28,14 @@ export type AggregateReceipt = {
 
 export type ReceiptAvgAggregateOutputType = {
   subtotal: number | null
+  discount: number | null
   tax: number | null
   total: number | null
 }
 
 export type ReceiptSumAggregateOutputType = {
   subtotal: number | null
+  discount: number | null
   tax: number | null
   total: number | null
 }
@@ -43,8 +45,11 @@ export type ReceiptMinAggregateOutputType = {
   orderId: string | null
   items: string | null
   subtotal: number | null
+  discount: number | null
   tax: number | null
   total: number | null
+  paymentMethod: $Enums.PaymentMethod | null
+  paidAt: Date | null
   kitchenId: string | null
   restaurantId: string | null
   generatedAt: Date | null
@@ -55,8 +60,11 @@ export type ReceiptMaxAggregateOutputType = {
   orderId: string | null
   items: string | null
   subtotal: number | null
+  discount: number | null
   tax: number | null
   total: number | null
+  paymentMethod: $Enums.PaymentMethod | null
+  paidAt: Date | null
   kitchenId: string | null
   restaurantId: string | null
   generatedAt: Date | null
@@ -67,8 +75,11 @@ export type ReceiptCountAggregateOutputType = {
   orderId: number
   items: number
   subtotal: number
+  discount: number
   tax: number
   total: number
+  paymentMethod: number
+  paidAt: number
   kitchenId: number
   restaurantId: number
   generatedAt: number
@@ -78,12 +89,14 @@ export type ReceiptCountAggregateOutputType = {
 
 export type ReceiptAvgAggregateInputType = {
   subtotal?: true
+  discount?: true
   tax?: true
   total?: true
 }
 
 export type ReceiptSumAggregateInputType = {
   subtotal?: true
+  discount?: true
   tax?: true
   total?: true
 }
@@ -93,8 +106,11 @@ export type ReceiptMinAggregateInputType = {
   orderId?: true
   items?: true
   subtotal?: true
+  discount?: true
   tax?: true
   total?: true
+  paymentMethod?: true
+  paidAt?: true
   kitchenId?: true
   restaurantId?: true
   generatedAt?: true
@@ -105,8 +121,11 @@ export type ReceiptMaxAggregateInputType = {
   orderId?: true
   items?: true
   subtotal?: true
+  discount?: true
   tax?: true
   total?: true
+  paymentMethod?: true
+  paidAt?: true
   kitchenId?: true
   restaurantId?: true
   generatedAt?: true
@@ -117,8 +136,11 @@ export type ReceiptCountAggregateInputType = {
   orderId?: true
   items?: true
   subtotal?: true
+  discount?: true
   tax?: true
   total?: true
+  paymentMethod?: true
+  paidAt?: true
   kitchenId?: true
   restaurantId?: true
   generatedAt?: true
@@ -216,8 +238,11 @@ export type ReceiptGroupByOutputType = {
   orderId: string
   items: string
   subtotal: number
+  discount: number
   tax: number
   total: number
+  paymentMethod: $Enums.PaymentMethod | null
+  paidAt: Date | null
   kitchenId: string | null
   restaurantId: string
   generatedAt: Date
@@ -251,8 +276,11 @@ export type ReceiptWhereInput = {
   orderId?: Prisma.StringFilter<"Receipt"> | string
   items?: Prisma.StringFilter<"Receipt"> | string
   subtotal?: Prisma.FloatFilter<"Receipt"> | number
+  discount?: Prisma.FloatFilter<"Receipt"> | number
   tax?: Prisma.FloatFilter<"Receipt"> | number
   total?: Prisma.FloatFilter<"Receipt"> | number
+  paymentMethod?: Prisma.EnumPaymentMethodNullableFilter<"Receipt"> | $Enums.PaymentMethod | null
+  paidAt?: Prisma.DateTimeNullableFilter<"Receipt"> | Date | string | null
   kitchenId?: Prisma.StringNullableFilter<"Receipt"> | string | null
   restaurantId?: Prisma.StringFilter<"Receipt"> | string
   generatedAt?: Prisma.DateTimeFilter<"Receipt"> | Date | string
@@ -266,8 +294,11 @@ export type ReceiptOrderByWithRelationInput = {
   orderId?: Prisma.SortOrder
   items?: Prisma.SortOrder
   subtotal?: Prisma.SortOrder
+  discount?: Prisma.SortOrder
   tax?: Prisma.SortOrder
   total?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrderInput | Prisma.SortOrder
+  paidAt?: Prisma.SortOrderInput | Prisma.SortOrder
   kitchenId?: Prisma.SortOrderInput | Prisma.SortOrder
   restaurantId?: Prisma.SortOrder
   generatedAt?: Prisma.SortOrder
@@ -284,8 +315,11 @@ export type ReceiptWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ReceiptWhereInput | Prisma.ReceiptWhereInput[]
   items?: Prisma.StringFilter<"Receipt"> | string
   subtotal?: Prisma.FloatFilter<"Receipt"> | number
+  discount?: Prisma.FloatFilter<"Receipt"> | number
   tax?: Prisma.FloatFilter<"Receipt"> | number
   total?: Prisma.FloatFilter<"Receipt"> | number
+  paymentMethod?: Prisma.EnumPaymentMethodNullableFilter<"Receipt"> | $Enums.PaymentMethod | null
+  paidAt?: Prisma.DateTimeNullableFilter<"Receipt"> | Date | string | null
   kitchenId?: Prisma.StringNullableFilter<"Receipt"> | string | null
   restaurantId?: Prisma.StringFilter<"Receipt"> | string
   generatedAt?: Prisma.DateTimeFilter<"Receipt"> | Date | string
@@ -299,8 +333,11 @@ export type ReceiptOrderByWithAggregationInput = {
   orderId?: Prisma.SortOrder
   items?: Prisma.SortOrder
   subtotal?: Prisma.SortOrder
+  discount?: Prisma.SortOrder
   tax?: Prisma.SortOrder
   total?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrderInput | Prisma.SortOrder
+  paidAt?: Prisma.SortOrderInput | Prisma.SortOrder
   kitchenId?: Prisma.SortOrderInput | Prisma.SortOrder
   restaurantId?: Prisma.SortOrder
   generatedAt?: Prisma.SortOrder
@@ -319,8 +356,11 @@ export type ReceiptScalarWhereWithAggregatesInput = {
   orderId?: Prisma.StringWithAggregatesFilter<"Receipt"> | string
   items?: Prisma.StringWithAggregatesFilter<"Receipt"> | string
   subtotal?: Prisma.FloatWithAggregatesFilter<"Receipt"> | number
+  discount?: Prisma.FloatWithAggregatesFilter<"Receipt"> | number
   tax?: Prisma.FloatWithAggregatesFilter<"Receipt"> | number
   total?: Prisma.FloatWithAggregatesFilter<"Receipt"> | number
+  paymentMethod?: Prisma.EnumPaymentMethodNullableWithAggregatesFilter<"Receipt"> | $Enums.PaymentMethod | null
+  paidAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Receipt"> | Date | string | null
   kitchenId?: Prisma.StringNullableWithAggregatesFilter<"Receipt"> | string | null
   restaurantId?: Prisma.StringWithAggregatesFilter<"Receipt"> | string
   generatedAt?: Prisma.DateTimeWithAggregatesFilter<"Receipt"> | Date | string
@@ -330,8 +370,11 @@ export type ReceiptCreateInput = {
   id?: string
   items: string
   subtotal: number
+  discount?: number
   tax: number
   total: number
+  paymentMethod?: $Enums.PaymentMethod | null
+  paidAt?: Date | string | null
   generatedAt?: Date | string
   kitchen?: Prisma.UserCreateNestedOneWithoutReceiptsInput
   order: Prisma.OrderCreateNestedOneWithoutReceiptInput
@@ -343,8 +386,11 @@ export type ReceiptUncheckedCreateInput = {
   orderId: string
   items: string
   subtotal: number
+  discount?: number
   tax: number
   total: number
+  paymentMethod?: $Enums.PaymentMethod | null
+  paidAt?: Date | string | null
   kitchenId?: string | null
   restaurantId: string
   generatedAt?: Date | string
@@ -354,8 +400,11 @@ export type ReceiptUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   items?: Prisma.StringFieldUpdateOperationsInput | string
   subtotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
   tax?: Prisma.FloatFieldUpdateOperationsInput | number
   total?: Prisma.FloatFieldUpdateOperationsInput | number
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   kitchen?: Prisma.UserUpdateOneWithoutReceiptsNestedInput
   order?: Prisma.OrderUpdateOneRequiredWithoutReceiptNestedInput
@@ -367,8 +416,11 @@ export type ReceiptUncheckedUpdateInput = {
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   items?: Prisma.StringFieldUpdateOperationsInput | string
   subtotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
   tax?: Prisma.FloatFieldUpdateOperationsInput | number
   total?: Prisma.FloatFieldUpdateOperationsInput | number
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   kitchenId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   restaurantId?: Prisma.StringFieldUpdateOperationsInput | string
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -379,8 +431,11 @@ export type ReceiptCreateManyInput = {
   orderId: string
   items: string
   subtotal: number
+  discount?: number
   tax: number
   total: number
+  paymentMethod?: $Enums.PaymentMethod | null
+  paidAt?: Date | string | null
   kitchenId?: string | null
   restaurantId: string
   generatedAt?: Date | string
@@ -390,8 +445,11 @@ export type ReceiptUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   items?: Prisma.StringFieldUpdateOperationsInput | string
   subtotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
   tax?: Prisma.FloatFieldUpdateOperationsInput | number
   total?: Prisma.FloatFieldUpdateOperationsInput | number
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -400,8 +458,11 @@ export type ReceiptUncheckedUpdateManyInput = {
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   items?: Prisma.StringFieldUpdateOperationsInput | string
   subtotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
   tax?: Prisma.FloatFieldUpdateOperationsInput | number
   total?: Prisma.FloatFieldUpdateOperationsInput | number
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   kitchenId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   restaurantId?: Prisma.StringFieldUpdateOperationsInput | string
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -427,8 +488,11 @@ export type ReceiptCountOrderByAggregateInput = {
   orderId?: Prisma.SortOrder
   items?: Prisma.SortOrder
   subtotal?: Prisma.SortOrder
+  discount?: Prisma.SortOrder
   tax?: Prisma.SortOrder
   total?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrder
   kitchenId?: Prisma.SortOrder
   restaurantId?: Prisma.SortOrder
   generatedAt?: Prisma.SortOrder
@@ -436,6 +500,7 @@ export type ReceiptCountOrderByAggregateInput = {
 
 export type ReceiptAvgOrderByAggregateInput = {
   subtotal?: Prisma.SortOrder
+  discount?: Prisma.SortOrder
   tax?: Prisma.SortOrder
   total?: Prisma.SortOrder
 }
@@ -445,8 +510,11 @@ export type ReceiptMaxOrderByAggregateInput = {
   orderId?: Prisma.SortOrder
   items?: Prisma.SortOrder
   subtotal?: Prisma.SortOrder
+  discount?: Prisma.SortOrder
   tax?: Prisma.SortOrder
   total?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrder
   kitchenId?: Prisma.SortOrder
   restaurantId?: Prisma.SortOrder
   generatedAt?: Prisma.SortOrder
@@ -457,8 +525,11 @@ export type ReceiptMinOrderByAggregateInput = {
   orderId?: Prisma.SortOrder
   items?: Prisma.SortOrder
   subtotal?: Prisma.SortOrder
+  discount?: Prisma.SortOrder
   tax?: Prisma.SortOrder
   total?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrder
   kitchenId?: Prisma.SortOrder
   restaurantId?: Prisma.SortOrder
   generatedAt?: Prisma.SortOrder
@@ -466,6 +537,7 @@ export type ReceiptMinOrderByAggregateInput = {
 
 export type ReceiptSumOrderByAggregateInput = {
   subtotal?: Prisma.SortOrder
+  discount?: Prisma.SortOrder
   tax?: Prisma.SortOrder
   total?: Prisma.SortOrder
 }
@@ -590,8 +662,11 @@ export type ReceiptCreateWithoutKitchenInput = {
   id?: string
   items: string
   subtotal: number
+  discount?: number
   tax: number
   total: number
+  paymentMethod?: $Enums.PaymentMethod | null
+  paidAt?: Date | string | null
   generatedAt?: Date | string
   order: Prisma.OrderCreateNestedOneWithoutReceiptInput
   restaurant: Prisma.RestaurantCreateNestedOneWithoutReceiptsInput
@@ -602,8 +677,11 @@ export type ReceiptUncheckedCreateWithoutKitchenInput = {
   orderId: string
   items: string
   subtotal: number
+  discount?: number
   tax: number
   total: number
+  paymentMethod?: $Enums.PaymentMethod | null
+  paidAt?: Date | string | null
   restaurantId: string
   generatedAt?: Date | string
 }
@@ -642,8 +720,11 @@ export type ReceiptScalarWhereInput = {
   orderId?: Prisma.StringFilter<"Receipt"> | string
   items?: Prisma.StringFilter<"Receipt"> | string
   subtotal?: Prisma.FloatFilter<"Receipt"> | number
+  discount?: Prisma.FloatFilter<"Receipt"> | number
   tax?: Prisma.FloatFilter<"Receipt"> | number
   total?: Prisma.FloatFilter<"Receipt"> | number
+  paymentMethod?: Prisma.EnumPaymentMethodNullableFilter<"Receipt"> | $Enums.PaymentMethod | null
+  paidAt?: Prisma.DateTimeNullableFilter<"Receipt"> | Date | string | null
   kitchenId?: Prisma.StringNullableFilter<"Receipt"> | string | null
   restaurantId?: Prisma.StringFilter<"Receipt"> | string
   generatedAt?: Prisma.DateTimeFilter<"Receipt"> | Date | string
@@ -653,8 +734,11 @@ export type ReceiptCreateWithoutRestaurantInput = {
   id?: string
   items: string
   subtotal: number
+  discount?: number
   tax: number
   total: number
+  paymentMethod?: $Enums.PaymentMethod | null
+  paidAt?: Date | string | null
   generatedAt?: Date | string
   kitchen?: Prisma.UserCreateNestedOneWithoutReceiptsInput
   order: Prisma.OrderCreateNestedOneWithoutReceiptInput
@@ -665,8 +749,11 @@ export type ReceiptUncheckedCreateWithoutRestaurantInput = {
   orderId: string
   items: string
   subtotal: number
+  discount?: number
   tax: number
   total: number
+  paymentMethod?: $Enums.PaymentMethod | null
+  paidAt?: Date | string | null
   kitchenId?: string | null
   generatedAt?: Date | string
 }
@@ -701,8 +788,11 @@ export type ReceiptCreateWithoutOrderInput = {
   id?: string
   items: string
   subtotal: number
+  discount?: number
   tax: number
   total: number
+  paymentMethod?: $Enums.PaymentMethod | null
+  paidAt?: Date | string | null
   generatedAt?: Date | string
   kitchen?: Prisma.UserCreateNestedOneWithoutReceiptsInput
   restaurant: Prisma.RestaurantCreateNestedOneWithoutReceiptsInput
@@ -712,8 +802,11 @@ export type ReceiptUncheckedCreateWithoutOrderInput = {
   id?: string
   items: string
   subtotal: number
+  discount?: number
   tax: number
   total: number
+  paymentMethod?: $Enums.PaymentMethod | null
+  paidAt?: Date | string | null
   kitchenId?: string | null
   restaurantId: string
   generatedAt?: Date | string
@@ -739,8 +832,11 @@ export type ReceiptUpdateWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   items?: Prisma.StringFieldUpdateOperationsInput | string
   subtotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
   tax?: Prisma.FloatFieldUpdateOperationsInput | number
   total?: Prisma.FloatFieldUpdateOperationsInput | number
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   kitchen?: Prisma.UserUpdateOneWithoutReceiptsNestedInput
   restaurant?: Prisma.RestaurantUpdateOneRequiredWithoutReceiptsNestedInput
@@ -750,8 +846,11 @@ export type ReceiptUncheckedUpdateWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   items?: Prisma.StringFieldUpdateOperationsInput | string
   subtotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
   tax?: Prisma.FloatFieldUpdateOperationsInput | number
   total?: Prisma.FloatFieldUpdateOperationsInput | number
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   kitchenId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   restaurantId?: Prisma.StringFieldUpdateOperationsInput | string
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -762,8 +861,11 @@ export type ReceiptCreateManyKitchenInput = {
   orderId: string
   items: string
   subtotal: number
+  discount?: number
   tax: number
   total: number
+  paymentMethod?: $Enums.PaymentMethod | null
+  paidAt?: Date | string | null
   restaurantId: string
   generatedAt?: Date | string
 }
@@ -772,8 +874,11 @@ export type ReceiptUpdateWithoutKitchenInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   items?: Prisma.StringFieldUpdateOperationsInput | string
   subtotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
   tax?: Prisma.FloatFieldUpdateOperationsInput | number
   total?: Prisma.FloatFieldUpdateOperationsInput | number
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   order?: Prisma.OrderUpdateOneRequiredWithoutReceiptNestedInput
   restaurant?: Prisma.RestaurantUpdateOneRequiredWithoutReceiptsNestedInput
@@ -784,8 +889,11 @@ export type ReceiptUncheckedUpdateWithoutKitchenInput = {
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   items?: Prisma.StringFieldUpdateOperationsInput | string
   subtotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
   tax?: Prisma.FloatFieldUpdateOperationsInput | number
   total?: Prisma.FloatFieldUpdateOperationsInput | number
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   restaurantId?: Prisma.StringFieldUpdateOperationsInput | string
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -795,8 +903,11 @@ export type ReceiptUncheckedUpdateManyWithoutKitchenInput = {
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   items?: Prisma.StringFieldUpdateOperationsInput | string
   subtotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
   tax?: Prisma.FloatFieldUpdateOperationsInput | number
   total?: Prisma.FloatFieldUpdateOperationsInput | number
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   restaurantId?: Prisma.StringFieldUpdateOperationsInput | string
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -806,8 +917,11 @@ export type ReceiptCreateManyRestaurantInput = {
   orderId: string
   items: string
   subtotal: number
+  discount?: number
   tax: number
   total: number
+  paymentMethod?: $Enums.PaymentMethod | null
+  paidAt?: Date | string | null
   kitchenId?: string | null
   generatedAt?: Date | string
 }
@@ -816,8 +930,11 @@ export type ReceiptUpdateWithoutRestaurantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   items?: Prisma.StringFieldUpdateOperationsInput | string
   subtotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
   tax?: Prisma.FloatFieldUpdateOperationsInput | number
   total?: Prisma.FloatFieldUpdateOperationsInput | number
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   kitchen?: Prisma.UserUpdateOneWithoutReceiptsNestedInput
   order?: Prisma.OrderUpdateOneRequiredWithoutReceiptNestedInput
@@ -828,8 +945,11 @@ export type ReceiptUncheckedUpdateWithoutRestaurantInput = {
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   items?: Prisma.StringFieldUpdateOperationsInput | string
   subtotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
   tax?: Prisma.FloatFieldUpdateOperationsInput | number
   total?: Prisma.FloatFieldUpdateOperationsInput | number
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   kitchenId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -839,8 +959,11 @@ export type ReceiptUncheckedUpdateManyWithoutRestaurantInput = {
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
   items?: Prisma.StringFieldUpdateOperationsInput | string
   subtotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
   tax?: Prisma.FloatFieldUpdateOperationsInput | number
   total?: Prisma.FloatFieldUpdateOperationsInput | number
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   kitchenId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -852,8 +975,11 @@ export type ReceiptSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   orderId?: boolean
   items?: boolean
   subtotal?: boolean
+  discount?: boolean
   tax?: boolean
   total?: boolean
+  paymentMethod?: boolean
+  paidAt?: boolean
   kitchenId?: boolean
   restaurantId?: boolean
   generatedAt?: boolean
@@ -867,8 +993,11 @@ export type ReceiptSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   orderId?: boolean
   items?: boolean
   subtotal?: boolean
+  discount?: boolean
   tax?: boolean
   total?: boolean
+  paymentMethod?: boolean
+  paidAt?: boolean
   kitchenId?: boolean
   restaurantId?: boolean
   generatedAt?: boolean
@@ -882,8 +1011,11 @@ export type ReceiptSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   orderId?: boolean
   items?: boolean
   subtotal?: boolean
+  discount?: boolean
   tax?: boolean
   total?: boolean
+  paymentMethod?: boolean
+  paidAt?: boolean
   kitchenId?: boolean
   restaurantId?: boolean
   generatedAt?: boolean
@@ -897,14 +1029,17 @@ export type ReceiptSelectScalar = {
   orderId?: boolean
   items?: boolean
   subtotal?: boolean
+  discount?: boolean
   tax?: boolean
   total?: boolean
+  paymentMethod?: boolean
+  paidAt?: boolean
   kitchenId?: boolean
   restaurantId?: boolean
   generatedAt?: boolean
 }
 
-export type ReceiptOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderId" | "items" | "subtotal" | "tax" | "total" | "kitchenId" | "restaurantId" | "generatedAt", ExtArgs["result"]["receipt"]>
+export type ReceiptOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderId" | "items" | "subtotal" | "discount" | "tax" | "total" | "paymentMethod" | "paidAt" | "kitchenId" | "restaurantId" | "generatedAt", ExtArgs["result"]["receipt"]>
 export type ReceiptInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   kitchen?: boolean | Prisma.Receipt$kitchenArgs<ExtArgs>
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
@@ -933,8 +1068,11 @@ export type $ReceiptPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     orderId: string
     items: string
     subtotal: number
+    discount: number
     tax: number
     total: number
+    paymentMethod: $Enums.PaymentMethod | null
+    paidAt: Date | null
     kitchenId: string | null
     restaurantId: string
     generatedAt: Date
@@ -1368,8 +1506,11 @@ export interface ReceiptFieldRefs {
   readonly orderId: Prisma.FieldRef<"Receipt", 'String'>
   readonly items: Prisma.FieldRef<"Receipt", 'String'>
   readonly subtotal: Prisma.FieldRef<"Receipt", 'Float'>
+  readonly discount: Prisma.FieldRef<"Receipt", 'Float'>
   readonly tax: Prisma.FieldRef<"Receipt", 'Float'>
   readonly total: Prisma.FieldRef<"Receipt", 'Float'>
+  readonly paymentMethod: Prisma.FieldRef<"Receipt", 'PaymentMethod'>
+  readonly paidAt: Prisma.FieldRef<"Receipt", 'DateTime'>
   readonly kitchenId: Prisma.FieldRef<"Receipt", 'String'>
   readonly restaurantId: Prisma.FieldRef<"Receipt", 'String'>
   readonly generatedAt: Prisma.FieldRef<"Receipt", 'DateTime'>

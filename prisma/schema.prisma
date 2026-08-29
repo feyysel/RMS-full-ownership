@@ -99,28 +99,40 @@ model MenuItem {
 }
 
 model Order {
-  id              String      @id @default(cuid())
-  orderNumber     Int
-  type            OrderType   @default(DINE_IN)
-  status          OrderStatus @default(PENDING)
-  note            String?
-  total           Float       @default(0)
-  collectedAmount Float?
-  tip             Float?
-  tableId         String?
-  tableLabel      String?
-  sourceTableCode String?
-  waiterId        String?
-  cashierId       String?
-  restaurantId    String
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
-  restaurant      Restaurant  @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
-  table           Table?      @relation(fields: [tableId], references: [id])
-  waiter          User?       @relation("OrderWaiter", fields: [waiterId], references: [id])
-  cashier         User?       @relation("OrderCashier", fields: [cashierId], references: [id])
-  items           OrderItem[]
-  receipt         Receipt?
+  id               String         @id @default(cuid())
+  orderNumber      Int
+  type             OrderType      @default(DINE_IN)
+  status           OrderStatus    @default(PENDING)
+  note             String?
+  total            Float          @default(0)
+  discount         Float          @default(0)
+  discountReason   String?
+  paymentMethod    PaymentMethod?
+  paidAt           DateTime?
+  collectedAmount  Float?
+  tip              Float?
+  voided           Boolean        @default(false)
+  voidReason       String?
+  voidedAt         DateTime?
+  voidedBy         String?
+  refunded         Boolean        @default(false)
+  refundReason     String?
+  refundedAt       DateTime?
+  refundedBy       String?
+  tableId          String?
+  tableLabel       String?
+  sourceTableCode  String?
+  waiterId         String?
+  cashierId        String?
+  restaurantId     String
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  restaurant       Restaurant     @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  table            Table?         @relation(fields: [tableId], references: [id])
+  waiter           User?          @relation("OrderWaiter", fields: [waiterId], references: [id])
+  cashier          User?          @relation("OrderCashier", fields: [cashierId], references: [id])
+  items            OrderItem[]
+  receipt          Receipt?
 
   @@unique([restaurantId, orderNumber])
   @@index([restaurantId, status, createdAt])
@@ -148,18 +160,21 @@ model OrderItem {
 }
 
 model Receipt {
-  id           String     @id @default(cuid())
-  orderId      String     @unique
-  items        String
-  subtotal     Float
-  tax          Float
-  total        Float
-  kitchenId    String?
-  restaurantId String
-  generatedAt  DateTime   @default(now())
-  kitchen      User?      @relation("ReceiptKitchen", fields: [kitchenId], references: [id])
-  order        Order      @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  id            String         @id @default(cuid())
+  orderId       String         @unique
+  items         String
+  subtotal      Float
+  discount      Float          @default(0)
+  tax           Float
+  total         Float
+  paymentMethod PaymentMethod?
+  paidAt        DateTime?
+  kitchenId     String?
+  restaurantId  String
+  generatedAt   DateTime       @default(now())
+  kitchen       User?          @relation("ReceiptKitchen", fields: [kitchenId], references: [id])
+  order         Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  restaurant    Restaurant     @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
 
   @@index([restaurantId])
   @@index([restaurantId, generatedAt])
@@ -243,6 +258,13 @@ enum OrderItemStatus {
 enum OrderType {
   DINE_IN
   TAKEAWAY
+}
+
+enum PaymentMethod {
+  CASH
+  CARD
+  CARD_ONLINE
+  OTHER
 }
 
 enum BellStatus {

@@ -23,7 +23,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
-import { Label, Textarea, Input } from "@/components/ui/input";
+import { Label, Textarea, Input, Select } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn, formatCurrency, formatTime, timeAgo } from "@/lib/utils";
 import { useRealtime } from "@/components/realtime/use-realtime";
@@ -41,7 +41,7 @@ type WaiterOrder = {
   items: { id: string; name: string; quantity: number; price: number }[];
   table: { number: number; code: string } | null;
   waiter: { id: string; name: string } | null;
-  receipt: { subtotal: number; tax: number; total: number } | null;
+  receipt: { subtotal: number; tax: number; total: number; discount?: number } | null;
 };
 
 type WaiterTable = {
@@ -759,22 +759,41 @@ function CollectPaymentModal({
   onClose: () => void;
   onCollected: () => void;
 }) {
-  const [amount, setAmount] = React.useState("");
+  const [cashReceived, setCashReceived] = React.useState("");
+  const [paymentMethod, setPaymentMethod] = React.useState("CASH");
+  const [discount, setDiscount] = React.useState("");
+  const [discountReason, setDiscountReason] = React.useState("");
   const [submitting, setSubmitting] = React.useState(false);
 
-  const payable = order ? (order.receipt?.total ?? order.total) : 0;
-  const parsed = Number(amount);
-  const hasAmount = amount.trim() !== "" && Number.isFinite(parsed) && parsed >= 0;
-  const tip = hasAmount ? Math.max(0, Math.round((parsed - payable) * 100) / 100) : 0;
+  const subtotal = order
+    ? (order.receipt?.subtotal ?? order.items.reduce((s, i) => s + i.price * i.quantity, 0))
+    : 0;
+  const discountValue = Math.min(Math.max(Number(discount) || 0, 0), subtotal);
+  const taxable = Math.max(0, subtotal - discountValue);
+  const tax = Math.round(taxable * 0.08 * 100) / 100;
+  const total = Math.round((taxable + tax) * 100) / 100;
+  const isCash = paymentMethod === "CASH";
+  const tendered = Number(cashReceived) || 0;
+  const hasTendered = isCash ? cashReceived.trim() !== "" && Number.isFinite(tendered) && tendered >= 0 : true;
+  const collected = isCash ? tendered : total;
+  const change = isCash && tendered > 0 ? Math.max(0, Math.round((tendered - total) * 100) / 100) : null;
+  const tip = collected > 0 && collected >= total ? Math.max(0, Math.round((collected - total) * 100) / 100) : 0;
+  const canSubmit = !!order && hasTendered && (isCash ? tendered >= total : true);
 
   async function complete() {
-    if (!order || !hasAmount) return;
+    if (!order || !canSubmit) return;
     setSubmitting(true);
     try {
       const res = await fetch(`/api/orders/${order.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "complete", collectedAmount: parsed }),
+        body: JSON.stringify({
+          action: "complete",
+          collectedAmount: collected,
+          discount: discountValue,
+          discountReason: discountReason.trim() || null,
+          paymentMethod,
+        }),
       });
       const d = await res.json();
       if (!res.ok) {
@@ -782,7 +801,7 @@ function CollectPaymentModal({
         return;
       }
       toast.success(
-        `Order #${order.orderNumber} completed · tip ${formatCurrency(tip)}`
+        `Order #${order.orderNumber} paid ${formatCurrency(total)} · tip ${formatCurrency(tip)}`
       );
       onCollected();
     } catch {
@@ -797,7 +816,7 @@ function CollectPaymentModal({
       open={order !== null}
       onClose={onClose}
       title={order ? `Collect payment · #${order.orderNumber}` : "Collect payment"}
-      description="Enter the cash the customer handed you — the tip is calculated automatically."
+      description="Runs after the customer is served and finishes eating."
     >
       {order && (
         <>
@@ -809,39 +828,103 @@ function CollectPaymentModal({
                 </p>
                 <p className="text-xs text-zinc-500">
                   {order.items.reduce((s, i) => s + i.quantity, 0)} item(s) ·{" "}
-                  {formatCurrency(payable)}
+                  {formatCurrency(subtotal)}
                 </p>
               </div>
               <Badge tone="teal">SERVED</Badge>
             </div>
-            <div className="mt-3 flex items-end justify-between border-t border-zinc-200 dark:border-white/[0.06] pt-3">
-              <p className="text-xs text-zinc-500 dark:text-zinc-400">Customer pays (incl. tax)</p>
-              <p className="font-display text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
-                {formatCurrency(payable)}
-              </p>
+            <div className="mt-3 space-y-1 border-t border-zinc-200 dark:border-white/[0.06] pt-3 text-sm">
+              <div className="flex justify-between text-zinc-500">
+                <span>Subtotal</span>
+                <span>{formatCurrency(subtotal)}</span>
+              </div>
+              {discountValue > 0 && (
+                <div className="flex justify-between text-rose-600">
+                  <span>Discount{discountReason.trim() ? ` (${discountReason.trim()})` : ""}</span>
+                  <span>−{formatCurrency(discountValue)}</span>
+                </div>
+              )}
+              <div className="flex justify-between text-zinc-500">
+                <span>Tax (8%)</span>
+                <span>{formatCurrency(tax)}</span>
+              </div>
+              <div className="flex items-end justify-between pt-1">
+                <p className="text-xs text-zinc-500 dark:text-zinc-400">Customer pays (incl. tax)</p>
+                <p className="font-display text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
+                  {formatCurrency(total)}
+                </p>
+              </div>
             </div>
           </div>
 
-          <div>
-            <Label htmlFor="wp-amount">Cash received from customer</Label>
-            <Input
-              id="wp-amount"
-              type="number"
-              inputMode="decimal"
-              min="0"
-              step="0.01"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              placeholder="0.00"
-              autoFocus
-            />
-          </div>
+          <div className="space-y-3">
+            <div>
+              <Label htmlFor="wp-discount">Discount (ETB)</Label>
+              <Input
+                id="wp-discount"
+                type="number"
+                min={0}
+                step="0.01"
+                value={discount}
+                onChange={(e) => setDiscount(e.target.value)}
+                placeholder="0.00"
+              />
+            </div>
+            <div>
+              <Label htmlFor="wp-reason">Discount reason</Label>
+              <Input
+                id="wp-reason"
+                value={discountReason}
+                onChange={(e) => setDiscountReason(e.target.value)}
+                placeholder="e.g. loyalty, complaint, promo"
+              />
+            </div>
+            <div>
+              <Label htmlFor="wp-method">Payment method</Label>
+              <Select id="wp-method" value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
+                <option value="CASH">Cash</option>
+                <option value="CARD">Card (POS)</option>
+                <option value="CARD_ONLINE">Online card</option>
+                <option value="OTHER">Other</option>
+              </Select>
+            </div>
+            {isCash && (
+              <div>
+                <Label htmlFor="wp-cash">Cash tendered</Label>
+                <Input
+                  id="wp-cash"
+                  type="number"
+                  inputMode="decimal"
+                  min={0}
+                  step="0.01"
+                  value={cashReceived}
+                  onChange={(e) => setCashReceived(e.target.value)}
+                  placeholder="0.00"
+                  autoFocus
+                />
+                {hasTendered && tendered < total && (
+                  <p className="mt-1 text-xs text-rose-500">
+                    Cash tendered is less than {formatCurrency(total)}.
+                  </p>
+                )}
+              </div>
+            )}
 
-          <div className="mt-4 flex items-center justify-between rounded-xl bg-gold/[0.07] px-4 py-3 ring-1 ring-gold/20">
-            <p className="text-sm text-zinc-600 dark:text-zinc-300">Your tip</p>
-            <p className="font-display text-xl font-semibold text-gold-dark dark:text-gold-light">
-              {formatCurrency(tip)}
-            </p>
+            {change !== null && (
+              <div className="flex items-center justify-between rounded-xl bg-emerald-50 px-4 py-3 ring-1 ring-emerald-200 dark:bg-emerald-500/10 dark:ring-emerald-500/20">
+                <p className="text-sm text-emerald-700 dark:text-emerald-200">Change</p>
+                <p className="font-display text-xl font-semibold text-emerald-700 dark:text-emerald-200">
+                  {formatCurrency(change)}
+                </p>
+              </div>
+            )}
+
+            <div className="flex items-center justify-between rounded-xl bg-gold/[0.07] px-4 py-3 ring-1 ring-gold/20">
+              <p className="text-sm text-zinc-600 dark:text-zinc-300">Your tip</p>
+              <p className="font-display text-xl font-semibold text-gold-dark dark:text-gold-light">
+                {formatCurrency(tip)}
+              </p>
+            </div>
           </div>
 
           <div className="mt-5">
@@ -849,14 +932,14 @@ function CollectPaymentModal({
               size="lg"
               className="w-full"
               onClick={() => complete()}
-              disabled={submitting || !hasAmount}
+              disabled={submitting || !canSubmit}
             >
               {submitting ? (
                 <Loader2 className="h-5 w-5 animate-spin" />
               ) : (
                 <CheckCircle2 className="h-5 w-5" />
               )}
-              Complete with {hasAmount ? formatCurrency(parsed) : "payment"}
+              Collect {formatCurrency(total)}
             </Button>
           </div>
         </>

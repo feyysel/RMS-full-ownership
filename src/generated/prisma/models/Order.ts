@@ -29,6 +29,7 @@ export type AggregateOrder = {
 export type OrderAvgAggregateOutputType = {
   orderNumber: number | null
   total: number | null
+  discount: number | null
   collectedAmount: number | null
   tip: number | null
 }
@@ -36,6 +37,7 @@ export type OrderAvgAggregateOutputType = {
 export type OrderSumAggregateOutputType = {
   orderNumber: number | null
   total: number | null
+  discount: number | null
   collectedAmount: number | null
   tip: number | null
 }
@@ -47,8 +49,20 @@ export type OrderMinAggregateOutputType = {
   status: $Enums.OrderStatus | null
   note: string | null
   total: number | null
+  discount: number | null
+  discountReason: string | null
+  paymentMethod: $Enums.PaymentMethod | null
+  paidAt: Date | null
   collectedAmount: number | null
   tip: number | null
+  voided: boolean | null
+  voidReason: string | null
+  voidedAt: Date | null
+  voidedBy: string | null
+  refunded: boolean | null
+  refundReason: string | null
+  refundedAt: Date | null
+  refundedBy: string | null
   tableId: string | null
   tableLabel: string | null
   sourceTableCode: string | null
@@ -66,8 +80,20 @@ export type OrderMaxAggregateOutputType = {
   status: $Enums.OrderStatus | null
   note: string | null
   total: number | null
+  discount: number | null
+  discountReason: string | null
+  paymentMethod: $Enums.PaymentMethod | null
+  paidAt: Date | null
   collectedAmount: number | null
   tip: number | null
+  voided: boolean | null
+  voidReason: string | null
+  voidedAt: Date | null
+  voidedBy: string | null
+  refunded: boolean | null
+  refundReason: string | null
+  refundedAt: Date | null
+  refundedBy: string | null
   tableId: string | null
   tableLabel: string | null
   sourceTableCode: string | null
@@ -85,8 +111,20 @@ export type OrderCountAggregateOutputType = {
   status: number
   note: number
   total: number
+  discount: number
+  discountReason: number
+  paymentMethod: number
+  paidAt: number
   collectedAmount: number
   tip: number
+  voided: number
+  voidReason: number
+  voidedAt: number
+  voidedBy: number
+  refunded: number
+  refundReason: number
+  refundedAt: number
+  refundedBy: number
   tableId: number
   tableLabel: number
   sourceTableCode: number
@@ -102,6 +140,7 @@ export type OrderCountAggregateOutputType = {
 export type OrderAvgAggregateInputType = {
   orderNumber?: true
   total?: true
+  discount?: true
   collectedAmount?: true
   tip?: true
 }
@@ -109,6 +148,7 @@ export type OrderAvgAggregateInputType = {
 export type OrderSumAggregateInputType = {
   orderNumber?: true
   total?: true
+  discount?: true
   collectedAmount?: true
   tip?: true
 }
@@ -120,8 +160,20 @@ export type OrderMinAggregateInputType = {
   status?: true
   note?: true
   total?: true
+  discount?: true
+  discountReason?: true
+  paymentMethod?: true
+  paidAt?: true
   collectedAmount?: true
   tip?: true
+  voided?: true
+  voidReason?: true
+  voidedAt?: true
+  voidedBy?: true
+  refunded?: true
+  refundReason?: true
+  refundedAt?: true
+  refundedBy?: true
   tableId?: true
   tableLabel?: true
   sourceTableCode?: true
@@ -139,8 +191,20 @@ export type OrderMaxAggregateInputType = {
   status?: true
   note?: true
   total?: true
+  discount?: true
+  discountReason?: true
+  paymentMethod?: true
+  paidAt?: true
   collectedAmount?: true
   tip?: true
+  voided?: true
+  voidReason?: true
+  voidedAt?: true
+  voidedBy?: true
+  refunded?: true
+  refundReason?: true
+  refundedAt?: true
+  refundedBy?: true
   tableId?: true
   tableLabel?: true
   sourceTableCode?: true
@@ -158,8 +222,20 @@ export type OrderCountAggregateInputType = {
   status?: true
   note?: true
   total?: true
+  discount?: true
+  discountReason?: true
+  paymentMethod?: true
+  paidAt?: true
   collectedAmount?: true
   tip?: true
+  voided?: true
+  voidReason?: true
+  voidedAt?: true
+  voidedBy?: true
+  refunded?: true
+  refundReason?: true
+  refundedAt?: true
+  refundedBy?: true
   tableId?: true
   tableLabel?: true
   sourceTableCode?: true
@@ -264,8 +340,20 @@ export type OrderGroupByOutputType = {
   status: $Enums.OrderStatus
   note: string | null
   total: number
+  discount: number
+  discountReason: string | null
+  paymentMethod: $Enums.PaymentMethod | null
+  paidAt: Date | null
   collectedAmount: number | null
   tip: number | null
+  voided: boolean
+  voidReason: string | null
+  voidedAt: Date | null
+  voidedBy: string | null
+  refunded: boolean
+  refundReason: string | null
+  refundedAt: Date | null
+  refundedBy: string | null
   tableId: string | null
   tableLabel: string | null
   sourceTableCode: string | null
@@ -306,8 +394,20 @@ export type OrderWhereInput = {
   status?: Prisma.EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
   note?: Prisma.StringNullableFilter<"Order"> | string | null
   total?: Prisma.FloatFilter<"Order"> | number
+  discount?: Prisma.FloatFilter<"Order"> | number
+  discountReason?: Prisma.StringNullableFilter<"Order"> | string | null
+  paymentMethod?: Prisma.EnumPaymentMethodNullableFilter<"Order"> | $Enums.PaymentMethod | null
+  paidAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   collectedAmount?: Prisma.FloatNullableFilter<"Order"> | number | null
   tip?: Prisma.FloatNullableFilter<"Order"> | number | null
+  voided?: Prisma.BoolFilter<"Order"> | boolean
+  voidReason?: Prisma.StringNullableFilter<"Order"> | string | null
+  voidedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
+  voidedBy?: Prisma.StringNullableFilter<"Order"> | string | null
+  refunded?: Prisma.BoolFilter<"Order"> | boolean
+  refundReason?: Prisma.StringNullableFilter<"Order"> | string | null
+  refundedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
+  refundedBy?: Prisma.StringNullableFilter<"Order"> | string | null
   tableId?: Prisma.StringNullableFilter<"Order"> | string | null
   tableLabel?: Prisma.StringNullableFilter<"Order"> | string | null
   sourceTableCode?: Prisma.StringNullableFilter<"Order"> | string | null
@@ -331,8 +431,20 @@ export type OrderOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   note?: Prisma.SortOrderInput | Prisma.SortOrder
   total?: Prisma.SortOrder
+  discount?: Prisma.SortOrder
+  discountReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrderInput | Prisma.SortOrder
+  paidAt?: Prisma.SortOrderInput | Prisma.SortOrder
   collectedAmount?: Prisma.SortOrderInput | Prisma.SortOrder
   tip?: Prisma.SortOrderInput | Prisma.SortOrder
+  voided?: Prisma.SortOrder
+  voidReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  voidedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  voidedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  refunded?: Prisma.SortOrder
+  refundReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  refundedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  refundedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   tableId?: Prisma.SortOrderInput | Prisma.SortOrder
   tableLabel?: Prisma.SortOrderInput | Prisma.SortOrder
   sourceTableCode?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -360,8 +472,20 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
   note?: Prisma.StringNullableFilter<"Order"> | string | null
   total?: Prisma.FloatFilter<"Order"> | number
+  discount?: Prisma.FloatFilter<"Order"> | number
+  discountReason?: Prisma.StringNullableFilter<"Order"> | string | null
+  paymentMethod?: Prisma.EnumPaymentMethodNullableFilter<"Order"> | $Enums.PaymentMethod | null
+  paidAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   collectedAmount?: Prisma.FloatNullableFilter<"Order"> | number | null
   tip?: Prisma.FloatNullableFilter<"Order"> | number | null
+  voided?: Prisma.BoolFilter<"Order"> | boolean
+  voidReason?: Prisma.StringNullableFilter<"Order"> | string | null
+  voidedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
+  voidedBy?: Prisma.StringNullableFilter<"Order"> | string | null
+  refunded?: Prisma.BoolFilter<"Order"> | boolean
+  refundReason?: Prisma.StringNullableFilter<"Order"> | string | null
+  refundedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
+  refundedBy?: Prisma.StringNullableFilter<"Order"> | string | null
   tableId?: Prisma.StringNullableFilter<"Order"> | string | null
   tableLabel?: Prisma.StringNullableFilter<"Order"> | string | null
   sourceTableCode?: Prisma.StringNullableFilter<"Order"> | string | null
@@ -385,8 +509,20 @@ export type OrderOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   note?: Prisma.SortOrderInput | Prisma.SortOrder
   total?: Prisma.SortOrder
+  discount?: Prisma.SortOrder
+  discountReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrderInput | Prisma.SortOrder
+  paidAt?: Prisma.SortOrderInput | Prisma.SortOrder
   collectedAmount?: Prisma.SortOrderInput | Prisma.SortOrder
   tip?: Prisma.SortOrderInput | Prisma.SortOrder
+  voided?: Prisma.SortOrder
+  voidReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  voidedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  voidedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  refunded?: Prisma.SortOrder
+  refundReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  refundedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  refundedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   tableId?: Prisma.SortOrderInput | Prisma.SortOrder
   tableLabel?: Prisma.SortOrderInput | Prisma.SortOrder
   sourceTableCode?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -412,8 +548,20 @@ export type OrderScalarWhereWithAggregatesInput = {
   status?: Prisma.EnumOrderStatusWithAggregatesFilter<"Order"> | $Enums.OrderStatus
   note?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   total?: Prisma.FloatWithAggregatesFilter<"Order"> | number
+  discount?: Prisma.FloatWithAggregatesFilter<"Order"> | number
+  discountReason?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  paymentMethod?: Prisma.EnumPaymentMethodNullableWithAggregatesFilter<"Order"> | $Enums.PaymentMethod | null
+  paidAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
   collectedAmount?: Prisma.FloatNullableWithAggregatesFilter<"Order"> | number | null
   tip?: Prisma.FloatNullableWithAggregatesFilter<"Order"> | number | null
+  voided?: Prisma.BoolWithAggregatesFilter<"Order"> | boolean
+  voidReason?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  voidedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
+  voidedBy?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  refunded?: Prisma.BoolWithAggregatesFilter<"Order"> | boolean
+  refundReason?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  refundedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
+  refundedBy?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   tableId?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   tableLabel?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   sourceTableCode?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
@@ -431,8 +579,20 @@ export type OrderCreateInput = {
   status?: $Enums.OrderStatus
   note?: string | null
   total?: number
+  discount?: number
+  discountReason?: string | null
+  paymentMethod?: $Enums.PaymentMethod | null
+  paidAt?: Date | string | null
   collectedAmount?: number | null
   tip?: number | null
+  voided?: boolean
+  voidReason?: string | null
+  voidedAt?: Date | string | null
+  voidedBy?: string | null
+  refunded?: boolean
+  refundReason?: string | null
+  refundedAt?: Date | string | null
+  refundedBy?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
   createdAt?: Date | string
@@ -452,8 +612,20 @@ export type OrderUncheckedCreateInput = {
   status?: $Enums.OrderStatus
   note?: string | null
   total?: number
+  discount?: number
+  discountReason?: string | null
+  paymentMethod?: $Enums.PaymentMethod | null
+  paidAt?: Date | string | null
   collectedAmount?: number | null
   tip?: number | null
+  voided?: boolean
+  voidReason?: string | null
+  voidedAt?: Date | string | null
+  voidedBy?: string | null
+  refunded?: boolean
+  refundReason?: string | null
+  refundedAt?: Date | string | null
+  refundedBy?: string | null
   tableId?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
@@ -473,8 +645,20 @@ export type OrderUpdateInput = {
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   total?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
+  discountReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   collectedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tip?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  voided?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  voidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -494,8 +678,20 @@ export type OrderUncheckedUpdateInput = {
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   total?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
+  discountReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   collectedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tip?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  voided?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  voidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -515,8 +711,20 @@ export type OrderCreateManyInput = {
   status?: $Enums.OrderStatus
   note?: string | null
   total?: number
+  discount?: number
+  discountReason?: string | null
+  paymentMethod?: $Enums.PaymentMethod | null
+  paidAt?: Date | string | null
   collectedAmount?: number | null
   tip?: number | null
+  voided?: boolean
+  voidReason?: string | null
+  voidedAt?: Date | string | null
+  voidedBy?: string | null
+  refunded?: boolean
+  refundReason?: string | null
+  refundedAt?: Date | string | null
+  refundedBy?: string | null
   tableId?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
@@ -534,8 +742,20 @@ export type OrderUpdateManyMutationInput = {
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   total?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
+  discountReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   collectedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tip?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  voided?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  voidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -549,8 +769,20 @@ export type OrderUncheckedUpdateManyInput = {
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   total?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
+  discountReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   collectedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tip?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  voided?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  voidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -583,8 +815,20 @@ export type OrderCountOrderByAggregateInput = {
   status?: Prisma.SortOrder
   note?: Prisma.SortOrder
   total?: Prisma.SortOrder
+  discount?: Prisma.SortOrder
+  discountReason?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrder
   collectedAmount?: Prisma.SortOrder
   tip?: Prisma.SortOrder
+  voided?: Prisma.SortOrder
+  voidReason?: Prisma.SortOrder
+  voidedAt?: Prisma.SortOrder
+  voidedBy?: Prisma.SortOrder
+  refunded?: Prisma.SortOrder
+  refundReason?: Prisma.SortOrder
+  refundedAt?: Prisma.SortOrder
+  refundedBy?: Prisma.SortOrder
   tableId?: Prisma.SortOrder
   tableLabel?: Prisma.SortOrder
   sourceTableCode?: Prisma.SortOrder
@@ -598,6 +842,7 @@ export type OrderCountOrderByAggregateInput = {
 export type OrderAvgOrderByAggregateInput = {
   orderNumber?: Prisma.SortOrder
   total?: Prisma.SortOrder
+  discount?: Prisma.SortOrder
   collectedAmount?: Prisma.SortOrder
   tip?: Prisma.SortOrder
 }
@@ -609,8 +854,20 @@ export type OrderMaxOrderByAggregateInput = {
   status?: Prisma.SortOrder
   note?: Prisma.SortOrder
   total?: Prisma.SortOrder
+  discount?: Prisma.SortOrder
+  discountReason?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrder
   collectedAmount?: Prisma.SortOrder
   tip?: Prisma.SortOrder
+  voided?: Prisma.SortOrder
+  voidReason?: Prisma.SortOrder
+  voidedAt?: Prisma.SortOrder
+  voidedBy?: Prisma.SortOrder
+  refunded?: Prisma.SortOrder
+  refundReason?: Prisma.SortOrder
+  refundedAt?: Prisma.SortOrder
+  refundedBy?: Prisma.SortOrder
   tableId?: Prisma.SortOrder
   tableLabel?: Prisma.SortOrder
   sourceTableCode?: Prisma.SortOrder
@@ -628,8 +885,20 @@ export type OrderMinOrderByAggregateInput = {
   status?: Prisma.SortOrder
   note?: Prisma.SortOrder
   total?: Prisma.SortOrder
+  discount?: Prisma.SortOrder
+  discountReason?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrder
   collectedAmount?: Prisma.SortOrder
   tip?: Prisma.SortOrder
+  voided?: Prisma.SortOrder
+  voidReason?: Prisma.SortOrder
+  voidedAt?: Prisma.SortOrder
+  voidedBy?: Prisma.SortOrder
+  refunded?: Prisma.SortOrder
+  refundReason?: Prisma.SortOrder
+  refundedAt?: Prisma.SortOrder
+  refundedBy?: Prisma.SortOrder
   tableId?: Prisma.SortOrder
   tableLabel?: Prisma.SortOrder
   sourceTableCode?: Prisma.SortOrder
@@ -643,6 +912,7 @@ export type OrderMinOrderByAggregateInput = {
 export type OrderSumOrderByAggregateInput = {
   orderNumber?: Prisma.SortOrder
   total?: Prisma.SortOrder
+  discount?: Prisma.SortOrder
   collectedAmount?: Prisma.SortOrder
   tip?: Prisma.SortOrder
 }
@@ -828,6 +1098,14 @@ export type EnumOrderStatusFieldUpdateOperationsInput = {
   set?: $Enums.OrderStatus
 }
 
+export type NullableEnumPaymentMethodFieldUpdateOperationsInput = {
+  set?: $Enums.PaymentMethod | null
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
+}
+
 export type NullableFloatFieldUpdateOperationsInput = {
   set?: number | null
   increment?: number
@@ -871,8 +1149,20 @@ export type OrderCreateWithoutWaiterInput = {
   status?: $Enums.OrderStatus
   note?: string | null
   total?: number
+  discount?: number
+  discountReason?: string | null
+  paymentMethod?: $Enums.PaymentMethod | null
+  paidAt?: Date | string | null
   collectedAmount?: number | null
   tip?: number | null
+  voided?: boolean
+  voidReason?: string | null
+  voidedAt?: Date | string | null
+  voidedBy?: string | null
+  refunded?: boolean
+  refundReason?: string | null
+  refundedAt?: Date | string | null
+  refundedBy?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
   createdAt?: Date | string
@@ -891,8 +1181,20 @@ export type OrderUncheckedCreateWithoutWaiterInput = {
   status?: $Enums.OrderStatus
   note?: string | null
   total?: number
+  discount?: number
+  discountReason?: string | null
+  paymentMethod?: $Enums.PaymentMethod | null
+  paidAt?: Date | string | null
   collectedAmount?: number | null
   tip?: number | null
+  voided?: boolean
+  voidReason?: string | null
+  voidedAt?: Date | string | null
+  voidedBy?: string | null
+  refunded?: boolean
+  refundReason?: string | null
+  refundedAt?: Date | string | null
+  refundedBy?: string | null
   tableId?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
@@ -921,8 +1223,20 @@ export type OrderCreateWithoutCashierInput = {
   status?: $Enums.OrderStatus
   note?: string | null
   total?: number
+  discount?: number
+  discountReason?: string | null
+  paymentMethod?: $Enums.PaymentMethod | null
+  paidAt?: Date | string | null
   collectedAmount?: number | null
   tip?: number | null
+  voided?: boolean
+  voidReason?: string | null
+  voidedAt?: Date | string | null
+  voidedBy?: string | null
+  refunded?: boolean
+  refundReason?: string | null
+  refundedAt?: Date | string | null
+  refundedBy?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
   createdAt?: Date | string
@@ -941,8 +1255,20 @@ export type OrderUncheckedCreateWithoutCashierInput = {
   status?: $Enums.OrderStatus
   note?: string | null
   total?: number
+  discount?: number
+  discountReason?: string | null
+  paymentMethod?: $Enums.PaymentMethod | null
+  paidAt?: Date | string | null
   collectedAmount?: number | null
   tip?: number | null
+  voided?: boolean
+  voidReason?: string | null
+  voidedAt?: Date | string | null
+  voidedBy?: string | null
+  refunded?: boolean
+  refundReason?: string | null
+  refundedAt?: Date | string | null
+  refundedBy?: string | null
   tableId?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
@@ -990,8 +1316,20 @@ export type OrderScalarWhereInput = {
   status?: Prisma.EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
   note?: Prisma.StringNullableFilter<"Order"> | string | null
   total?: Prisma.FloatFilter<"Order"> | number
+  discount?: Prisma.FloatFilter<"Order"> | number
+  discountReason?: Prisma.StringNullableFilter<"Order"> | string | null
+  paymentMethod?: Prisma.EnumPaymentMethodNullableFilter<"Order"> | $Enums.PaymentMethod | null
+  paidAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   collectedAmount?: Prisma.FloatNullableFilter<"Order"> | number | null
   tip?: Prisma.FloatNullableFilter<"Order"> | number | null
+  voided?: Prisma.BoolFilter<"Order"> | boolean
+  voidReason?: Prisma.StringNullableFilter<"Order"> | string | null
+  voidedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
+  voidedBy?: Prisma.StringNullableFilter<"Order"> | string | null
+  refunded?: Prisma.BoolFilter<"Order"> | boolean
+  refundReason?: Prisma.StringNullableFilter<"Order"> | string | null
+  refundedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
+  refundedBy?: Prisma.StringNullableFilter<"Order"> | string | null
   tableId?: Prisma.StringNullableFilter<"Order"> | string | null
   tableLabel?: Prisma.StringNullableFilter<"Order"> | string | null
   sourceTableCode?: Prisma.StringNullableFilter<"Order"> | string | null
@@ -1025,8 +1363,20 @@ export type OrderCreateWithoutRestaurantInput = {
   status?: $Enums.OrderStatus
   note?: string | null
   total?: number
+  discount?: number
+  discountReason?: string | null
+  paymentMethod?: $Enums.PaymentMethod | null
+  paidAt?: Date | string | null
   collectedAmount?: number | null
   tip?: number | null
+  voided?: boolean
+  voidReason?: string | null
+  voidedAt?: Date | string | null
+  voidedBy?: string | null
+  refunded?: boolean
+  refundReason?: string | null
+  refundedAt?: Date | string | null
+  refundedBy?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
   createdAt?: Date | string
@@ -1045,8 +1395,20 @@ export type OrderUncheckedCreateWithoutRestaurantInput = {
   status?: $Enums.OrderStatus
   note?: string | null
   total?: number
+  discount?: number
+  discountReason?: string | null
+  paymentMethod?: $Enums.PaymentMethod | null
+  paidAt?: Date | string | null
   collectedAmount?: number | null
   tip?: number | null
+  voided?: boolean
+  voidReason?: string | null
+  voidedAt?: Date | string | null
+  voidedBy?: string | null
+  refunded?: boolean
+  refundReason?: string | null
+  refundedAt?: Date | string | null
+  refundedBy?: string | null
   tableId?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
@@ -1091,8 +1453,20 @@ export type OrderCreateWithoutTableInput = {
   status?: $Enums.OrderStatus
   note?: string | null
   total?: number
+  discount?: number
+  discountReason?: string | null
+  paymentMethod?: $Enums.PaymentMethod | null
+  paidAt?: Date | string | null
   collectedAmount?: number | null
   tip?: number | null
+  voided?: boolean
+  voidReason?: string | null
+  voidedAt?: Date | string | null
+  voidedBy?: string | null
+  refunded?: boolean
+  refundReason?: string | null
+  refundedAt?: Date | string | null
+  refundedBy?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
   createdAt?: Date | string
@@ -1111,8 +1485,20 @@ export type OrderUncheckedCreateWithoutTableInput = {
   status?: $Enums.OrderStatus
   note?: string | null
   total?: number
+  discount?: number
+  discountReason?: string | null
+  paymentMethod?: $Enums.PaymentMethod | null
+  paidAt?: Date | string | null
   collectedAmount?: number | null
   tip?: number | null
+  voided?: boolean
+  voidReason?: string | null
+  voidedAt?: Date | string | null
+  voidedBy?: string | null
+  refunded?: boolean
+  refundReason?: string | null
+  refundedAt?: Date | string | null
+  refundedBy?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
   waiterId?: string | null
@@ -1157,8 +1543,20 @@ export type OrderCreateWithoutItemsInput = {
   status?: $Enums.OrderStatus
   note?: string | null
   total?: number
+  discount?: number
+  discountReason?: string | null
+  paymentMethod?: $Enums.PaymentMethod | null
+  paidAt?: Date | string | null
   collectedAmount?: number | null
   tip?: number | null
+  voided?: boolean
+  voidReason?: string | null
+  voidedAt?: Date | string | null
+  voidedBy?: string | null
+  refunded?: boolean
+  refundReason?: string | null
+  refundedAt?: Date | string | null
+  refundedBy?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
   createdAt?: Date | string
@@ -1177,8 +1575,20 @@ export type OrderUncheckedCreateWithoutItemsInput = {
   status?: $Enums.OrderStatus
   note?: string | null
   total?: number
+  discount?: number
+  discountReason?: string | null
+  paymentMethod?: $Enums.PaymentMethod | null
+  paidAt?: Date | string | null
   collectedAmount?: number | null
   tip?: number | null
+  voided?: boolean
+  voidReason?: string | null
+  voidedAt?: Date | string | null
+  voidedBy?: string | null
+  refunded?: boolean
+  refundReason?: string | null
+  refundedAt?: Date | string | null
+  refundedBy?: string | null
   tableId?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
@@ -1213,8 +1623,20 @@ export type OrderUpdateWithoutItemsInput = {
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   total?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
+  discountReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   collectedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tip?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  voided?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  voidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1233,8 +1655,20 @@ export type OrderUncheckedUpdateWithoutItemsInput = {
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   total?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
+  discountReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   collectedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tip?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  voided?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  voidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1253,8 +1687,20 @@ export type OrderCreateWithoutReceiptInput = {
   status?: $Enums.OrderStatus
   note?: string | null
   total?: number
+  discount?: number
+  discountReason?: string | null
+  paymentMethod?: $Enums.PaymentMethod | null
+  paidAt?: Date | string | null
   collectedAmount?: number | null
   tip?: number | null
+  voided?: boolean
+  voidReason?: string | null
+  voidedAt?: Date | string | null
+  voidedBy?: string | null
+  refunded?: boolean
+  refundReason?: string | null
+  refundedAt?: Date | string | null
+  refundedBy?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
   createdAt?: Date | string
@@ -1273,8 +1719,20 @@ export type OrderUncheckedCreateWithoutReceiptInput = {
   status?: $Enums.OrderStatus
   note?: string | null
   total?: number
+  discount?: number
+  discountReason?: string | null
+  paymentMethod?: $Enums.PaymentMethod | null
+  paidAt?: Date | string | null
   collectedAmount?: number | null
   tip?: number | null
+  voided?: boolean
+  voidReason?: string | null
+  voidedAt?: Date | string | null
+  voidedBy?: string | null
+  refunded?: boolean
+  refundReason?: string | null
+  refundedAt?: Date | string | null
+  refundedBy?: string | null
   tableId?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
@@ -1309,8 +1767,20 @@ export type OrderUpdateWithoutReceiptInput = {
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   total?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
+  discountReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   collectedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tip?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  voided?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  voidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1329,8 +1799,20 @@ export type OrderUncheckedUpdateWithoutReceiptInput = {
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   total?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
+  discountReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   collectedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tip?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  voided?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  voidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1349,8 +1831,20 @@ export type OrderCreateManyWaiterInput = {
   status?: $Enums.OrderStatus
   note?: string | null
   total?: number
+  discount?: number
+  discountReason?: string | null
+  paymentMethod?: $Enums.PaymentMethod | null
+  paidAt?: Date | string | null
   collectedAmount?: number | null
   tip?: number | null
+  voided?: boolean
+  voidReason?: string | null
+  voidedAt?: Date | string | null
+  voidedBy?: string | null
+  refunded?: boolean
+  refundReason?: string | null
+  refundedAt?: Date | string | null
+  refundedBy?: string | null
   tableId?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
@@ -1367,8 +1861,20 @@ export type OrderCreateManyCashierInput = {
   status?: $Enums.OrderStatus
   note?: string | null
   total?: number
+  discount?: number
+  discountReason?: string | null
+  paymentMethod?: $Enums.PaymentMethod | null
+  paidAt?: Date | string | null
   collectedAmount?: number | null
   tip?: number | null
+  voided?: boolean
+  voidReason?: string | null
+  voidedAt?: Date | string | null
+  voidedBy?: string | null
+  refunded?: boolean
+  refundReason?: string | null
+  refundedAt?: Date | string | null
+  refundedBy?: string | null
   tableId?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
@@ -1385,8 +1891,20 @@ export type OrderUpdateWithoutWaiterInput = {
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   total?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
+  discountReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   collectedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tip?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  voided?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  voidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1405,8 +1923,20 @@ export type OrderUncheckedUpdateWithoutWaiterInput = {
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   total?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
+  discountReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   collectedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tip?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  voided?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  voidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1425,8 +1955,20 @@ export type OrderUncheckedUpdateManyWithoutWaiterInput = {
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   total?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
+  discountReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   collectedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tip?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  voided?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  voidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1443,8 +1985,20 @@ export type OrderUpdateWithoutCashierInput = {
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   total?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
+  discountReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   collectedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tip?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  voided?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  voidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1463,8 +2017,20 @@ export type OrderUncheckedUpdateWithoutCashierInput = {
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   total?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
+  discountReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   collectedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tip?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  voided?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  voidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1483,8 +2049,20 @@ export type OrderUncheckedUpdateManyWithoutCashierInput = {
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   total?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
+  discountReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   collectedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tip?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  voided?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  voidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1501,8 +2079,20 @@ export type OrderCreateManyRestaurantInput = {
   status?: $Enums.OrderStatus
   note?: string | null
   total?: number
+  discount?: number
+  discountReason?: string | null
+  paymentMethod?: $Enums.PaymentMethod | null
+  paidAt?: Date | string | null
   collectedAmount?: number | null
   tip?: number | null
+  voided?: boolean
+  voidReason?: string | null
+  voidedAt?: Date | string | null
+  voidedBy?: string | null
+  refunded?: boolean
+  refundReason?: string | null
+  refundedAt?: Date | string | null
+  refundedBy?: string | null
   tableId?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
@@ -1519,8 +2109,20 @@ export type OrderUpdateWithoutRestaurantInput = {
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   total?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
+  discountReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   collectedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tip?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  voided?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  voidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1539,8 +2141,20 @@ export type OrderUncheckedUpdateWithoutRestaurantInput = {
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   total?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
+  discountReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   collectedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tip?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  voided?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  voidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1559,8 +2173,20 @@ export type OrderUncheckedUpdateManyWithoutRestaurantInput = {
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   total?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
+  discountReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   collectedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tip?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  voided?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  voidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1577,8 +2203,20 @@ export type OrderCreateManyTableInput = {
   status?: $Enums.OrderStatus
   note?: string | null
   total?: number
+  discount?: number
+  discountReason?: string | null
+  paymentMethod?: $Enums.PaymentMethod | null
+  paidAt?: Date | string | null
   collectedAmount?: number | null
   tip?: number | null
+  voided?: boolean
+  voidReason?: string | null
+  voidedAt?: Date | string | null
+  voidedBy?: string | null
+  refunded?: boolean
+  refundReason?: string | null
+  refundedAt?: Date | string | null
+  refundedBy?: string | null
   tableLabel?: string | null
   sourceTableCode?: string | null
   waiterId?: string | null
@@ -1595,8 +2233,20 @@ export type OrderUpdateWithoutTableInput = {
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   total?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
+  discountReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   collectedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tip?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  voided?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  voidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1615,8 +2265,20 @@ export type OrderUncheckedUpdateWithoutTableInput = {
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   total?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
+  discountReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   collectedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tip?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  voided?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  voidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waiterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1635,8 +2297,20 @@ export type OrderUncheckedUpdateManyWithoutTableInput = {
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   total?: Prisma.FloatFieldUpdateOperationsInput | number
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
+  discountReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   collectedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   tip?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  voided?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  voidReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  voidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  voidedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refundReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  refundedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tableLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTableCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   waiterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1684,8 +2358,20 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   status?: boolean
   note?: boolean
   total?: boolean
+  discount?: boolean
+  discountReason?: boolean
+  paymentMethod?: boolean
+  paidAt?: boolean
   collectedAmount?: boolean
   tip?: boolean
+  voided?: boolean
+  voidReason?: boolean
+  voidedAt?: boolean
+  voidedBy?: boolean
+  refunded?: boolean
+  refundReason?: boolean
+  refundedAt?: boolean
+  refundedBy?: boolean
   tableId?: boolean
   tableLabel?: boolean
   sourceTableCode?: boolean
@@ -1710,8 +2396,20 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   status?: boolean
   note?: boolean
   total?: boolean
+  discount?: boolean
+  discountReason?: boolean
+  paymentMethod?: boolean
+  paidAt?: boolean
   collectedAmount?: boolean
   tip?: boolean
+  voided?: boolean
+  voidReason?: boolean
+  voidedAt?: boolean
+  voidedBy?: boolean
+  refunded?: boolean
+  refundReason?: boolean
+  refundedAt?: boolean
+  refundedBy?: boolean
   tableId?: boolean
   tableLabel?: boolean
   sourceTableCode?: boolean
@@ -1733,8 +2431,20 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   status?: boolean
   note?: boolean
   total?: boolean
+  discount?: boolean
+  discountReason?: boolean
+  paymentMethod?: boolean
+  paidAt?: boolean
   collectedAmount?: boolean
   tip?: boolean
+  voided?: boolean
+  voidReason?: boolean
+  voidedAt?: boolean
+  voidedBy?: boolean
+  refunded?: boolean
+  refundReason?: boolean
+  refundedAt?: boolean
+  refundedBy?: boolean
   tableId?: boolean
   tableLabel?: boolean
   sourceTableCode?: boolean
@@ -1756,8 +2466,20 @@ export type OrderSelectScalar = {
   status?: boolean
   note?: boolean
   total?: boolean
+  discount?: boolean
+  discountReason?: boolean
+  paymentMethod?: boolean
+  paidAt?: boolean
   collectedAmount?: boolean
   tip?: boolean
+  voided?: boolean
+  voidReason?: boolean
+  voidedAt?: boolean
+  voidedBy?: boolean
+  refunded?: boolean
+  refundReason?: boolean
+  refundedAt?: boolean
+  refundedBy?: boolean
   tableId?: boolean
   tableLabel?: boolean
   sourceTableCode?: boolean
@@ -1768,7 +2490,7 @@ export type OrderSelectScalar = {
   updatedAt?: boolean
 }
 
-export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderNumber" | "type" | "status" | "note" | "total" | "collectedAmount" | "tip" | "tableId" | "tableLabel" | "sourceTableCode" | "waiterId" | "cashierId" | "restaurantId" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderNumber" | "type" | "status" | "note" | "total" | "discount" | "discountReason" | "paymentMethod" | "paidAt" | "collectedAmount" | "tip" | "voided" | "voidReason" | "voidedAt" | "voidedBy" | "refunded" | "refundReason" | "refundedAt" | "refundedBy" | "tableId" | "tableLabel" | "sourceTableCode" | "waiterId" | "cashierId" | "restaurantId" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
 export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   restaurant?: boolean | Prisma.RestaurantDefaultArgs<ExtArgs>
   table?: boolean | Prisma.Order$tableArgs<ExtArgs>
@@ -1808,8 +2530,20 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     status: $Enums.OrderStatus
     note: string | null
     total: number
+    discount: number
+    discountReason: string | null
+    paymentMethod: $Enums.PaymentMethod | null
+    paidAt: Date | null
     collectedAmount: number | null
     tip: number | null
+    voided: boolean
+    voidReason: string | null
+    voidedAt: Date | null
+    voidedBy: string | null
+    refunded: boolean
+    refundReason: string | null
+    refundedAt: Date | null
+    refundedBy: string | null
     tableId: string | null
     tableLabel: string | null
     sourceTableCode: string | null
@@ -2253,8 +2987,20 @@ export interface OrderFieldRefs {
   readonly status: Prisma.FieldRef<"Order", 'OrderStatus'>
   readonly note: Prisma.FieldRef<"Order", 'String'>
   readonly total: Prisma.FieldRef<"Order", 'Float'>
+  readonly discount: Prisma.FieldRef<"Order", 'Float'>
+  readonly discountReason: Prisma.FieldRef<"Order", 'String'>
+  readonly paymentMethod: Prisma.FieldRef<"Order", 'PaymentMethod'>
+  readonly paidAt: Prisma.FieldRef<"Order", 'DateTime'>
   readonly collectedAmount: Prisma.FieldRef<"Order", 'Float'>
   readonly tip: Prisma.FieldRef<"Order", 'Float'>
+  readonly voided: Prisma.FieldRef<"Order", 'Boolean'>
+  readonly voidReason: Prisma.FieldRef<"Order", 'String'>
+  readonly voidedAt: Prisma.FieldRef<"Order", 'DateTime'>
+  readonly voidedBy: Prisma.FieldRef<"Order", 'String'>
+  readonly refunded: Prisma.FieldRef<"Order", 'Boolean'>
+  readonly refundReason: Prisma.FieldRef<"Order", 'String'>
+  readonly refundedAt: Prisma.FieldRef<"Order", 'DateTime'>
+  readonly refundedBy: Prisma.FieldRef<"Order", 'String'>
   readonly tableId: Prisma.FieldRef<"Order", 'String'>
   readonly tableLabel: Prisma.FieldRef<"Order", 'String'>
   readonly sourceTableCode: Prisma.FieldRef<"Order", 'String'>
