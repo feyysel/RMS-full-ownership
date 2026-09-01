@@ -41,6 +41,8 @@ export async function notify(input: NotifyInput) {
       orderId: notif.orderId ?? null,
       tableId: notif.tableId ?? null,
       createdAt: notif.createdAt.toISOString(),
+      userId: userId ?? null,
+      role: role ?? null,
     });
   }
 

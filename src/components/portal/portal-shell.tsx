@@ -146,27 +146,37 @@ export function PortalShell({
 
   const { connected } = useRealtime(channels, (evt) => {
     const map = NOTIFY_TOAST[evt.type];
-    if (map) {
-      const payload = evt.payload as { title?: string; body?: string; id?: string };
-      if (typeof document !== "undefined" && !document.hasFocus()) notifyBrowser(payload.title ?? map.title, { body: payload.body ?? "" });
-      if (map.tone === "success") toast.success(payload.title ?? map.title);
-      else if (map.tone === "error") toast.error(payload.title ?? map.title);
-      else toast(payload.title ?? map.title, { description: payload.body ?? "" });
-    }
-    if (evt.type !== "heartbeat" && evt.type !== "hello") {
-      setNotifs((prev) => [
-        {
-          id: evt.id,
-          title: (evt.payload as { title?: string })?.title ?? evt.type,
-          body: (evt.payload as { body?: string })?.body ?? "",
-          type: evt.type,
-          read: false,
-          createdAt: new Date(evt.createdAt).toISOString(),
-        },
-        ...prev,
-      ]);
-      setUnread((u) => u + 1);
-    }
+    if (!map) return;
+    const payload = evt.payload as {
+      title?: string;
+      body?: string;
+      id?: string;
+      userId?: string | null;
+      role?: string | null;
+    };
+    const isMine =
+      !payload.userId && !payload.role
+        ? true
+        : payload.userId === user.id || payload.role === user.role;
+    if (!isMine) return;
+
+    if (typeof document !== "undefined" && !document.hasFocus()) notifyBrowser(payload.title ?? map.title, { body: payload.body ?? "" });
+    if (map.tone === "success") toast.success(payload.title ?? map.title);
+    else if (map.tone === "error") toast.error(payload.title ?? map.title);
+    else toast(payload.title ?? map.title, { description: payload.body ?? "" });
+
+    setNotifs((prev) => [
+      {
+        id: evt.id,
+        title: payload.title ?? evt.type,
+        body: payload.body ?? "",
+        type: evt.type,
+        read: false,
+        createdAt: new Date(evt.createdAt).toISOString(),
+      },
+      ...prev,
+    ]);
+    setUnread((u) => u + 1);
   });
 
   React.useEffect(() => {
