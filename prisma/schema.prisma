@@ -270,9 +270,10 @@ enum OrderType {
 
 enum PaymentMethod {
   CASH
-  CARD
-  CARD_ONLINE
-  OTHER
+  CBE
+  TELEBIRR
+  ABYSSINIA
+  POS
 }
 
 enum BellStatus {

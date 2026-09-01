@@ -58,9 +58,10 @@ type Order = {
 
 const PAYMENT_LABEL: Record<string, string> = {
   CASH: "Cash",
-  CARD: "Card (POS)",
-  CARD_ONLINE: "Online card",
-  OTHER: "Other",
+  CBE: "CBE",
+  TELEBIRR: "TeleBirr",
+  ABYSSINIA: "Abyssinia",
+  POS: "POS",
 };
 
 const statusTone: Record<string, "amber" | "sky" | "gold" | "violet" | "teal" | "emerald" | "rose"> = {

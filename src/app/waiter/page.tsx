@@ -883,9 +883,10 @@ function CollectPaymentModal({
               <Label htmlFor="wp-method">Payment method</Label>
               <Select id="wp-method" value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
                 <option value="CASH">Cash</option>
-                <option value="CARD">Card (POS)</option>
-                <option value="CARD_ONLINE">Online card</option>
-                <option value="OTHER">Other</option>
+                <option value="CBE">CBE</option>
+                <option value="TELEBIRR">TeleBirr</option>
+                <option value="ABYSSINIA">Abyssinia</option>
+                <option value="POS">POS</option>
               </Select>
             </div>
             {isCash && (

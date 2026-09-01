@@ -56,9 +56,10 @@ export type OrderType = (typeof OrderType)[keyof typeof OrderType]
 
 export const PaymentMethod = {
   CASH: 'CASH',
-  CARD: 'CARD',
-  CARD_ONLINE: 'CARD_ONLINE',
-  OTHER: 'OTHER'
+  CBE: 'CBE',
+  TELEBIRR: 'TELEBIRR',
+  ABYSSINIA: 'ABYSSINIA',
+  POS: 'POS'
 } as const
 
 export type PaymentMethod = (typeof PaymentMethod)[keyof typeof PaymentMethod]

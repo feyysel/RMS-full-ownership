@@ -61,7 +61,7 @@ const ACTIONS: Record<
   },
 };
 
-const PAYMENT_METHODS: PaymentMethod[] = ["CASH", "CARD", "CARD_ONLINE", "OTHER"];
+const PAYMENT_METHODS: PaymentMethod[] = ["CASH", "CBE", "TELEBIRR", "ABYSSINIA", "POS"];
 
 export async function GET(req: Request, ctx: Ctx) {
   const guard = await requireRoles(req, ["KITCHEN", "WAITER", "CASHIER", "MANAGER", "OWNER"]);

@@ -44,9 +44,10 @@ const EVENT_ICON: Record<string, React.ComponentType<{ className?: string }>> = 
 
 const PAYMENT_LABEL: Record<string, string> = {
   CASH: "Cash",
-  CARD: "Card (POS)",
-  CARD_ONLINE: "Online card",
-  OTHER: "Other",
+  CBE: "CBE",
+  TELEBIRR: "TeleBirr",
+  ABYSSINIA: "Abyssinia",
+  POS: "POS",
 };
 
 export default function ManagerAudit() {
