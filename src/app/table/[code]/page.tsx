@@ -194,7 +194,7 @@ export default function TableMenuPage({
   }, [code]);
 
   const activeOrders = orders.filter((o) =>
-    ["PENDING", "ACCEPTED", "COOKING", "READY"].includes(o.status)
+    ["PENDING", "TAKEN", "PAID", "ACCEPTED", "COOKING", "READY"].includes(o.status)
   );
   const cartCount = cart.reduce((s, c) => s + c.qty, 0);
   const cartTotal = cart.reduce((s, c) => s + c.qty * c.price, 0);
@@ -783,7 +783,9 @@ function OrderTimeline({
     ? STATUS_STEPS.indexOf(order.status)
     : order.status === "CANCELLED"
       ? -1
-      : STATUS_STEPS.length;
+      : order.status === "TAKEN" || order.status === "PAID"
+        ? 0
+        : STATUS_STEPS.length;
 
   const done = order.status === "COMPLETED" || order.status === "CANCELLED";
 
