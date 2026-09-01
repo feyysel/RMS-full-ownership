@@ -29,6 +29,8 @@ export default async function ManagerLayout({ children }: LayoutProps<"/manager"
       ? [{ label: "My Restaurants", href: "/manager/branches", icon: "Store" } satisfies NavItem]
       : []),
     { label: "Employees", href: "/manager/employees", icon: "Users" },
+    { label: "Waiter performance", href: "/manager/waiter-performance", icon: "Users" },
+    { label: "Kitchen performance", href: "/manager/kitchen-performance", icon: "UtensilsCrossed" },
     { label: "Menu", href: "/manager/menu", icon: "UtensilsCrossed" },
     { label: "Ingredients", href: "/manager/ingredients", icon: "Package" },
     { label: "Tables", href: "/manager/tables", icon: "Grid3X3" },
